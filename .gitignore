@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+pnpm-store/
+
+# Builds
+dist/
+build/
+bin/
+*.jar
+
+# Environnement
+.env
+.env.local
+.env.*.local
+
+# Gradle
+.gradle/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

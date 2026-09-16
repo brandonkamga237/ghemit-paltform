@@ -1,0 +1,74 @@
+{
+  "realm": "gehmit",
+  "enabled": true,
+  "displayName": "Gehmit",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Administrateur du back-office Gehmit"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin@gehmit.org",
+      "firstName": "Admin",
+      "lastName": "Gehmit",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "admin-frontend",
+      "name": "Gehmit Admin Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://localhost:5174/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5174"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "scopeMappings": [
+    {
+      "client": "admin-frontend",
+      "roles": ["admin"]
+    }
+  ]
+}

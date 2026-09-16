@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#EDE7DF; font-family:'Source Sans 3', system-ui, sans-serif; -webkit-font-smoothing:antialiased; color:#1E2D4A; }
+  a { color:#15803D; text-decoration:none; }
+  a:hover { color:#0F5F2D; text-decoration:underline; }
+  * { box-sizing:border-box; }
+</style>
+</helmet>
+
+<div style="display:flex; flex-direction:column; gap:72px; padding:64px 72px 72px; width:1400px; min-width:1400px;">
+
+  <div style="display:flex; flex-direction:column; gap:16px; max-width:860px;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#9CA3AF;">Étape 3 · Écrans</span>
+      <span style="height:1px; flex:1; background:#D1C9BE;"></span>
+    </div>
+    <h1 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.1; font-weight:600; letter-spacing:-0.01em;">Les écrans publics</h1>
+    <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563;">Direction 2a appliquée au système UI. Douze vues, largeur desktop 1240 px. L'en-tête et le pied de page sont globaux : le pied de page complet figure sur l'accueil, les autres écrans le sous-entendent.</p>
+  </div>
+
+  <!-- ══════════ 01 ACCUEIL ══════════ -->
+  <div data-screen-label="01" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">01</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Accueil</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D; letter-spacing:-0.01em;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Accueil</span><span>À propos</span><span>Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:0.85fr 1.15fr;">
+        <div style="background:#15803D; padding:64px 44px; display:flex; flex-direction:column; justify-content:center; gap:26px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(253,250,247,0.7);">Depuis 2021 · Cameroun</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:50px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em; text-wrap:balance;">Votre place dans le numérique existe.</h3>
+          <p style="margin:0; font-size:19px; line-height:1.6; color:rgba(253,250,247,0.88);">Nous vous aidons à la trouver.</p>
+          <div style="display:flex; gap:12px; padding-top:6px;">
+            <span style="display:inline-flex; align-items:center; gap:10px; height:48px; padding:0 26px; background:#FDFAF7; color:#15803D; border-radius:6px; font-size:16px; font-weight:600;">Découvrir les programmes
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+        </div>
+        <div style="min-height:540px; background:#E8E2D9; display:flex; align-items:flex-end; padding:26px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#8a7a5e; line-height:1.6;">Photo plein cadre — 1200 × 900 min.<br>Séminaire d'orientation</span></div>
+      </div>
+
+      <div style="padding:64px 40px; background:#F7F3EE; display:flex; flex-direction:column; gap:30px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Cinq programmes</h4>
+          <span style="font-size:15.5px; font-weight:600; color:#15803D;">Tout voir →</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+          <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:220px; background:#E8E2D9; display:flex; align-items:flex-end; padding:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — mentorat</span></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Mentorat</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:2px 10px; border-radius:999px;">Ouvert</span></div>
+              <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Trois mois avec un professionnel du domaine visé.</p>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Découvrir →</span>
+            </div>
+          </div>
+          <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:220px; background:#E8E2D9; display:flex; align-items:flex-end; padding:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — formation</span></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Formations</span><span style="font-size:12.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #D97706; padding:2px 10px; border-radius:999px;">14 sept.</span></div>
+              <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Data, développement web et IA appliquée.</p>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Voir le catalogue →</span>
+            </div>
+          </div>
+          <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:220px; background:#E8E2D9; display:flex; align-items:flex-end; padding:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — GLab Sisters</span></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">GLab Sisters</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:2px 10px; border-radius:999px;">Ouvert</span></div>
+              <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Les femmes dans le numérique, la tech et le leadership.</p>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Découvrir →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); background:#1E2D4A;">
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums;">200+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Étudiants encadrés</span></div>
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid rgba(255,255,255,0.12);"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums;">20+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Reconversions</span></div>
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid rgba(255,255,255,0.12);"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums;">100+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Stages et emplois</span></div>
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid rgba(255,255,255,0.12);"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#C9952A; font-variant-numeric:tabular-nums;">50+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Formations</span></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; background:#FDFAF7;">
+        <div style="min-height:340px; background:#E8E2D9; display:flex; align-items:flex-end; padding:22px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — coach TechPath en usage</span></div>
+        <div style="padding:56px 44px; display:flex; flex-direction:column; justify-content:center; gap:20px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Solutions</span>
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:34px; line-height:1.15; font-weight:600;">Pas encore décidé ? TechPath vous oriente.</h4>
+          <p style="margin:0; font-size:17px; line-height:1.65; color:#4B5563; max-width:460px;">Un coach conversationnel et un annuaire d'écoles, puis une recommandation vers le programme qui correspond.</p>
+          <span style="display:inline-flex; align-items:center; justify-content:center; align-self:flex-start; height:48px; padding:0 26px; background:transparent; color:#1E2D4A; border:1px solid #1E2D4A; border-radius:6px; font-size:16px; font-weight:600;">Ouvrir TechPath</span>
+        </div>
+      </div>
+
+      <div style="padding:64px 40px; background:#F7F3EE; display:flex; flex-direction:column; gap:30px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Publications récentes</h4>
+          <span style="font-size:15.5px; font-weight:600; color:#15803D;">Voir le blog →</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:24px;">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="height:280px; background:#E8E2D9; border-radius:8px; display:flex; align-items:flex-end; padding:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — table ronde</span></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">29 juillet 2026 · GLab Sisters</span>
+            <span style="font-family:'Lora',serif; font-size:24px; line-height:1.28; font-weight:600;">Comprendre les défis des femmes dans la tech</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="height:170px; background:#E8E2D9; border-radius:8px;"></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">10 août 2026</span>
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">Discussion entre #TechSisters</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="height:170px; background:#E8E2D9; border-radius:8px;"></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">16 avril 2026</span>
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">Retour sur le séminaire « De la recherche à l'innovation »</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:48px 40px; background:#FDFAF7; border-top:1px solid #E8E2D9; display:flex; flex-direction:column; gap:24px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Ils nous accompagnent</span>
+        <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:20px;">
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+        </div>
+      </div>
+
+      <div style="background:#1E2D4A; padding:56px 40px 32px; display:flex; flex-direction:column; gap:44px;">
+        <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px;">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <span style="font-family:'Lora',serif; font-size:26px; font-weight:700; color:#FDFAF7;">Gehmit</span>
+            <p style="margin:0; font-size:15.5px; line-height:1.6; color:rgba(253,250,247,0.7); max-width:300px;">Recevez les sessions et appels à candidature, une fois par mois.</p>
+            <div style="display:flex; gap:10px;">
+              <div style="flex:1; height:46px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border-radius:6px; font-size:15px; color:#9CA3AF;">votre@email.com</div>
+              <span style="display:inline-flex; align-items:center; height:46px; padding:0 20px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">S'inscrire</span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Programmes</span>
+            <span style="font-size:15px; color:rgba(253,250,247,0.75);">PAEI</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">Mentorat</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">Formations</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">Stage</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">GLab Sisters</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Organisation</span>
+            <span style="font-size:15px; color:rgba(253,250,247,0.75);">À propos</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">Notre impact</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">Blog</span><span style="font-size:15px; color:rgba(253,250,247,0.75);">Contact</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Contact</span>
+            <span style="font-size:15px; color:rgba(253,250,247,0.75);">info.gehmit@gmail.com</span>
+            <span style="font-size:15px; color:rgba(253,250,247,0.75);">+237 671 13 02 66</span>
+            <span style="font-size:15px; color:rgba(253,250,247,0.75);">Douala, Cameroun</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-top:24px; border-top:1px solid rgba(255,255,255,0.12);">
+          <span style="font-size:14px; color:rgba(253,250,247,0.5);">© 2026 Gehmit</span>
+          <div style="display:flex; gap:20px; font-size:14px; color:rgba(253,250,247,0.5);"><span>Mentions légales</span><span>Politique de confidentialité</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 02 À PROPOS ══════════ -->
+  <div data-screen-label="02" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">02</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">À propos</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">À propos</span><span>Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="padding:64px 40px 56px; display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:end; background:#F7F3EE;">
+        <div style="display:flex; flex-direction:column; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / À propos</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:52px; line-height:1.08; font-weight:600; letter-spacing:-0.02em;">Réduire la part de hasard dans une carrière tech.</h3>
+        </div>
+        <p style="margin:0; font-size:18px; line-height:1.7; color:#4B5563; border-left:2px solid #C9952A; padding-left:24px;">Gehmit est une organisation à but non lucratif. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique, et nous facilitons leur insertion.</p>
+      </div>
+
+      <div style="height:420px; background:#E8E2D9; display:flex; align-items:flex-end; padding:24px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#8a7a5e;">Photo panoramique — équipe ou événement, 2400 × 900</span></div>
+
+      <div style="padding:64px 40px; background:#FDFAF7; display:grid; grid-template-columns:280px 1fr; gap:56px;">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Pourquoi</h4>
+          <span style="width:48px; height:2px; background:#C9952A;"></span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:20px; max-width:680px;">
+          <p style="margin:0; font-size:17px; line-height:1.75; color:#4B5563;">Le numérique crée des emplois plus vite qu'il ne crée de repères. En Afrique centrale, un étudiant qui s'y intéresse découvre rarement l'étendue réelle des métiers, et ceux qui ont un objectif précis avancent souvent seuls.</p>
+          <p style="margin:0; font-size:17px; line-height:1.75; color:#4B5563;">Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de formation et un réseau d'entreprises. Le reste dépend d'elles.</p>
+        </div>
+      </div>
+
+      <div style="padding:0 40px 64px; background:#FDFAF7; display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px; padding:28px; display:flex; flex-direction:column; gap:10px;">
+          <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Informer</span>
+          <p style="margin:0; font-size:15.5px; line-height:1.6; color:#4B5563;">Rendre lisibles les métiers, les formations et les débouchés réels du secteur.</p>
+        </div>
+        <div style="background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px; padding:28px; display:flex; flex-direction:column; gap:10px;">
+          <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Former</span>
+          <p style="margin:0; font-size:15.5px; line-height:1.6; color:#4B5563;">Des sessions courtes et pratiques, animées par des professionnels en exercice.</p>
+        </div>
+        <div style="background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px; padding:28px; display:flex; flex-direction:column; gap:10px;">
+          <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Insérer</span>
+          <p style="margin:0; font-size:15.5px; line-height:1.6; color:#4B5563;">Mentorat, stages et mise en relation avec les entreprises partenaires.</p>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px; background:#15803D; display:flex; align-items:center; justify-content:space-between; gap:40px;">
+        <h4 style="margin:0; font-family:'Lora',serif; font-size:32px; line-height:1.2; font-weight:600; color:#FDFAF7; max-width:620px;">Une question sur nos programmes ?</h4>
+        <span style="display:inline-flex; align-items:center; height:48px; padding:0 26px; background:#FDFAF7; color:#15803D; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Nous écrire</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div style="display:flex; flex-direction:column; gap:72px; padding:0 72px 72px; width:1400px; min-width:1400px;">
+
+  <!-- ══════════ 03 PROGRAMMES ══════════ -->
+  <div data-screen-label="03" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">03</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Programmes — liste</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px 44px; display:flex; flex-direction:column; gap:18px; background:#F7F3EE;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / Programmes</span>
+        <h3 style="margin:0; font-family:'Lora',serif; font-size:48px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Cinq façons d'avancer</h3>
+        <p style="margin:0; font-size:19px; line-height:1.6; color:#4B5563; max-width:680px;">Chaque programme a ses conditions, sa durée et son calendrier. Candidature directe, sans compte à créer.</p>
+      </div>
+
+      <div style="padding:0 40px 64px; background:#F7F3EE; display:flex; flex-direction:column; gap:24px;">
+        <div style="display:grid; grid-template-columns:440px 1fr; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="min-height:260px; background:#E8E2D9; display:flex; align-items:flex-end; padding:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — PAEI</span></div>
+          <div style="padding:32px 36px; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'Lora',serif; font-size:28px; font-weight:600;">PAEI</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px;">Candidatures ouvertes</span></div>
+            <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563; max-width:560px;">Programme d'appui à l'employabilité et à l'insertion : préparation au marché du travail, projet concret, mise en relation avec les entreprises partenaires.</p>
+            <div style="display:flex; gap:28px; font-size:15px; color:#9CA3AF;"><span>6 mois</span><span>Gratuit</span><span>Douala</span><span>Clôture le 30 sept.</span></div>
+            <div style="display:flex; gap:12px; padding-top:4px;">
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">En savoir plus</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:440px 1fr; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="min-height:260px; background:#E8E2D9; display:flex; align-items:flex-end; padding:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — mentorat</span></div>
+          <div style="padding:32px 36px; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'Lora',serif; font-size:28px; font-weight:600;">Mentorat</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px;">Candidatures ouvertes</span></div>
+            <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563; max-width:560px;">Trois mois avec un professionnel de plus de dix ans d'expérience, une à deux séances par semaine, dans le domaine que vous visez.</p>
+            <div style="display:flex; gap:28px; font-size:15px; color:#9CA3AF;"><span>3 mois</span><span>Bénévole</span><span>À distance</span></div>
+            <div style="display:flex; gap:12px; padding-top:4px;">
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Devenir mentor</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:440px 1fr; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="min-height:260px; background:#E8E2D9; display:flex; align-items:flex-end; padding:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — formation</span></div>
+          <div style="padding:32px 36px; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'Lora',serif; font-size:28px; font-weight:600;">Formations</span><span style="font-size:12.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #D97706; padding:3px 11px; border-radius:999px;">Prochaine session 14 sept.</span></div>
+            <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563; max-width:560px;">Data, développement web et IA appliquée. Sessions courtes, en ligne ou à Douala, avec calendrier et tarifs publiés.</p>
+            <div style="display:flex; gap:28px; font-size:15px; color:#9CA3AF;"><span>2 à 8 semaines</span><span>Gratuit à 25 000 FCFA</span><span>4 sessions</span></div>
+            <div style="display:flex; gap:12px; padding-top:4px;">
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Voir le catalogue</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:440px 1fr; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; opacity:0.72;">
+          <div style="min-height:220px; background:#E8E2D9; display:flex; align-items:flex-end; padding:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — stage</span></div>
+          <div style="padding:32px 36px; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'Lora',serif; font-size:28px; font-weight:600;">Stage</span><span style="font-size:12.5px; font-weight:600; color:#6B7280; background:#F3F4F6; border:1px solid #9CA3AF; padding:3px 11px; border-radius:999px;">Candidatures closes</span></div>
+            <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563; max-width:560px;">Placement en entreprise partenaire à l'issue d'un programme de formation ou de mentorat.</p>
+            <div style="display:flex; gap:28px; font-size:15px; color:#9CA3AF;"><span>3 à 6 mois</span><span>Réouverture en janvier 2027</span></div>
+            <div style="display:flex; gap:12px; padding-top:4px;">
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#E8E2D9; color:#9CA3AF; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">M'avertir à l'ouverture</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:440px 1fr; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="min-height:260px; background:#E8E2D9; display:flex; align-items:flex-end; padding:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo — GLab Sisters</span></div>
+          <div style="padding:32px 36px; display:flex; flex-direction:column; gap:16px; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'Lora',serif; font-size:28px; font-weight:600;">GLab Sisters</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px;">Candidatures ouvertes</span></div>
+            <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563; max-width:560px;">Formations, mentorat, ateliers de leadership et communauté de pratique pour les jeunes filles et les femmes dans le numérique.</p>
+            <div style="display:flex; gap:28px; font-size:15px; color:#9CA3AF;"><span>Continu</span><span>Gratuit</span><span>Douala et en ligne</span></div>
+            <div style="display:flex; gap:12px; padding-top:4px;">
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Devenir partenaire</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 04 PROGRAMME — DÉTAIL ══════════ -->
+  <div data-screen-label="04" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">04</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Programme — page détail</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:0.9fr 1.1fr;">
+        <div style="background:#15803D; padding:56px 44px; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(253,250,247,0.65);">Programmes / Mentorat</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em;">Mentorat</h3>
+          <p style="margin:0; font-size:18px; line-height:1.65; color:rgba(253,250,247,0.88); max-width:420px;">Trois mois avec un professionnel qui exerce le métier que vous visez.</p>
+          <span style="display:inline-flex; align-items:center; align-self:flex-start; height:48px; padding:0 26px; background:#FDFAF7; color:#15803D; border-radius:6px; font-size:16px; font-weight:600;">Candidater</span>
+        </div>
+        <div style="min-height:400px; background:#E8E2D9; display:flex; align-items:flex-end; padding:24px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#8a7a5e;">Photo — séance de mentorat</span></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Durée</span><span style="font-size:18px; font-weight:600;">3 mois</span></div>
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px; border-left:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Rythme</span><span style="font-size:18px; font-weight:600;">1 à 2 séances / semaine</span></div>
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px; border-left:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Tarif</span><span style="font-size:18px; font-weight:600;">Gratuit</span></div>
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px; border-left:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Format</span><span style="font-size:18px; font-weight:600;">À distance</span></div>
+      </div>
+
+      <div style="padding:64px 40px; background:#FDFAF7; display:grid; grid-template-columns:1fr 360px; gap:56px; align-items:start;">
+        <div style="display:flex; flex-direction:column; gap:40px; max-width:680px;">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Le principe</h4>
+            <p style="margin:0; font-size:17px; line-height:1.75; color:#4B5563;">Vous êtes mis en relation avec un mentor bénévole choisi selon le domaine que vous visez et vos disponibilités. Il vous accompagne pendant trois mois : orientation, méthode de travail, préparation aux entretiens, retour d'expérience du terrain.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Conditions</h4>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; gap:12px; align-items:flex-start;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2" style="flex:0 0 auto; margin-top:3px;"><path d="M20 6L9 17l-5-5"/></svg><span style="font-size:16.5px; line-height:1.6; color:#4B5563;">Être étudiant, jeune diplômé ou en reconversion vers le numérique.</span></div>
+              <div style="display:flex; gap:12px; align-items:flex-start;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2" style="flex:0 0 auto; margin-top:3px;"><path d="M20 6L9 17l-5-5"/></svg><span style="font-size:16.5px; line-height:1.6; color:#4B5563;">Disposer d'au moins deux heures par semaine pendant trois mois.</span></div>
+              <div style="display:flex; gap:12px; align-items:flex-start;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2" style="flex:0 0 auto; margin-top:3px;"><path d="M20 6L9 17l-5-5"/></svg><span style="font-size:16.5px; line-height:1.6; color:#4B5563;">Avoir une idée, même imprécise, du domaine visé.</span></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Déroulé</h4>
+            <div style="display:flex; flex-direction:column;">
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">01</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Candidature</span><span style="font-size:16px; color:#4B5563;">Un formulaire de dix minutes.</span></div></div>
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">02</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Attribution</span><span style="font-size:16px; color:#4B5563;">Un mentor vous est proposé sous dix jours ouvrés.</span></div></div>
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">03</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Accompagnement</span><span style="font-size:16px; color:#4B5563;">Trois mois de séances, à votre rythme commun.</span></div></div>
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">04</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Bilan</span><span style="font-size:16px; color:#4B5563;">Un retour de chaque côté, pour améliorer le programme.</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px; position:sticky; top:24px;">
+          <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:14px;">
+            <span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px; align-self:flex-start;">Candidatures ouvertes</span>
+            <span style="font-family:'Lora',serif; font-size:21px; line-height:1.3; font-weight:600;">Prochaine promotion : octobre 2026</span>
+            <p style="margin:0; font-size:15.5px; line-height:1.6; color:#4B5563;">Réponse par e-mail sous dix jours ouvrés. Aucun compte à créer.</p>
+            <span style="display:inline-flex; align-items:center; justify-content:center; height:48px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+            <span style="display:inline-flex; align-items:center; justify-content:center; height:48px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Devenir mentor</span>
+          </div>
+          <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Programmes liés</span>
+            <span style="font-size:16px; font-weight:600; color:#15803D;">Formations →</span>
+            <span style="font-size:16px; font-weight:600; color:#15803D;">PAEI →</span>
+            <span style="font-size:16px; font-weight:600; color:#15803D;">GLab Sisters →</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:48px 40px; background:#F7F3EE; border-top:1px solid #E8E2D9; display:flex; flex-direction:column; gap:24px;">
+        <h4 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">En images</h4>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
+          <div style="height:180px; background:#E8E2D9; border-radius:8px;"></div>
+          <div style="height:180px; background:#E8E2D9; border-radius:8px;"></div>
+          <div style="height:180px; background:#E8E2D9; border-radius:8px;"></div>
+          <div style="height:180px; background:#E8E2D9; border-radius:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 05 CANDIDATURE ══════════ -->
+  <div data-screen-label="05" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">05</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Formulaire de candidature</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+        <div style="display:flex; align-items:center; gap:18px; font-size:15px; color:#4B5563;"><span>Besoin d'aide ?</span><span style="font-weight:600; color:#15803D;">Nous écrire</span></div>
+      </div>
+
+      <div style="padding:48px 40px 64px; background:#F7F3EE; display:grid; grid-template-columns:1fr 320px; gap:56px; align-items:start;">
+        <div style="display:flex; flex-direction:column; gap:32px; max-width:680px;">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Programmes / Mentorat / Candidature</span>
+            <h3 style="margin:0; font-family:'Lora',serif; font-size:40px; line-height:1.12; font-weight:600;">Candidater au mentorat</h3>
+            <p style="margin:0; font-size:17px; line-height:1.6; color:#4B5563;">Dix minutes. Vous recevrez un accusé de réception immédiat par e-mail.</p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight:600; color:#15803D;"><span style="width:24px; height:24px; border-radius:999px; background:#15803D; color:#FDFAF7; display:flex; align-items:center; justify-content:center; font-size:12.5px;">1</span>Vous</span>
+            <span style="flex:1; height:1px; background:#D1C9BE;"></span>
+            <span style="display:flex; align-items:center; gap:9px; font-size:14.5px; color:#9CA3AF;"><span style="width:24px; height:24px; border-radius:999px; border:1px solid #D1C9BE; display:flex; align-items:center; justify-content:center; font-size:12.5px;">2</span>Votre projet</span>
+            <span style="flex:1; height:1px; background:#D1C9BE;"></span>
+            <span style="display:flex; align-items:center; gap:9px; font-size:14.5px; color:#9CA3AF;"><span style="width:24px; height:24px; border-radius:999px; border:1px solid #D1C9BE; display:flex; align-items:center; justify-content:center; font-size:12.5px;">3</span>Pièces</span>
+          </div>
+
+          <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:32px; display:flex; flex-direction:column; gap:24px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Prénom</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px;">Amina</div></div>
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Nom</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px;">Nkoulou</div></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Adresse e-mail</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #2B4C7E; border-radius:6px; font-size:15.5px; box-shadow:0 0 0 3px rgba(43,76,126,0.18);">amina.nkoulou@example.com</div></div>
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Téléphone</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px;">+237 6 71 13 02 66</div></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-size:15px; font-weight:600;">Domaine visé</span>
+                <div style="height:48px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px solid #D97706; border-radius:6px; font-size:15.5px; color:#9CA3AF;"><span>Sélectionner</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+                <span style="display:flex; align-items:center; gap:6px; font-size:13.5px; color:#92400E;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>Choisissez un domaine pour continuer</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Situation actuelle</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px;"><span>Étudiante</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:15px; font-weight:600;">Pourquoi ce programme ?</span>
+              <div style="min-height:120px; padding:14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; line-height:1.6; color:#9CA3AF;">Trois à cinq phrases suffisent.</div>
+              <div style="display:flex; justify-content:space-between; font-size:13.5px; color:#9CA3AF;"><span>Facultatif</span><span style="font-family:'JetBrains Mono',monospace;">0 / 600</span></div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:8px; border-top:1px solid #E8E2D9;">
+              <span style="font-size:15px; font-weight:600; color:#4B5563;">Étape 1 sur 3</span>
+              <span style="display:inline-flex; align-items:center; height:48px; padding:0 28px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Continuer</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:14px; padding:18px 20px; background:#F0FDF4; border:1px solid #15803D; border-radius:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <span style="font-size:16px; font-weight:600; color:#14532D;">État après envoi</span>
+              <span style="font-size:15px; line-height:1.6; color:#14532D;">Candidature envoyée. Vous recevrez une réponse par e-mail sous dix jours ouvrés.</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:16px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Vous candidatez à</span>
+          <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Mentorat</span>
+          <div style="display:flex; flex-direction:column; gap:9px; padding:14px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;">
+            <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Durée</span><span style="font-weight:500;">3 mois</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Tarif</span><span style="font-weight:500;">Gratuit</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Réponse</span><span style="font-weight:500;">Sous 10 jours</span></div>
+          </div>
+          <p style="margin:0; font-size:14.5px; line-height:1.6; color:#4B5563;">Vos données servent uniquement à traiter cette candidature. Aucun compte n'est créé.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="display:flex; flex-direction:column; gap:72px; padding:0 72px 72px; width:1400px; min-width:1400px;">
+
+  <!-- ══════════ 06 FORMATIONS ══════════ -->
+  <div data-screen-label="06" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">06</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Formations — catalogue et calendrier</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px 40px; background:#F7F3EE; display:flex; flex-direction:column; gap:16px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Programmes / Formations</span>
+        <h3 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Catalogue des formations</h3>
+        <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563; max-width:680px;">Durées, tarifs et dates réelles, mis à jour par l'équipe.</p>
+      </div>
+
+      <div style="padding:0 40px 24px; background:#F7F3EE; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#1E2D4A; color:#FDFAF7; font-size:14.5px; font-weight:600;">Toutes</span>
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14.5px;">Data</span>
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14.5px;">Développement</span>
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14.5px;">IA</span>
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14.5px;">En ligne</span>
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14.5px;">Douala</span>
+      </div>
+
+      <div style="padding:0 40px 48px; background:#F7F3EE;">
+        <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; background:#F7F3EE; border-bottom:1px solid #D1C9BE;">
+            <span style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Formation</span>
+            <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Prochaine session</span>
+            <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Durée</span>
+            <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Format</span>
+            <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Tarif</span>
+            <span style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF; text-align:right;">État</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; align-items:center; border-bottom:1px solid #E8E2D9;">
+            <span style="padding:20px; font-size:17px; font-weight:600;">Fondamentaux de la data</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">14 sept. 2026</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">4 semaines</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">En ligne</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">Gratuit</span>
+            <span style="padding:20px; text-align:right;"><span style="display:inline-flex; align-items:center; height:40px; padding:0 18px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:14.5px; font-weight:600;">S'inscrire</span></span>
+          </div>
+          <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; align-items:center; border-bottom:1px solid #E8E2D9;">
+            <span style="padding:20px; font-size:17px; font-weight:600;">Développement web</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">6 oct. 2026</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">8 semaines</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">Douala</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">25 000 FCFA</span>
+            <span style="padding:20px; text-align:right;"><span style="display:inline-flex; align-items:center; height:40px; padding:0 18px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:14.5px; font-weight:600;">S'inscrire</span></span>
+          </div>
+          <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; align-items:center; border-bottom:1px solid #E8E2D9;">
+            <span style="padding:20px; font-size:17px; font-weight:600;">IA appliquée aux métiers</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">3 nov. 2026</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">6 semaines</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">En ligne</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">Gratuit</span>
+            <span style="padding:20px; text-align:right;"><span style="font-size:12.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #D97706; padding:4px 12px; border-radius:999px;">Bientôt</span></span>
+          </div>
+          <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; align-items:center;">
+            <span style="padding:20px; font-size:17px; font-weight:600; color:#9CA3AF;">Cybersécurité, niveau 1</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#9CA3AF; font-variant-numeric:tabular-nums;">Juin 2026</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#9CA3AF;">3 semaines</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#9CA3AF;">Douala</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#9CA3AF;">Gratuit</span>
+            <span style="padding:20px; text-align:right;"><span style="font-size:12.5px; font-weight:600; color:#6B7280; background:#F3F4F6; border:1px solid #9CA3AF; padding:4px 12px; border-radius:999px;">Terminée</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:48px 40px 64px; background:#FDFAF7; border-top:1px solid #E8E2D9; display:flex; flex-direction:column; gap:26px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Calendrier des sessions</h4>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#9CA3AF;">Septembre – décembre 2026</span>
+        </div>
+        <div style="display:grid; grid-template-columns:120px repeat(4,1fr); gap:2px; background:#E8E2D9; border:1px solid #E8E2D9; border-radius:8px; overflow:hidden;">
+          <span style="background:#F7F3EE; padding:14px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Formation</span>
+          <span style="background:#F7F3EE; padding:14px 16px; font-size:14.5px; font-weight:600;">Septembre</span>
+          <span style="background:#F7F3EE; padding:14px 16px; font-size:14.5px; font-weight:600;">Octobre</span>
+          <span style="background:#F7F3EE; padding:14px 16px; font-size:14.5px; font-weight:600;">Novembre</span>
+          <span style="background:#F7F3EE; padding:14px 16px; font-size:14.5px; font-weight:600;">Décembre</span>
+
+          <span style="background:#FDFAF7; padding:18px 16px; font-size:15px; font-weight:600;">Data</span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#15803D; color:#FDFAF7; display:flex; align-items:center; padding:0 12px; font-size:13.5px; font-weight:600;">14 sept. → 9 oct.</span></span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#15803D; opacity:0.35;"></span></span>
+          <span style="background:#FDFAF7;"></span>
+          <span style="background:#FDFAF7;"></span>
+
+          <span style="background:#FDFAF7; padding:18px 16px; font-size:15px; font-weight:600;">Développement web</span>
+          <span style="background:#FDFAF7;"></span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#15803D; color:#FDFAF7; display:flex; align-items:center; padding:0 12px; font-size:13.5px; font-weight:600;">6 oct. → 1 déc.</span></span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#15803D; opacity:0.35;"></span></span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#15803D; opacity:0.35;"></span></span>
+
+          <span style="background:#FDFAF7; padding:18px 16px; font-size:15px; font-weight:600;">IA appliquée</span>
+          <span style="background:#FDFAF7;"></span>
+          <span style="background:#FDFAF7;"></span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#D97706; color:#FDFAF7; display:flex; align-items:center; padding:0 12px; font-size:13.5px; font-weight:600;">3 nov. → 15 déc.</span></span>
+          <span style="background:#FDFAF7; padding:12px 10px; display:flex; align-items:center;"><span style="flex:1; height:34px; border-radius:4px; background:#D97706; opacity:0.35;"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 07 SOLUTIONS / TECHPATH ══════════ -->
+  <div data-screen-label="07" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">07</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Solutions — TechPath</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span>Programmes</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; background:#1E2D4A;">
+        <div style="padding:64px 44px; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#C9952A;">Solutions / TechPath</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em;">Un coach d'orientation, disponible à toute heure.</h3>
+          <p style="margin:0; font-size:18px; line-height:1.65; color:rgba(253,250,247,0.8); max-width:460px;">Quelques questions sur votre profil, une recommandation de métier, d'école et de programme Gehmit.</p>
+          <span style="display:inline-flex; align-items:center; align-self:flex-start; height:48px; padding:0 26px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:16px; font-weight:600;">Démarrer avec TechPath</span>
+        </div>
+        <div style="min-height:420px; background:#2B3F62; display:flex; align-items:flex-end; padding:24px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(253,250,247,0.6);">Capture produit — interface du coach</span></div>
+      </div>
+
+      <div style="padding:64px 40px; background:#FDFAF7; display:flex; flex-direction:column; gap:32px;">
+        <h4 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Comment ça marche</h4>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:20px; border-top:2px solid #15803D;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">01</span>
+            <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Vous décrivez votre situation</span>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Niveau d'études, centres d'intérêt, contraintes de temps et de lieu.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:20px; border-top:2px solid #E8E2D9;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">02</span>
+            <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Le coach propose des pistes</span>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Métiers accessibles, compétences à acquérir, écoles de l'annuaire.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:20px; border-top:2px solid #E8E2D9;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">03</span>
+            <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Vous êtes orienté vers un programme</span>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">La recommandation renvoie directement vers le programme Gehmit correspondant.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0 40px 64px; background:#FDFAF7; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:32px; display:flex; flex-direction:column; gap:14px;">
+          <span style="font-family:'Lora',serif; font-size:24px; font-weight:600;">Annuaire des écoles</span>
+          <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Établissements de la sous-région, filières, durées et coûts, consultables sans inscription.</p>
+          <span style="font-size:15.5px; font-weight:600; color:#15803D;">Consulter l'annuaire →</span>
+        </div>
+        <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:32px; display:flex; flex-direction:column; gap:14px;">
+          <span style="font-family:'Lora',serif; font-size:24px; font-weight:600;">Après la recommandation</span>
+          <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">TechPath ne s'arrête pas au conseil : il ouvre la page du programme et le formulaire de candidature.</p>
+          <span style="font-size:15.5px; font-weight:600; color:#15803D;">Voir les programmes →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 08 NOTRE IMPACT ══════════ -->
+  <div data-screen-label="08" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">08</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Notre impact</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span>Programmes</span><span>Solutions</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px 44px; background:#F7F3EE; display:flex; flex-direction:column; gap:16px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / Notre impact</span>
+        <h3 style="margin:0; font-family:'Lora',serif; font-size:48px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Ce que nous avons accompli</h3>
+        <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563; max-width:680px;">Chiffres tenus à jour par l'équipe. Dernière mise à jour le 12 août 2026.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); background:#15803D;">
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px;"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">200+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Étudiants encadrés</span></div>
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px; border-left:1px solid rgba(255,255,255,0.18);"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">20+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Professionnels reconvertis</span></div>
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px; border-left:1px solid rgba(255,255,255,0.18);"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">100+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Stages et emplois attribués</span></div>
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px; border-left:1px solid rgba(255,255,255,0.18);"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">50+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Formations et séminaires</span></div>
+      </div>
+
+      <div style="padding:64px 40px; background:#FDFAF7; display:flex; flex-direction:column; gap:30px;">
+        <h4 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Réalisations</h4>
+        <div style="display:flex; flex-direction:column;">
+          <div style="display:grid; grid-template-columns:140px 1fr 300px; gap:28px; align-items:center; padding:26px 0; border-top:1px solid #E8E2D9;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">Sept. 2025</span>
+            <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Séminaire « De la recherche à l'innovation »</span><span style="font-size:16px; color:#4B5563;">IA comme levier de développement, cinq intervenants.</span></div>
+            <span style="font-size:16px; color:#9CA3AF;">120 participants</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 300px; gap:28px; align-items:center; padding:26px 0; border-top:1px solid #E8E2D9;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">Juillet 2026</span>
+            <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Lancement de GLab Sisters</span><span style="font-size:16px; color:#4B5563;">Programme dédié aux femmes dans le numérique.</span></div>
+            <span style="font-size:16px; color:#9CA3AF;">40 participantes</span>
+          </div>
+          <div style="display:grid; grid-template-columns:140px 1fr 300px; gap:28px; align-items:center; padding:26px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">Août 2026</span>
+            <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Table ronde #TechSisters</span><span style="font-size:16px; color:#4B5563;">Défis des femmes dans la tech et solutions collectives.</span></div>
+            <span style="font-size:16px; color:#9CA3AF;">18 intervenantes</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; background:#F7F3EE; border-top:1px solid #E8E2D9;">
+        <div style="min-height:360px; background:#E8E2D9; display:flex; align-items:flex-end; padding:22px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Portrait — bénéficiaire</span></div>
+        <div style="padding:56px 44px; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Témoignage</span>
+          <p style="margin:0; font-family:'Lora',serif; font-size:26px; line-height:1.45; font-weight:500; color:#1E2D4A;">« Lors d'une période difficile, j'ai eu la chance de bénéficier des conseils avisés de Gehmit, qui m'ont permis de mieux orienter mes études en informatique. »</p>
+          <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:600;">Michelle Gouet</span><span style="font-size:15px; color:#9CA3AF;">Cameroun</span></div>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px; background:#1E2D4A; display:flex; align-items:center; justify-content:space-between; gap:40px;">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:30px; line-height:1.2; font-weight:600; color:#FDFAF7;">Soutenez la prochaine promotion</h4>
+          <p style="margin:0; font-size:17px; color:rgba(253,250,247,0.75);">Chaque don finance directement l'accompagnement d'un jeune.</p>
+        </div>
+        <span style="display:inline-flex; align-items:center; height:48px; padding:0 26px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Faire un don</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="display:flex; flex-direction:column; gap:72px; padding:0 72px 120px; width:1400px; min-width:1400px;">
+
+  <!-- ══════════ 09 BLOG ══════════ -->
+  <div data-screen-label="09" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">09</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Blog — liste</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span>Programmes</span><span>Solutions</span><span>Notre impact</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px 32px; background:#F7F3EE; display:flex; align-items:flex-end; justify-content:space-between; gap:40px;">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / Blog</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Le blog</h3>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; height:48px; padding:0 16px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; width:320px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+          <span style="font-size:15px; color:#9CA3AF;">Rechercher un article</span>
+        </div>
+      </div>
+
+      <div style="padding:0 40px 32px; background:#F7F3EE; display:flex; gap:10px; flex-wrap:wrap;">
+        <span style="height:40px; padding:0 16px; display:inline-flex; align-items:center; border-radius:999px; background:#1E2D4A; color:#FDFAF7; font-size:14px; font-weight:600;">Tous</span>
+        <span style="height:40px; padding:0 16px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14px;">GLab Sisters</span>
+        <span style="height:40px; padding:0 16px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14px;">Événements</span>
+        <span style="height:40px; padding:0 16px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14px;">Orientation</span>
+        <span style="height:40px; padding:0 16px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; font-size:14px;">Témoignages</span>
+      </div>
+
+      <div style="padding:0 40px 40px; background:#F7F3EE;">
+        <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:32px; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="min-height:340px; background:#E8E2D9; display:flex; align-items:flex-end; padding:18px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Photo à la une</span></div>
+          <div style="padding:40px 40px 40px 0; display:flex; flex-direction:column; justify-content:center; gap:16px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">29 juillet 2026 · GLab Sisters</span>
+            <span style="font-family:'Lora',serif; font-size:32px; line-height:1.22; font-weight:600;">Table ronde : comprendre les défis des femmes dans la tech</span>
+            <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563;">Une rencontre entre femmes leaders, étudiantes et professionnelles pour construire des solutions ensemble.</p>
+            <span style="font-size:15.5px; font-weight:600; color:#15803D;">Lire l'article →</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0 40px 40px; background:#F7F3EE; display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="height:190px; background:#E8E2D9;"></div>
+          <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">10 août 2026</span>
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">Discussion entre #TechSisters</span>
+            <span style="font-size:15px; font-weight:600; color:#15803D;">Lire →</span>
+          </div>
+        </div>
+        <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="height:190px; background:#E8E2D9;"></div>
+          <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">22 mai 2026</span>
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">Partage ton histoire dans la tech</span>
+            <span style="font-size:15px; font-weight:600; color:#15803D;">Lire →</span>
+          </div>
+        </div>
+        <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+          <div style="height:190px; background:#E8E2D9;"></div>
+          <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">16 avril 2026</span>
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">Retour sur le séminaire d'orientation</span>
+            <span style="font-size:15px; font-weight:600; color:#15803D;">Lire →</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0 40px 64px; background:#F7F3EE; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span style="width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; background:#15803D; color:#FDFAF7; font-size:15px; font-weight:600;">1</span>
+        <span style="width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; border:1px solid #D1C9BE; background:#FDFAF7; font-size:15px;">2</span>
+        <span style="width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; border:1px solid #D1C9BE; background:#FDFAF7; font-size:15px;">3</span>
+        <span style="height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:6px; border:1px solid #D1C9BE; background:#FDFAF7; font-size:15px; font-weight:600;">Suivant →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 10 ARTICLE ══════════ -->
+  <div data-screen-label="10" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">10</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Article</h2></div>
+    <div style="width:1240px; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span>Programmes</span><span>Solutions</span><span>Notre impact</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="padding:64px 40px 40px; display:flex; flex-direction:column; align-items:center; gap:22px;">
+        <div style="width:680px; display:flex; flex-direction:column; gap:20px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#9CA3AF;">Blog / GLab Sisters · 29 juillet 2026 · 4 min de lecture</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.14; font-weight:600; letter-spacing:-0.015em;">Table ronde : comprendre les défis des femmes dans la tech</h3>
+          <p style="margin:0; font-size:20px; line-height:1.6; color:#4B5563;">Dans le cadre du programme GLab Sisters, Gehmit a réuni des femmes leaders de communautés tech, des étudiantes et des professionnelles.</p>
+        </div>
+      </div>
+
+      <div style="padding:0 40px 48px; display:flex; justify-content:center;">
+        <div style="width:1040px; height:460px; background:#E8E2D9; border-radius:8px; display:flex; align-items:flex-end; padding:20px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#8a7a5e;">Photo d'ouverture — 2080 × 920</span></div>
+      </div>
+
+      <div style="padding:0 40px 64px; display:flex; flex-direction:column; align-items:center;">
+        <div style="width:680px; display:flex; flex-direction:column; gap:26px;">
+          <p style="margin:0; font-size:18px; line-height:1.8; color:#4B5563;">La rencontre est partie d'un constat simple : les difficultés rencontrées par les femmes dans le numérique se ressemblent d'un parcours à l'autre, mais restent rarement formulées à voix haute. Une matinée d'échanges a suffi pour faire apparaître trois obstacles récurrents.</p>
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">L'accès à l'information</h4>
+          <p style="margin:0; font-size:18px; line-height:1.8; color:#4B5563;">Les participantes ont décrit un même moment de blocage : celui où l'on sait que le secteur recrute, sans savoir par où entrer. Les filières existent, les formations aussi, mais l'information circule surtout dans des réseaux auxquels elles n'ont pas accès.</p>
+          <blockquote style="margin:0; padding:24px 28px; background:#F7F3EE; border-left:3px solid #C9952A; border-radius:0 8px 8px 0;">
+            <p style="margin:0; font-family:'Lora',serif; font-size:22px; line-height:1.5; font-style:italic; color:#1E2D4A;">« On ne manque pas de motivation. On manque de gens qui nous disent que c'est possible. »</p>
+          </blockquote>
+          <h4 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">La suite</h4>
+          <p style="margin:0; font-size:18px; line-height:1.8; color:#4B5563;">GLab Sisters ouvre une communauté de pratique mensuelle et un cycle de mentorat dédié. Les candidatures sont ouvertes en continu.</p>
+        </div>
+      </div>
+
+      <div style="padding:40px; background:#F7F3EE; border-top:1px solid #E8E2D9; display:flex; align-items:center; justify-content:space-between; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <span style="font-family:'Lora',serif; font-size:24px; font-weight:600;">Rejoindre GLab Sisters</span>
+          <span style="font-size:16px; color:#4B5563;">Candidatures ouvertes en continu.</span>
+        </div>
+        <span style="display:inline-flex; align-items:center; height:48px; padding:0 26px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Candidater</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 11 CONTACT ══════════ -->
+  <div data-screen-label="11" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">11</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Contact</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span>Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span style="color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1.15fr 0.85fr;">
+        <div style="padding:64px 44px; background:#F7F3EE; display:flex; flex-direction:column; gap:28px;">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <h3 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Nous écrire</h3>
+            <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563; max-width:520px;">Réponse sous 48 heures ouvrées.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:20px; max-width:560px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Nom complet</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; color:#9CA3AF;">Votre nom</div></div>
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Adresse e-mail</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; color:#9CA3AF;">votre@email.com</div></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Objet</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px;"><span>Une question sur un programme</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div></div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:15px; font-weight:600;">Message</span>
+              <div style="min-height:150px; padding:14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; color:#9CA3AF;">Votre message</div>
+            </div>
+            <span style="display:inline-flex; align-items:center; justify-content:center; align-self:flex-start; height:48px; padding:0 28px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Envoyer</span>
+          </div>
+        </div>
+
+        <div style="background:#1E2D4A; padding:64px 40px; display:flex; flex-direction:column; gap:36px;">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Coordonnées</span>
+            <span style="font-size:17px; color:#FDFAF7;">info.gehmit@gmail.com</span>
+            <span style="font-size:17px; color:#FDFAF7;">+237 671 13 02 66</span>
+            <span style="font-size:17px; color:rgba(253,250,247,0.75);">Douala, Cameroun</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Questions fréquentes</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.12);"><span style="font-size:16px; color:#FDFAF7;">Les programmes sont-ils payants ?</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(253,250,247,0.6)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.12);"><span style="font-size:16px; color:#FDFAF7;">Faut-il un diplôme pour candidater ?</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(253,250,247,0.6)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.12);"><span style="font-size:16px; color:#FDFAF7;">Puis-je devenir mentor ?</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(253,250,247,0.6)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:16px 18px; background:rgba(255,255,255,0.08); border-radius:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9952A" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.5 8.5 0 01-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 013.6 11a8.5 8.5 0 018.9-8.5 8.4 8.4 0 018.5 8.5z"/></svg>
+            <span style="font-size:15px; line-height:1.5; color:rgba(253,250,247,0.85);">Un chat est disponible sur toutes les pages du site.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 12 DON ══════════ -->
+  <div data-screen-label="12" style="display:flex; flex-direction:column; gap:14px;">
+    <div style="display:flex; align-items:baseline; gap:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#FDFAF7; background:#1E2D4A; padding:5px 10px; border-radius:6px;">12</span><h2 style="margin:0; font-family:'Lora',serif; font-size:26px; font-weight:600;">Faire un don — paiement</h2></div>
+    <div style="width:1240px; background:#F7F3EE; border:1px solid #D1C9BE; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:46px;">
+          <span style="font-family:'Lora',serif; font-size:28px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;"><span>Accueil</span><span>À propos</span><span>Programmes</span><span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#B4831F; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr;">
+        <div style="padding:64px 44px; background:#F5E9C8; display:flex; flex-direction:column; justify-content:center; gap:24px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#92400E;">Soutenir Gehmit</span>
+          <h3 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Un don finance un accompagnement.</h3>
+          <div style="display:flex; flex-direction:column; gap:14px; padding-top:6px;">
+            <div style="display:flex; gap:14px; align-items:baseline;"><span style="font-family:'Lora',serif; font-size:26px; font-weight:600; color:#1E2D4A; min-width:120px; font-variant-numeric:tabular-nums;">10 000 F</span><span style="font-size:16.5px; color:#4B5563;">Une séance de mentorat</span></div>
+            <div style="display:flex; gap:14px; align-items:baseline;"><span style="font-family:'Lora',serif; font-size:26px; font-weight:600; color:#1E2D4A; min-width:120px; font-variant-numeric:tabular-nums;">50 000 F</span><span style="font-size:16.5px; color:#4B5563;">Une place en formation</span></div>
+            <div style="display:flex; gap:14px; align-items:baseline;"><span style="font-family:'Lora',serif; font-size:26px; font-weight:600; color:#1E2D4A; min-width:120px; font-variant-numeric:tabular-nums;">200 000 F</span><span style="font-size:16.5px; color:#4B5563;">Un séminaire d'orientation</span></div>
+          </div>
+        </div>
+
+        <div style="padding:56px 44px; background:#FDFAF7; display:flex; flex-direction:column; gap:26px;">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-size:15px; font-weight:600;">Montant</span>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+              <span style="height:52px; display:inline-flex; align-items:center; justify-content:center; border:1px solid #D1C9BE; background:#FFFFFF; border-radius:6px; font-size:15.5px; font-weight:600; font-variant-numeric:tabular-nums;">5 000</span>
+              <span style="height:52px; display:inline-flex; align-items:center; justify-content:center; border:2px solid #C9952A; background:#F5E9C8; border-radius:6px; font-size:15.5px; font-weight:600; font-variant-numeric:tabular-nums;">10 000</span>
+              <span style="height:52px; display:inline-flex; align-items:center; justify-content:center; border:1px solid #D1C9BE; background:#FFFFFF; border-radius:6px; font-size:15.5px; font-weight:600; font-variant-numeric:tabular-nums;">50 000</span>
+              <span style="height:52px; display:inline-flex; align-items:center; justify-content:center; border:1px solid #D1C9BE; background:#FFFFFF; border-radius:6px; font-size:15.5px; color:#9CA3AF;">Autre</span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-size:15px; font-weight:600;">Fréquence</span>
+            <div style="display:flex; gap:0; border:1px solid #D1C9BE; border-radius:6px; overflow:hidden; background:#FFFFFF;">
+              <span style="flex:1; height:48px; display:inline-flex; align-items:center; justify-content:center; background:#1E2D4A; color:#FDFAF7; font-size:15px; font-weight:600;">Une fois</span>
+              <span style="flex:1; height:48px; display:inline-flex; align-items:center; justify-content:center; font-size:15px;">Chaque mois</span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <span style="font-size:15px; font-weight:600;">Moyen de paiement</span>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="height:56px; padding:0 16px; display:flex; align-items:center; gap:12px; border:2px solid #15803D; background:#F0FDF4; border-radius:6px;"><span style="width:18px; height:18px; border-radius:999px; border:5px solid #15803D; background:#FDFAF7;"></span><span style="font-size:16px; font-weight:600;">Mobile Money</span><span style="margin-left:auto; font-size:14.5px; color:#4B5563;">MTN · Orange</span></div>
+              <div style="height:56px; padding:0 16px; display:flex; align-items:center; gap:12px; border:1px solid #D1C9BE; background:#FFFFFF; border-radius:6px;"><span style="width:18px; height:18px; border-radius:999px; border:1px solid #D1C9BE;"></span><span style="font-size:16px;">Carte bancaire</span></div>
+              <div style="height:56px; padding:0 16px; display:flex; align-items:center; gap:12px; border:1px solid #D1C9BE; background:#FFFFFF; border-radius:6px;"><span style="width:18px; height:18px; border-radius:999px; border:1px solid #D1C9BE;"></span><span style="font-size:16px;">Virement bancaire</span></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Numéro Mobile Money</span><div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; color:#9CA3AF;">+237 6 ...</div></div>
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:6px; border-top:1px solid #E8E2D9;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font-size:16px; color:#4B5563;">Total</span><span style="font-family:'Lora',serif; font-size:30px; font-weight:600; font-variant-numeric:tabular-nums;">10 000 FCFA</span></div>
+            <span style="display:inline-flex; align-items:center; justify-content:center; height:52px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:16px; font-weight:600;">Confirmer le don</span>
+            <span style="font-size:14px; line-height:1.5; color:#9CA3AF; text-align:center;">Paiement sécurisé. Reçu envoyé par e-mail.</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:40px; background:#1E2D4A; display:flex; align-items:center; justify-content:space-between; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <span style="font-family:'Lora',serif; font-size:24px; font-weight:600; color:#FDFAF7;">Don en nature ou partenariat</span>
+          <span style="font-size:16px; color:rgba(253,250,247,0.75);">Matériel informatique, mise à disposition de locaux, mécénat de compétences.</span>
+        </div>
+        <span style="display:inline-flex; align-items:center; height:48px; padding:0 26px; border:1px solid rgba(253,250,247,0.4); color:#FDFAF7; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Nous contacter</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#F7F3EE; font-family:'Source Sans 3', system-ui, sans-serif; -webkit-font-smoothing:antialiased; color:#1E2D4A; }
+  a { color:#15803D; text-decoration:none; }
+  a:hover { color:#0F5F2D; text-decoration:underline; }
+  * { box-sizing:border-box; }
+  .nav { cursor:pointer; transition:color 150ms ease; }
+  .nav:hover { color:#15803D; }
+  .btn { cursor:pointer; transition:background 150ms ease, color 150ms ease, border-color 150ms ease; }
+  .btn:active { transform:scale(0.98); }
+  .card { cursor:pointer; transition:box-shadow 200ms ease, border-color 150ms ease; }
+  .card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06); border-color:#C9952A; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; min-width:1240px; display:flex; flex-direction:column; background:#F7F3EE;">
+
+  <div onMouseLeave="{{ closeMenu }}" style="position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; padding:18px 40px; background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+    <div style="display:flex; align-items:center; gap:44px;">
+      <span class="nav" onClick="{{ goAccueil }}" style="font-family:'Lora',serif; font-size:26px; font-weight:700; color:#15803D; letter-spacing:-0.01em;">Gehmit</span>
+      <div style="display:flex; gap:26px; font-size:15px; font-weight:500; white-space:nowrap;">
+        <span class="nav" onClick="{{ goAccueil }}" style="{{ navAccueil }}">Accueil</span>
+        <span class="nav" onClick="{{ goApropos }}" style="{{ navApropos }}">À propos</span>
+        <span class="nav" onMouseEnter="{{ openMenu }}" onClick="{{ toggleMenu }}" style="{{ navProgrammes }}">Programmes
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-left:6px; vertical-align:-1px;"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+        <span class="nav" onClick="{{ goSolutions }}" style="{{ navSolutions }}">Solutions</span>
+        <span class="nav" onClick="{{ goImpact }}" style="{{ navImpact }}">Notre impact</span>
+        <span class="nav" onClick="{{ goBlog }}" style="{{ navBlog }}">Blog</span>
+        <span class="nav" onClick="{{ goContact }}" style="{{ navContact }}">Contact</span>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+      <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span class="nav">EN</span></div>
+      <span class="btn" onClick="{{ goDon }}" style="display:inline-flex; align-items:center; height:44px; padding:0 22px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+    </div>
+
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute; left:0; top:100%; width:100%; background:#F7F3EE; border-bottom:1px solid #D1C9BE; box-shadow:0 4px 16px rgba(0,0,0,0.12); padding:30px 40px 34px; display:grid; grid-template-columns:repeat(5,1fr); gap:24px;">
+        <sc-for list="{{ menuProgrammes }}" as="mp" hint-placeholder-count="5">
+          <div class="btn" onClick="{{ mp.action }}" style="display:flex; flex-direction:column; gap:7px; min-width:0;">
+            <div style="display:flex; align-items:center; gap:9px;">
+              <span style="font-size:17px; font-weight:600; color:#1E2D4A;">{{ mp.nom }}</span>
+              <span style="{{ mp.pastille }}"></span>
+            </div>
+            <span style="font-size:14.5px; line-height:1.5; color:#4B5563;">{{ mp.sous }}</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">{{ mp.etat }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ACCUEIL -->
+  <sc-if value="{{ isAccueil }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex; flex-direction:column;">
+      <div style="display:grid; grid-template-columns:0.85fr 1.15fr;">
+        <div style="background:#15803D; padding:72px 48px; display:flex; flex-direction:column; justify-content:center; gap:26px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(253,250,247,0.7);">Depuis 2021 · Cameroun</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:52px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em; text-wrap:balance;">Votre place dans le numérique existe.</h1>
+          <p style="margin:0; font-size:19px; line-height:1.6; color:rgba(253,250,247,0.88);">Nous vous aidons à la trouver.</p>
+          <div style="display:flex; gap:12px; padding-top:6px;">
+            <span class="btn" onClick="{{ goProgrammes }}" style="display:inline-flex; align-items:center; gap:10px; height:48px; padding:0 26px; background:#FDFAF7; color:#15803D; border-radius:6px; font-size:16px; font-weight:600;">Découvrir les programmes →</span>
+          </div>
+        </div>
+        <div style="min-height:520px; background:#E8E2D9; display:flex; align-items:flex-end; padding:26px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#8a7a5e;">Photo plein cadre — séminaire d'orientation</span></div>
+      </div>
+
+      <div style="padding:64px 40px; display:flex; flex-direction:column; gap:30px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between;">
+          <h2 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Cinq programmes</h2>
+          <span class="nav" onClick="{{ goProgrammes }}" style="font-size:15.5px; font-weight:600; color:#15803D;">Tout voir →</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+          <div class="card" onClick="{{ goDetail }}" style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:220px; background:#E8E2D9;"></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Mentorat</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:2px 10px; border-radius:999px;">Ouvert</span></div>
+              <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Trois mois avec un professionnel du domaine visé.</p>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Découvrir →</span>
+            </div>
+          </div>
+          <div class="card" onClick="{{ goFormations }}" style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:220px; background:#E8E2D9;"></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Formations</span><span style="font-size:12.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #D97706; padding:2px 10px; border-radius:999px;">14 sept.</span></div>
+              <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Data, développement web et IA appliquée.</p>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Voir le catalogue →</span>
+            </div>
+          </div>
+          <div class="card" onClick="{{ goProgrammes }}" style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:220px; background:#E8E2D9;"></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:11px;">
+              <div style="display:flex; align-items:center; gap:10px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">GLab Sisters</span><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:2px 10px; border-radius:999px;">Ouvert</span></div>
+              <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Les femmes dans le numérique et le leadership.</p>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Découvrir →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); background:#1E2D4A;">
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums;">200+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Étudiants encadrés</span></div>
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid rgba(255,255,255,0.12);"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums;">20+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Reconversions</span></div>
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid rgba(255,255,255,0.12);"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums;">100+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Stages et emplois</span></div>
+        <div style="padding:38px 32px; display:flex; flex-direction:column; gap:6px; border-left:1px solid rgba(255,255,255,0.12);"><span style="font-family:'Lora',serif; font-size:40px; font-weight:600; color:#C9952A; font-variant-numeric:tabular-nums;">50+</span><span style="font-size:15px; color:rgba(253,250,247,0.7);">Formations</span></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; background:#FDFAF7;">
+        <div style="min-height:320px; background:#E8E2D9;"></div>
+        <div style="padding:56px 44px; display:flex; flex-direction:column; justify-content:center; gap:20px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Solutions</span>
+          <h2 style="margin:0; font-family:'Lora',serif; font-size:34px; line-height:1.15; font-weight:600;">Pas encore décidé ? TechPath vous oriente.</h2>
+          <p style="margin:0; font-size:17px; line-height:1.65; color:#4B5563; max-width:460px;">Un coach conversationnel et un annuaire d'écoles, puis une recommandation vers le programme correspondant.</p>
+          <span class="btn" onClick="{{ goSolutions }}" style="display:inline-flex; align-items:center; align-self:flex-start; height:48px; padding:0 26px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:16px; font-weight:600;">Ouvrir TechPath</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- À PROPOS -->
+  <sc-if value="{{ isApropos }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex; flex-direction:column;">
+      <div style="padding:64px 40px 56px; display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:end;">
+        <div style="display:flex; flex-direction:column; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / À propos</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:52px; line-height:1.08; font-weight:600; letter-spacing:-0.02em;">Réduire la part de hasard dans une carrière tech.</h1>
+        </div>
+        <p style="margin:0; font-size:18px; line-height:1.7; color:#4B5563; border-left:2px solid #C9952A; padding-left:24px;">Gehmit est une organisation à but non lucratif. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique.</p>
+      </div>
+      <div style="height:400px; background:#E8E2D9;"></div>
+      <div style="padding:64px 40px; background:#FDFAF7; display:grid; grid-template-columns:280px 1fr; gap:56px;">
+        <div style="display:flex; flex-direction:column; gap:10px;"><h2 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Pourquoi</h2><span style="width:48px; height:2px; background:#C9952A;"></span></div>
+        <div style="display:flex; flex-direction:column; gap:20px; max-width:680px;">
+          <p style="margin:0; font-size:17px; line-height:1.75; color:#4B5563;">Le numérique crée des emplois plus vite qu'il ne crée de repères. Un étudiant qui s'y intéresse découvre rarement l'étendue réelle des métiers, et ceux qui ont un objectif précis avancent souvent seuls.</p>
+          <p style="margin:0; font-size:17px; line-height:1.75; color:#4B5563;">Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de formation et un réseau d'entreprises.</p>
+        </div>
+      </div>
+      <div style="padding:56px 40px; background:#15803D; display:flex; align-items:center; justify-content:space-between; gap:40px;">
+        <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600; color:#FDFAF7;">Une question sur nos programmes ?</h2>
+        <span class="btn" onClick="{{ goContact }}" style="display:inline-flex; align-items:center; height:48px; padding:0 26px; background:#FDFAF7; color:#15803D; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Nous écrire</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- PROGRAMMES -->
+  <sc-if value="{{ isProgrammes }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:56px 40px 72px; display:flex; flex-direction:column; gap:30px;">
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / Programmes</span>
+        <h1 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Cinq façons d'avancer</h1>
+        <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563; max-width:680px;">Candidature directe, sans compte à créer.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <sc-for list="{{ programmes }}" as="p" hint-placeholder-count="3">
+          <div style="display:grid; grid-template-columns:400px 1fr; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="min-height:240px; background:#E8E2D9;"></div>
+            <div style="padding:32px 36px; display:flex; flex-direction:column; gap:15px; justify-content:center;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Lora',serif; font-size:27px; font-weight:600;">{{ p.nom }}</span>
+                <span style="{{ p.badgeStyle }}">{{ p.statut }}</span>
+              </div>
+              <p style="margin:0; font-size:16.5px; line-height:1.65; color:#4B5563; max-width:560px;">{{ p.desc }}</p>
+              <div style="display:flex; gap:26px; font-size:15px; color:#9CA3AF;"><span>{{ p.duree }}</span><span>{{ p.tarif }}</span><span>{{ p.lieu }}</span></div>
+              <div style="display:flex; gap:12px; padding-top:2px;">
+                <span class="btn" onClick="{{ p.action }}" style="{{ p.ctaStyle }}">{{ p.cta }}</span>
+                <span class="btn" onClick="{{ goDetail }}" style="display:inline-flex; align-items:center; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">En savoir plus</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- DÉTAIL PROGRAMME -->
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex; flex-direction:column;">
+      <div style="display:grid; grid-template-columns:0.9fr 1.1fr;">
+        <div style="background:#15803D; padding:56px 44px; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+          <span class="nav" onClick="{{ goProgrammes }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(253,250,247,0.65);">← Programmes / Mentorat</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em;">Mentorat</h1>
+          <p style="margin:0; font-size:18px; line-height:1.65; color:rgba(253,250,247,0.88); max-width:420px;">Trois mois avec un professionnel qui exerce le métier que vous visez.</p>
+          <span class="btn" onClick="{{ goCandidature }}" style="display:inline-flex; align-items:center; align-self:flex-start; height:48px; padding:0 26px; background:#FDFAF7; color:#15803D; border-radius:6px; font-size:16px; font-weight:600;">Candidater</span>
+        </div>
+        <div style="min-height:380px; background:#E8E2D9;"></div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); background:#FDFAF7; border-bottom:1px solid #E8E2D9;">
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Durée</span><span style="font-size:18px; font-weight:600;">3 mois</span></div>
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px; border-left:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Rythme</span><span style="font-size:18px; font-weight:600;">1 à 2 séances / semaine</span></div>
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px; border-left:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Tarif</span><span style="font-size:18px; font-weight:600;">Gratuit</span></div>
+        <div style="padding:26px 32px; display:flex; flex-direction:column; gap:4px; border-left:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Format</span><span style="font-size:18px; font-weight:600;">À distance</span></div>
+      </div>
+      <div style="padding:56px 40px 72px; background:#FDFAF7; display:grid; grid-template-columns:1fr 340px; gap:56px; align-items:start;">
+        <div style="display:flex; flex-direction:column; gap:36px; max-width:680px;">
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <h2 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Le principe</h2>
+            <p style="margin:0; font-size:17px; line-height:1.75; color:#4B5563;">Vous êtes mis en relation avec un mentor bénévole choisi selon le domaine que vous visez et vos disponibilités. Il vous accompagne pendant trois mois : orientation, méthode de travail, préparation aux entretiens.</p>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <h2 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Déroulé</h2>
+            <div style="display:flex; flex-direction:column;">
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">01</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Candidature</span><span style="font-size:16px; color:#4B5563;">Un formulaire de dix minutes.</span></div></div>
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">02</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Attribution</span><span style="font-size:16px; color:#4B5563;">Un mentor vous est proposé sous dix jours ouvrés.</span></div></div>
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">03</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Accompagnement</span><span style="font-size:16px; color:#4B5563;">Trois mois de séances.</span></div></div>
+              <div style="display:grid; grid-template-columns:52px 1fr; gap:20px; padding:18px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">04</span><div style="display:flex; flex-direction:column; gap:3px;"><span style="font-size:17px; font-weight:600;">Bilan</span><span style="font-size:16px; color:#4B5563;">Un retour de chaque côté.</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:14px;">
+          <span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px; align-self:flex-start;">Candidatures ouvertes</span>
+          <span style="font-family:'Lora',serif; font-size:21px; line-height:1.3; font-weight:600;">Prochaine promotion : octobre 2026</span>
+          <p style="margin:0; font-size:15.5px; line-height:1.6; color:#4B5563;">Réponse par e-mail sous dix jours ouvrés. Aucun compte à créer.</p>
+          <span class="btn" onClick="{{ goCandidature }}" style="display:inline-flex; align-items:center; justify-content:center; height:48px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CANDIDATURE -->
+  <sc-if value="{{ isCandidature }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:48px 40px 80px; display:grid; grid-template-columns:1fr 320px; gap:56px; align-items:start; max-width:1240px; margin:0 auto; width:100%;">
+      <div style="display:flex; flex-direction:column; gap:28px; max-width:680px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span class="nav" onClick="{{ goDetail }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">← Mentorat / Candidature</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:40px; line-height:1.12; font-weight:600;">Candidater au mentorat</h1>
+        </div>
+
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; flex-direction:column; gap:26px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="{{ step1Style }}"><span style="{{ dot1Style }}">1</span>Vous</span>
+              <span style="flex:1; height:1px; background:#D1C9BE;"></span>
+              <span style="{{ step2Style }}"><span style="{{ dot2Style }}">2</span>Votre projet</span>
+              <span style="flex:1; height:1px; background:#D1C9BE;"></span>
+              <span style="{{ step3Style }}"><span style="{{ dot3Style }}">3</span>Pièces</span>
+            </div>
+
+            <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:32px; display:flex; flex-direction:column; gap:22px;">
+              <sc-if value="{{ atStep1 }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Prénom</span><input value="{{ prenom }}" onChange="{{ setPrenom }}" placeholder="Votre prénom" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+                    <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Nom</span><input value="{{ nom }}" onChange="{{ setNom }}" placeholder="Votre nom" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Adresse e-mail</span><input value="{{ email }}" onChange="{{ setEmail }}" placeholder="votre@email.com" style="{{ emailStyle }}"></div>
+                    <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Téléphone</span><input value="{{ tel }}" onChange="{{ setTel }}" placeholder="+237 6 ..." style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+                  </div>
+                  <sc-if value="{{ emailError }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:flex; align-items:center; gap:6px; font-size:13.5px; color:#92400E;">Indiquez une adresse e-mail valide pour continuer.</span>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ atStep2 }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <div style="display:flex; flex-direction:column; gap:10px;">
+                    <span style="font-size:15px; font-weight:600;">Domaine visé</span>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                      <sc-for list="{{ domaines }}" as="d" hint-placeholder-count="4">
+                        <span class="btn" onClick="{{ d.pick }}" style="{{ d.style }}">{{ d.nom }}</span>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ domaineError }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:13.5px; color:#92400E;">Choisissez un domaine pour continuer.</span>
+                    </sc-if>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <span style="font-size:15px; font-weight:600;">Pourquoi ce programme ?</span>
+                    <textarea value="{{ motivation }}" onChange="{{ setMotivation }}" placeholder="Trois à cinq phrases suffisent." style="min-height:130px; padding:14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; line-height:1.6; font-family:inherit; color:#1E2D4A; resize:vertical;"></textarea>
+                    <div style="display:flex; justify-content:space-between; font-size:13.5px; color:#9CA3AF;"><span>Facultatif</span><span style="font-family:'JetBrains Mono',monospace;">{{ motivationCount }}</span></div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ atStep3 }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <span style="font-size:15px; font-weight:600;">CV</span>
+                    <div style="height:48px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px dashed #D1C9BE; border-radius:6px; font-size:15.5px; color:#4B5563;"><span>amina-cv.pdf</span><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;">240 Ko</span></div>
+                    <span style="font-size:13.5px; color:#9CA3AF;">PDF, 2 Mo maximum</span>
+                  </div>
+                  <div style="display:flex; gap:12px; align-items:flex-start; padding:16px 18px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;">
+                    <span class="btn" onClick="{{ toggleConsent }}" style="{{ consentBoxStyle }}"></span>
+                    <span style="font-size:15px; line-height:1.55; color:#4B5563;">J'accepte que Gehmit utilise ces informations pour traiter ma candidature. Aucun compte n'est créé.</span>
+                  </div>
+                  <sc-if value="{{ consentError }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13.5px; color:#92400E;">Cochez la case pour envoyer votre candidature.</span>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid #E8E2D9;">
+                <span class="nav" onClick="{{ prevStep }}" style="font-size:15px; font-weight:600; color:#4B5563;">{{ backLabel }}</span>
+                <span class="btn" onClick="{{ nextStep }}" style="{{ nextStyle }}">{{ nextLabel }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <div style="display:flex; gap:16px; padding:28px 30px; background:#F0FDF4; border:1px solid #15803D; border-radius:8px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-family:'Lora',serif; font-size:24px; font-weight:600; color:#14532D;">Candidature envoyée</span>
+                <span style="font-size:16.5px; line-height:1.65; color:#14532D;">Un accusé de réception vient d'être envoyé à {{ emailAffiche }}. Vous recevrez une réponse sous dix jours ouvrés.</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <span class="btn" onClick="{{ goProgrammes }}" style="display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Voir les autres programmes</span>
+              <span class="btn" onClick="{{ goAccueil }}" style="display:inline-flex; align-items:center; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Retour à l'accueil</span>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:16px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Vous candidatez à</span>
+        <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Mentorat</span>
+        <div style="display:flex; flex-direction:column; gap:9px; padding:14px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;">
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Durée</span><span style="font-weight:500;">3 mois</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Tarif</span><span style="font-weight:500;">Gratuit</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Réponse</span><span style="font-weight:500;">Sous 10 jours</span></div>
+        </div>
+        <p style="margin:0; font-size:14.5px; line-height:1.6; color:#4B5563;">Vos données servent uniquement à traiter cette candidature.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- FORMATIONS -->
+  <sc-if value="{{ isFormations }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:56px 40px 80px; display:flex; flex-direction:column; gap:26px;">
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <span class="nav" onClick="{{ goProgrammes }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">← Programmes / Formations</span>
+        <h1 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Catalogue des formations</h1>
+        <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563;">Durées, tarifs et dates réelles, mis à jour par l'équipe.</p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <sc-for list="{{ filtres }}" as="f" hint-placeholder-count="4">
+          <span class="btn" onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.nom }}</span>
+        </sc-for>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+        <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; background:#F7F3EE; border-bottom:1px solid #D1C9BE;">
+          <span style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Formation</span>
+          <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Session</span>
+          <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Durée</span>
+          <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Format</span>
+          <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Tarif</span>
+          <span style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF; text-align:right;">État</span>
+        </div>
+        <sc-for list="{{ sessionsVisibles }}" as="s" hint-placeholder-count="3">
+          <div style="display:grid; grid-template-columns:1.7fr 1fr 0.9fr 1fr 0.9fr 150px; align-items:center; border-bottom:1px solid #E8E2D9;">
+            <span style="padding:20px; font-size:17px; font-weight:600;">{{ s.nom }}</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">{{ s.date }}</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">{{ s.duree }}</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">{{ s.format }}</span>
+            <span style="padding:20px 12px; font-size:15.5px; color:#4B5563;">{{ s.tarif }}</span>
+            <span style="padding:20px; text-align:right;"><span style="{{ s.etatStyle }}">{{ s.etat }}</span></span>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ aucuneSession }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:0; padding:28px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; font-size:16px; color:#4B5563;">Aucune session ne correspond à ce filtre pour le moment.</p>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- SOLUTIONS -->
+  <sc-if value="{{ isSolutions }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex; flex-direction:column;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; background:#1E2D4A;">
+        <div style="padding:64px 44px; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#C9952A;">Solutions / TechPath</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em;">Un coach d'orientation, disponible à toute heure.</h1>
+          <p style="margin:0; font-size:18px; line-height:1.65; color:rgba(253,250,247,0.8); max-width:460px;">Quelques questions sur votre profil, une recommandation de métier, d'école et de programme Gehmit.</p>
+          <span class="btn" onClick="{{ goProgrammes }}" style="display:inline-flex; align-items:center; align-self:flex-start; height:48px; padding:0 26px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:16px; font-weight:600;">Démarrer avec TechPath</span>
+        </div>
+        <div style="min-height:400px; background:#2B3F62;"></div>
+      </div>
+      <div style="padding:64px 40px 80px; background:#FDFAF7; display:flex; flex-direction:column; gap:30px;">
+        <h2 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Comment ça marche</h2>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:20px; border-top:2px solid #15803D;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">01</span><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Vous décrivez votre situation</span><p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Niveau d'études, centres d'intérêt, contraintes de temps et de lieu.</p></div>
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:20px; border-top:2px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">02</span><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Le coach propose des pistes</span><p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Métiers accessibles, compétences à acquérir, écoles de l'annuaire.</p></div>
+          <div style="display:flex; flex-direction:column; gap:12px; padding-top:20px; border-top:2px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">03</span><span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Vous êtes orienté vers un programme</span><p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">La recommandation renvoie vers le programme Gehmit correspondant.</p></div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- IMPACT -->
+  <sc-if value="{{ isImpact }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex; flex-direction:column;">
+      <div style="padding:56px 40px 44px; display:flex; flex-direction:column; gap:14px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / Notre impact</span>
+        <h1 style="margin:0; font-family:'Lora',serif; font-size:48px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Ce que nous avons accompli</h1>
+        <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563;">Chiffres tenus à jour par l'équipe. Dernière mise à jour le 12 août 2026.</p>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); background:#15803D;">
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px;"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">200+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Étudiants encadrés</span></div>
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px; border-left:1px solid rgba(255,255,255,0.18);"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">20+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Professionnels reconvertis</span></div>
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px; border-left:1px solid rgba(255,255,255,0.18);"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">100+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Stages et emplois</span></div>
+        <div style="padding:44px 32px; display:flex; flex-direction:column; gap:8px; border-left:1px solid rgba(255,255,255,0.18);"><span style="font-family:'Lora',serif; font-size:52px; font-weight:600; color:#FDFAF7; font-variant-numeric:tabular-nums; line-height:1;">50+</span><span style="font-size:16px; color:rgba(253,250,247,0.82);">Formations et séminaires</span></div>
+      </div>
+      <div style="padding:56px 40px; background:#FDFAF7; display:flex; flex-direction:column; gap:26px;">
+        <h2 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600;">Réalisations</h2>
+        <div style="display:flex; flex-direction:column;">
+          <div style="display:grid; grid-template-columns:140px 1fr 260px; gap:28px; align-items:center; padding:24px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">Sept. 2025</span><div style="display:flex; flex-direction:column; gap:4px;"><span style="font-family:'Lora',serif; font-size:21px; font-weight:600;">Séminaire « De la recherche à l'innovation »</span><span style="font-size:16px; color:#4B5563;">IA comme levier de développement.</span></div><span style="font-size:16px; color:#9CA3AF;">120 participants</span></div>
+          <div style="display:grid; grid-template-columns:140px 1fr 260px; gap:28px; align-items:center; padding:24px 0; border-top:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">Juillet 2026</span><div style="display:flex; flex-direction:column; gap:4px;"><span style="font-family:'Lora',serif; font-size:21px; font-weight:600;">Lancement de GLab Sisters</span><span style="font-size:16px; color:#4B5563;">Programme dédié aux femmes dans le numérique.</span></div><span style="font-size:16px; color:#9CA3AF;">40 participantes</span></div>
+          <div style="display:grid; grid-template-columns:140px 1fr 260px; gap:28px; align-items:center; padding:24px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;"><span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">Août 2026</span><div style="display:flex; flex-direction:column; gap:4px;"><span style="font-family:'Lora',serif; font-size:21px; font-weight:600;">Table ronde #TechSisters</span><span style="font-size:16px; color:#4B5563;">Défis des femmes dans la tech.</span></div><span style="font-size:16px; color:#9CA3AF;">18 intervenantes</span></div>
+        </div>
+      </div>
+      <div style="padding:48px 40px; background:#1E2D4A; display:flex; align-items:center; justify-content:space-between; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:8px;"><h2 style="margin:0; font-family:'Lora',serif; font-size:30px; font-weight:600; color:#FDFAF7;">Soutenez la prochaine promotion</h2><p style="margin:0; font-size:17px; color:rgba(253,250,247,0.75);">Chaque don finance directement l'accompagnement d'un jeune.</p></div>
+        <span class="btn" onClick="{{ goDon }}" style="display:inline-flex; align-items:center; height:48px; padding:0 26px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Faire un don</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- BLOG -->
+  <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:56px 40px 80px; display:flex; flex-direction:column; gap:28px;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Accueil / Blog</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Le blog</h1>
+        </div>
+        <input value="{{ recherche }}" onChange="{{ setRecherche }}" placeholder="Rechercher un article" style="height:48px; padding:0 16px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15px; font-family:inherit; width:320px; color:#1E2D4A;">
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <sc-for list="{{ articlesVisibles }}" as="a" hint-placeholder-count="3">
+          <div class="card" onClick="{{ goArticle }}" style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+            <div style="height:190px; background:#E8E2D9;"></div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">{{ a.date }}</span>
+              <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">{{ a.titre }}</span>
+              <span style="font-size:15px; font-weight:600; color:#15803D;">Lire →</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ aucunArticle }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:0; padding:28px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; font-size:16px; color:#4B5563;">Aucun article ne correspond à cette recherche.</p>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ARTICLE -->
+  <sc-if value="{{ isArticle }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#FDFAF7; display:flex; flex-direction:column;">
+      <div style="padding:56px 40px 36px; display:flex; justify-content:center;">
+        <div style="width:680px; display:flex; flex-direction:column; gap:18px;">
+          <span class="nav" onClick="{{ goBlog }}" style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#9CA3AF;">← Blog / GLab Sisters · 29 juillet 2026</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.14; font-weight:600; letter-spacing:-0.015em;">Table ronde : comprendre les défis des femmes dans la tech</h1>
+          <p style="margin:0; font-size:20px; line-height:1.6; color:#4B5563;">Dans le cadre du programme GLab Sisters, Gehmit a réuni des femmes leaders de communautés tech, des étudiantes et des professionnelles.</p>
+        </div>
+      </div>
+      <div style="padding:0 40px 44px; display:flex; justify-content:center;"><div style="width:1040px; height:440px; background:#E8E2D9; border-radius:8px;"></div></div>
+      <div style="padding:0 40px 64px; display:flex; justify-content:center;">
+        <div style="width:680px; display:flex; flex-direction:column; gap:24px;">
+          <p style="margin:0; font-size:18px; line-height:1.8; color:#4B5563;">La rencontre est partie d'un constat simple : les difficultés rencontrées par les femmes dans le numérique se ressemblent d'un parcours à l'autre, mais restent rarement formulées à voix haute.</p>
+          <h2 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">L'accès à l'information</h2>
+          <p style="margin:0; font-size:18px; line-height:1.8; color:#4B5563;">Les participantes ont décrit un même moment de blocage : celui où l'on sait que le secteur recrute, sans savoir par où entrer. Les filières existent, les formations aussi, mais l'information circule surtout dans des réseaux auxquels elles n'ont pas accès.</p>
+          <blockquote style="margin:0; padding:24px 28px; background:#F7F3EE; border-left:3px solid #C9952A; border-radius:0 8px 8px 0;"><p style="margin:0; font-family:'Lora',serif; font-size:22px; line-height:1.5; font-style:italic;">« On ne manque pas de motivation. On manque de gens qui nous disent que c'est possible. »</p></blockquote>
+          <p style="margin:0; font-size:18px; line-height:1.8; color:#4B5563;">GLab Sisters ouvre une communauté de pratique mensuelle et un cycle de mentorat dédié. Les candidatures sont ouvertes en continu.</p>
+        </div>
+      </div>
+      <div style="padding:36px 40px; background:#F7F3EE; border-top:1px solid #E8E2D9; display:flex; align-items:center; justify-content:space-between; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:5px;"><span style="font-family:'Lora',serif; font-size:24px; font-weight:600;">Rejoindre GLab Sisters</span><span style="font-size:16px; color:#4B5563;">Candidatures ouvertes en continu.</span></div>
+        <span class="btn" onClick="{{ goCandidature }}" style="display:inline-flex; align-items:center; height:48px; padding:0 26px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:16px; font-weight:600; white-space:nowrap;">Candidater</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CONTACT -->
+  <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid; grid-template-columns:1.15fr 0.85fr; min-height:640px;">
+      <div style="padding:56px 44px 72px; display:flex; flex-direction:column; gap:26px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Nous écrire</h1>
+          <p style="margin:0; font-size:18px; line-height:1.6; color:#4B5563;">Réponse sous 48 heures ouvrées.</p>
+        </div>
+        <sc-if value="{{ contactNotSent }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; flex-direction:column; gap:18px; max-width:560px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Nom complet</span><input value="{{ cNom }}" onChange="{{ setCNom }}" placeholder="Votre nom" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+              <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Adresse e-mail</span><input value="{{ cEmail }}" onChange="{{ setCEmail }}" placeholder="votre@email.com" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Message</span><textarea value="{{ cMessage }}" onChange="{{ setCMessage }}" placeholder="Votre message" style="min-height:150px; padding:14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; line-height:1.6; font-family:inherit; color:#1E2D4A; resize:vertical;"></textarea></div>
+            <span class="btn" onClick="{{ sendContact }}" style="{{ contactBtnStyle }}">Envoyer</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ contactSent }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; gap:14px; padding:24px 26px; background:#F0FDF4; border:1px solid #15803D; border-radius:8px; max-width:560px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+            <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-family:'Lora',serif; font-size:22px; font-weight:600; color:#14532D;">Message envoyé</span><span style="font-size:16px; line-height:1.6; color:#14532D;">Nous vous répondons sous 48 heures ouvrées.</span></div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="background:#1E2D4A; padding:56px 40px; display:flex; flex-direction:column; gap:34px;">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Coordonnées</span>
+          <span style="font-size:17px; color:#FDFAF7;">info.gehmit@gmail.com</span>
+          <span style="font-size:17px; color:#FDFAF7;">+237 671 13 02 66</span>
+          <span style="font-size:17px; color:rgba(253,250,247,0.75);">Douala, Cameroun</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Questions fréquentes</span>
+          <sc-for list="{{ faq }}" as="q" hint-placeholder-count="3">
+            <div class="btn" onClick="{{ q.toggle }}" style="display:flex; flex-direction:column; gap:10px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.12);">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:16px;">
+                <span style="font-size:16px; color:#FDFAF7;">{{ q.question }}</span>
+                <span style="font-size:18px; color:rgba(253,250,247,0.6);">{{ q.signe }}</span>
+              </div>
+              <sc-if value="{{ q.ouvert }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:15.5px; line-height:1.65; color:rgba(253,250,247,0.75);">{{ q.reponse }}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- DON -->
+  <sc-if value="{{ isDon }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid; grid-template-columns:1fr 1fr; min-height:640px;">
+      <div style="padding:64px 44px; background:#F5E9C8; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#92400E;">Soutenir Gehmit</span>
+        <h1 style="margin:0; font-family:'Lora',serif; font-size:44px; line-height:1.1; font-weight:600; letter-spacing:-0.02em;">Un don finance un accompagnement.</h1>
+        <div style="display:flex; flex-direction:column; gap:14px; padding-top:6px;">
+          <div style="display:flex; gap:14px; align-items:baseline;"><span style="font-family:'Lora',serif; font-size:26px; font-weight:600; min-width:120px; font-variant-numeric:tabular-nums;">10 000 F</span><span style="font-size:16.5px; color:#4B5563;">Une séance de mentorat</span></div>
+          <div style="display:flex; gap:14px; align-items:baseline;"><span style="font-family:'Lora',serif; font-size:26px; font-weight:600; min-width:120px; font-variant-numeric:tabular-nums;">50 000 F</span><span style="font-size:16.5px; color:#4B5563;">Une place en formation</span></div>
+          <div style="display:flex; gap:14px; align-items:baseline;"><span style="font-family:'Lora',serif; font-size:26px; font-weight:600; min-width:120px; font-variant-numeric:tabular-nums;">200 000 F</span><span style="font-size:16.5px; color:#4B5563;">Un séminaire d'orientation</span></div>
+        </div>
+      </div>
+      <div style="padding:56px 44px; background:#FDFAF7; display:flex; flex-direction:column; gap:24px;">
+        <sc-if value="{{ donNotSent }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <span style="font-size:15px; font-weight:600;">Montant</span>
+              <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+                <sc-for list="{{ montants }}" as="m" hint-placeholder-count="4">
+                  <span class="btn" onClick="{{ m.pick }}" style="{{ m.style }}">{{ m.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <span style="font-size:15px; font-weight:600;">Fréquence</span>
+              <div style="display:flex; border:1px solid #D1C9BE; border-radius:6px; overflow:hidden; background:#FFFFFF;">
+                <span class="btn" onClick="{{ setUnique }}" style="{{ freqUniqueStyle }}">Une fois</span>
+                <span class="btn" onClick="{{ setMensuel }}" style="{{ freqMensuelStyle }}">Chaque mois</span>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <span style="font-size:15px; font-weight:600;">Moyen de paiement</span>
+              <sc-for list="{{ moyens }}" as="mo" hint-placeholder-count="3">
+                <div class="btn" onClick="{{ mo.pick }}" style="{{ mo.style }}">
+                  <span style="{{ mo.radio }}"></span>
+                  <span style="font-size:16px; font-weight:500;">{{ mo.nom }}</span>
+                  <span style="margin-left:auto; font-size:14.5px; color:#9CA3AF;">{{ mo.detail }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px; padding-top:8px; border-top:1px solid #E8E2D9;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font-size:16px; color:#4B5563;">Total</span><span style="font-family:'Lora',serif; font-size:30px; font-weight:600; font-variant-numeric:tabular-nums;">{{ total }}</span></div>
+              <span class="btn" onClick="{{ payer }}" style="{{ payerStyle }}">{{ payerLabel }}</span>
+              <span style="font-size:14px; line-height:1.5; color:#9CA3AF; text-align:center;">Paiement sécurisé. Reçu envoyé par e-mail.</span>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ donSent }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:18px; justify-content:center; height:100%;">
+            <div style="display:flex; gap:16px; padding:28px 30px; background:#F0FDF4; border:1px solid #15803D; border-radius:8px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-family:'Lora',serif; font-size:24px; font-weight:600; color:#14532D;">Merci</span>
+                <span style="font-size:16.5px; line-height:1.65; color:#14532D;">Votre don de {{ total }} a été enregistré. Un reçu vous est envoyé par e-mail.</span>
+              </div>
+            </div>
+            <span class="btn" onClick="{{ goAccueil }}" style="display:inline-flex; align-items:center; justify-content:center; align-self:flex-start; height:48px; padding:0 24px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Retour à l'accueil</span>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- DEVENIR PARTENAIRE -->
+  <sc-if value="{{ isPartenaire }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex; flex-direction:column;">
+      <div style="display:grid; grid-template-columns:1.1fr 0.9fr; background:#1E2D4A;">
+        <div style="padding:64px 44px; display:flex; flex-direction:column; justify-content:center; gap:22px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#C9952A;">À propos / Devenir partenaire</span>
+          <h1 style="margin:0; font-family:'Lora',serif; font-size:46px; line-height:1.08; font-weight:600; color:#FDFAF7; letter-spacing:-0.02em;">Les jeunes que nous formons ont besoin de vous, pas seulement de nous.</h1>
+          <p style="margin:0; font-size:18px; line-height:1.65; color:rgba(253,250,247,0.8); max-width:480px;">Un stage, une expertise, du matériel ou une salle : chaque contribution ouvre une place de plus.</p>
+          <span class="btn" onClick="{{ scrollPartenaire }}" style="display:inline-flex; align-items:center; align-self:flex-start; height:48px; padding:0 26px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:16px; font-weight:600;">Proposer un partenariat</span>
+        </div>
+        <div style="min-height:400px; background:#2B3F62; display:flex; align-items:flex-end; padding:24px;"><span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(253,250,247,0.6);">Photo — signature de convention ou visite d'entreprise</span></div>
+      </div>
+
+      <div style="padding:64px 40px; background:#FDFAF7; display:flex; flex-direction:column; gap:32px;">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Quatre façons de contribuer</h2>
+          <p style="margin:0; font-size:17px; line-height:1.6; color:#4B5563; max-width:680px;">Aucune n'exige un budget. La plus recherchée est la première.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:24px;">
+          <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-left:3px solid #15803D; border-radius:8px; padding:28px 30px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C9952A;">01</span><span style="font-family:'Lora',serif; font-size:23px; font-weight:600;">Accueillir un stagiaire</span></div>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Trois à six mois, sur un profil que nous avons préparé et que nous suivons pendant toute la durée.</p>
+            <span style="font-size:14.5px; color:#9CA3AF;">Le besoin le plus urgent : 40 profils prêts, 12 places disponibles.</span>
+          </div>
+          <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:28px 30px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C9952A;">02</span><span style="font-family:'Lora',serif; font-size:23px; font-weight:600;">Mécénat de compétences</span></div>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Vos experts animent une session de formation ou encadrent des mentorés, deux heures par semaine.</p>
+            <span style="font-size:14.5px; color:#9CA3AF;">Engagement minimum : un cycle de trois mois.</span>
+          </div>
+          <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:28px 30px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C9952A;">03</span><span style="font-family:'Lora',serif; font-size:23px; font-weight:600;">Don de matériel</span></div>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Ordinateurs reconditionnés, écrans, connexion. Nous prenons en charge la remise en état et la traçabilité.</p>
+            <span style="font-size:14.5px; color:#9CA3AF;">Reçu et inventaire fournis.</span>
+          </div>
+          <div style="background:#F7F3EE; border:1px solid #D1C9BE; border-radius:8px; padding:28px 30px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C9952A;">04</span><span style="font-family:'Lora',serif; font-size:23px; font-weight:600;">Accueillir un événement</span></div>
+            <p style="margin:0; font-size:16px; line-height:1.65; color:#4B5563;">Une salle pour un séminaire d'orientation ou une table ronde GLab Sisters, une à deux fois par an.</p>
+            <span style="font-size:14.5px; color:#9CA3AF;">Capacité recherchée : 60 à 150 personnes.</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:56px 40px; background:#F7F3EE; border-top:1px solid #E8E2D9; display:grid; grid-template-columns:300px 1fr; gap:56px;">
+        <div style="display:flex; flex-direction:column; gap:10px;"><h2 style="margin:0; font-family:'Lora',serif; font-size:28px; font-weight:600;">Ce que vous recevez</h2><span style="width:48px; height:2px; background:#C9952A;"></span></div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:26px;">
+          <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">Une convention écrite</span><span style="font-size:16px; line-height:1.6; color:#4B5563;">Périmètre, durée, interlocuteur unique chez Gehmit.</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">Un bilan chiffré</span><span style="font-size:16px; line-height:1.6; color:#4B5563;">Nombre de bénéficiaires touchés et suites données, en fin de cycle.</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">Une visibilité mesurée</span><span style="font-size:16px; line-height:1.6; color:#4B5563;">Logo sur le site et les supports d'événement, mention dans le rapport annuel.</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">Un accès aux profils</span><span style="font-size:16px; line-height:1.6; color:#4B5563;">Les candidats formés vous sont présentés en priorité.</span></div>
+        </div>
+      </div>
+
+      <div style="padding:48px 40px; background:#FDFAF7; border-top:1px solid #E8E2D9; display:flex; flex-direction:column; gap:22px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9CA3AF;">Ils nous accompagnent déjà</span>
+        <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:20px;">
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+          <div style="height:72px; background:#F7F3EE; border:1px solid #E8E2D9; border-radius:8px;"></div>
+        </div>
+      </div>
+
+      <div style="padding:64px 40px 80px; background:#F7F3EE; border-top:1px solid #E8E2D9; display:grid; grid-template-columns:1fr 380px; gap:56px; align-items:start;">
+        <div style="display:flex; flex-direction:column; gap:24px; max-width:680px;">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Proposer un partenariat</h2>
+            <p style="margin:0; font-size:17px; line-height:1.6; color:#4B5563;">Nous revenons vers vous sous 48 heures ouvrées, avec une proposition écrite.</p>
+          </div>
+
+          <sc-if value="{{ partNotSent }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:32px; display:flex; flex-direction:column; gap:22px;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Organisation</span><input value="{{ pOrga }}" onChange="{{ setPOrga }}" placeholder="Nom de l'organisation" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+                <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Secteur</span><input value="{{ pSecteur }}" onChange="{{ setPSecteur }}" placeholder="Ex. services numériques" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Interlocuteur</span><input value="{{ pContact }}" onChange="{{ setPContact }}" placeholder="Nom et fonction" style="height:48px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;"></div>
+                <div style="display:flex; flex-direction:column; gap:8px;"><span style="font-size:15px; font-weight:600;">Adresse e-mail</span><input value="{{ pEmail }}" onChange="{{ setPEmail }}" placeholder="contact@organisation.com" style="{{ pEmailStyle }}"></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <span style="font-size:15px; font-weight:600;">Type de partenariat</span>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <sc-for list="{{ typesPartenariat }}" as="t" hint-placeholder-count="4">
+                    <span class="btn" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.nom }}</span>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ pTypeError }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:13.5px; color:#92400E;">Choisissez au moins un type de partenariat.</span>
+                </sc-if>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-size:15px; font-weight:600;">Ce que vous pouvez proposer</span>
+                <textarea value="{{ pMessage }}" onChange="{{ setPMessage }}" placeholder="Quelques lignes suffisent." style="min-height:120px; padding:14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; line-height:1.6; font-family:inherit; color:#1E2D4A; resize:vertical;"></textarea>
+              </div>
+              <sc-if value="{{ pEmailError }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:13.5px; color:#92400E;">Indiquez une adresse e-mail valide pour envoyer la proposition.</span>
+              </sc-if>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding-top:8px; border-top:1px solid #E8E2D9;">
+                <span style="font-size:15px; color:#9CA3AF;">Réponse sous 48 heures ouvrées</span>
+                <span class="btn" onClick="{{ sendPartenaire }}" style="display:inline-flex; align-items:center; height:48px; padding:0 28px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Envoyer la proposition</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ partSent }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; gap:16px; padding:28px 30px; background:#F0FDF4; border:1px solid #15803D; border-radius:8px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <span style="font-family:'Lora',serif; font-size:24px; font-weight:600; color:#14532D;">Proposition reçue</span>
+                <span style="font-size:16.5px; line-height:1.65; color:#14532D;">Un membre de l'équipe vous écrit à {{ pEmailAffiche }} sous 48 heures ouvrées.</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:14px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Contact direct</span>
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.35; font-weight:600;">Vous préférez en parler de vive voix ?</span>
+            <span style="font-size:16px; color:#4B5563;">info.gehmit@gmail.com</span>
+            <span style="font-size:16px; color:#4B5563;">+237 671 13 02 66</span>
+            <span class="btn" onClick="{{ openChat }}" style="display:inline-flex; align-items:center; justify-content:center; height:48px; border:1px solid #1E2D4A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Discuter maintenant</span>
+          </div>
+          <div style="background:#F5E9C8; border:1px solid #C9952A; border-radius:8px; padding:24px; display:flex; flex-direction:column; gap:12px;">
+            <span style="font-family:'Lora',serif; font-size:20px; line-height:1.35; font-weight:600;">Soutien financier</span>
+            <p style="margin:0; font-size:15.5px; line-height:1.6; color:#4B5563;">Un don ponctuel ou mensuel finance directement l'accompagnement.</p>
+            <span class="btn" onClick="{{ goDon }}" style="display:inline-flex; align-items:center; justify-content:center; height:48px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="margin-top:auto; background:#1E2D4A; padding:44px 40px 28px; display:flex; flex-direction:column; gap:32px;">
+    <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px;">
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <span style="font-family:'Lora',serif; font-size:24px; font-weight:700; color:#FDFAF7;">Gehmit</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:rgba(253,250,247,0.7); max-width:300px;">Recevez les sessions et appels à candidature, une fois par mois.</p>
+        <div style="display:flex; gap:10px;">
+          <input value="{{ newsletter }}" onChange="{{ setNewsletter }}" placeholder="votre@email.com" style="flex:1; height:46px; padding:0 14px; background:#FFFFFF; border:none; border-radius:6px; font-size:15px; font-family:inherit; color:#1E2D4A;">
+          <span class="btn" onClick="{{ subscribe }}" style="display:inline-flex; align-items:center; height:46px; padding:0 20px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600; white-space:nowrap;">{{ newsletterLabel }}</span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Programmes</span>
+        <span class="nav" onClick="{{ goProgrammes }}" style="font-size:15px; color:rgba(253,250,247,0.75);">PAEI</span>
+        <span class="nav" onClick="{{ goDetail }}" style="font-size:15px; color:rgba(253,250,247,0.75);">Mentorat</span>
+        <span class="nav" onClick="{{ goFormations }}" style="font-size:15px; color:rgba(253,250,247,0.75);">Formations</span>
+        <span class="nav" onClick="{{ goProgrammes }}" style="font-size:15px; color:rgba(253,250,247,0.75);">GLab Sisters</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Organisation</span>
+        <span class="nav" onClick="{{ goApropos }}" style="font-size:15px; color:rgba(253,250,247,0.75);">À propos</span>
+        <span class="nav" onClick="{{ goImpact }}" style="font-size:15px; color:rgba(253,250,247,0.75);">Notre impact</span>
+        <span class="nav" onClick="{{ goBlog }}" style="font-size:15px; color:rgba(253,250,247,0.75);">Blog</span>
+        <span class="nav" onClick="{{ goContact }}" style="font-size:15px; color:rgba(253,250,247,0.75);">Contact</span>
+        <span class="nav" onClick="{{ goPartenaire }}" style="font-size:15px; color:rgba(253,250,247,0.75);">Devenir partenaire</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#C9952A;">Contact</span>
+        <span style="font-size:15px; color:rgba(253,250,247,0.75);">info.gehmit@gmail.com</span>
+        <span style="font-size:15px; color:rgba(253,250,247,0.75);">+237 671 13 02 66</span>
+        <span style="font-size:15px; color:rgba(253,250,247,0.75);">Douala, Cameroun</span>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-top:20px; border-top:1px solid rgba(255,255,255,0.12);">
+      <span style="font-size:14px; color:rgba(253,250,247,0.5);">© 2026 Gehmit</span>
+      <div style="display:flex; gap:20px; font-size:14px; color:rgba(253,250,247,0.5);"><span>Mentions légales</span><span>Politique de confidentialité</span></div>
+    </div>
+  </div>
+
+  <!-- ASSISTANT — CHAT EN DIRECT -->
+  <div style="position:fixed; right:28px; bottom:28px; z-index:60; display:flex; flex-direction:column; align-items:flex-end; gap:14px;">
+
+    <sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="width:384px; height:552px; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08); display:flex; flex-direction:column; overflow:hidden;">
+
+        <div style="background:#1E2D4A; padding:16px 18px; display:flex; align-items:center; gap:12px;">
+          <span style="width:38px; height:38px; flex:0 0 auto; border-radius:999px; background:#15803D; color:#FDFAF7; display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-size:16px; font-weight:600;">SL</span>
+          <div style="display:flex; flex-direction:column; gap:2px; flex:1;">
+            <span style="font-size:15.5px; font-weight:600; color:#FDFAF7;">Équipe Gehmit</span>
+            <span style="display:flex; align-items:center; gap:7px; font-size:13px; color:rgba(253,250,247,0.7);">
+              <span style="{{ chatDotStyle }}"></span>{{ chatStatut }}
+            </span>
+          </div>
+          <span class="btn" onClick="{{ closeChat }}" style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px; color:rgba(253,250,247,0.7);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </span>
+        </div>
+
+        <div style="flex:1; overflow-y:auto; padding:20px 18px; background:#F7F3EE; display:flex; flex-direction:column; gap:14px;">
+          <span style="align-self:center; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Aujourd'hui</span>
+
+          <sc-for list="{{ chatMessages }}" as="m" hint-placeholder-count="2">
+            <div style="{{ m.rowStyle }}">
+              <div style="{{ m.bubbleStyle }}">{{ m.texte }}</div>
+              <span style="{{ m.metaStyle }}">{{ m.meta }}</span>
+            </div>
+          </sc-for>
+
+          <sc-if value="{{ chatTyping }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start; display:flex; align-items:center; gap:6px; padding:14px 16px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:12px 12px 12px 4px;">
+              <span style="width:7px; height:7px; border-radius:999px; background:#9CA3AF;"></span>
+              <span style="width:7px; height:7px; border-radius:999px; background:#C9BFB2;"></span>
+              <span style="width:7px; height:7px; border-radius:999px; background:#E8E2D9;"></span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ chatOffline }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#FFFBEB; border:1px solid #D97706; border-radius:8px; padding:16px 18px; display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:15px; font-weight:600; color:#92400E;">Personne en ligne pour le moment</span>
+              <span style="font-size:14.5px; line-height:1.6; color:#92400E;">Nous répondons du lundi au vendredi, de 8 h à 18 h. Laissez votre adresse, nous revenons vers vous.</span>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ chatOnline }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:14px 16px; background:#FDFAF7; border-top:1px solid #E8E2D9; display:flex; align-items:center; gap:10px;">
+            <input value="{{ chatInput }}" onChange="{{ setChatInput }}" onKeyDown="{{ chatKey }}" placeholder="Écrivez votre message" style="flex:1; height:46px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15px; font-family:inherit; color:#1E2D4A;">
+            <span class="btn" onClick="{{ sendChat }}" style="{{ chatSendStyle }}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ chatOffline }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:14px 16px; background:#FDFAF7; border-top:1px solid #E8E2D9; display:flex; flex-direction:column; gap:10px;">
+            <sc-if value="{{ chatLeadNotSent }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <input value="{{ chatLeadEmail }}" onChange="{{ setChatLeadEmail }}" placeholder="votre@email.com" style="height:46px; padding:0 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15px; font-family:inherit; color:#1E2D4A;">
+                <textarea value="{{ chatInput }}" onChange="{{ setChatInput }}" placeholder="Votre message" style="min-height:74px; padding:12px 14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15px; line-height:1.55; font-family:inherit; color:#1E2D4A; resize:none;"></textarea>
+                <span class="btn" onClick="{{ sendChatLead }}" style="{{ chatLeadStyle }}">Laisser un message</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ chatLeadSent }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background:#F0FDF4; border:1px solid #15803D; border-radius:6px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+                <span style="font-size:14.5px; line-height:1.5; color:#14532D;">Message transmis. Réponse par e-mail dans la journée.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <div style="display:flex; align-items:center; gap:12px;">
+      <sc-if value="{{ chatClosed }}" hint-placeholder-val="{{ true }}">
+        <span style="padding:10px 14px; background:#FDFAF7; border:1px solid #D1C9BE; border-radius:999px; box-shadow:0 4px 12px rgba(0,0,0,0.10); font-size:14.5px; color:#1E2D4A;">{{ chatAmorce }}</span>
+      </sc-if>
+      <span class="btn" onClick="{{ toggleChat }}" style="{{ chatLauncherStyle }}">
+        <sc-if value="{{ chatClosed }}" hint-placeholder-val="{{ true }}">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 01-9 8.4 8.5 8.5 0 01-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 013.6 11a8.5 8.5 0 018.9-8.5 8.4 8.4 0 018.5 8.5z"/></svg>
+        </sc-if>
+        <sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </sc-if>
+        <sc-if value="{{ chatUnread }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute; top:-2px; right:-2px; min-width:22px; height:22px; padding:0 6px; border-radius:999px; background:#C9952A; color:#1E2D4A; font-size:12.5px; font-weight:700; display:flex; align-items:center; justify-content:center; border:2px solid #FDFAF7;">1</span>
+        </sc-if>
+      </span>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;etatAssistant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;En ligne&quot;,&quot;Hors ligne&quot;],&quot;default&quot;:&quot;En ligne&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Assistant&quot;},&quot;assistantOuvert&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Assistant&quot;}}">
+class Component extends DCLogic {
+  state = {
+    route: 'accueil', step: 1, sent: false,
+    prenom: '', nom: '', email: '', tel: '', domaine: '', motivation: '', consent: false,
+    emailError: false, domaineError: false, consentError: false,
+    filtre: 'Toutes', recherche: '',
+    cNom: '', cEmail: '', cMessage: '', contactSent: false,
+    faqOpen: -1,
+    montant: 10000, freq: 'unique', moyen: 'mm', donSent: false,
+    newsletter: '', abonne: false,
+    pOrga: '', pSecteur: '', pContact: '', pEmail: '', pTypes: [], pMessage: '',
+    pEmailError: false, pTypeError: false, partSent: false,
+    chatOpen: null, chatInput: '', chatTyping: false, chatUnread: true,
+    chatLeadEmail: '', chatLeadSent: false,
+    chatMessages: [
+      { from: 'eux', texte: "Bonjour, je suis Sandra de l'équipe Gehmit. Une question sur un programme, une candidature ou un partenariat ?", meta: 'Sandra · 09:12' }
+    ]
+  };
+
+  openChat = () => this.setState({ chatOpen: true, chatUnread: false });
+  closeChat = () => this.setState({ chatOpen: false });
+  toggleChat = () => this.setState(st => ({ chatOpen: !(st.chatOpen === null ? false : st.chatOpen), chatUnread: false }));
+
+  sendChat = () => {
+    const texte = this.state.chatInput.trim();
+    if (!texte) return;
+    const h = new Date();
+    const heure = String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0');
+    this.setState(st => ({
+      chatMessages: st.chatMessages.concat([{ from: 'moi', texte: texte, meta: 'Vous · ' + heure }]),
+      chatInput: '', chatTyping: true
+    }));
+    setTimeout(() => {
+      this.setState(st => ({
+        chatTyping: false,
+        chatMessages: st.chatMessages.concat([{ from: 'eux', texte: "Merci, je regarde cela. Les candidatures au mentorat sont ouvertes jusqu'au 30 septembre, je peux vous envoyer le lien du formulaire.", meta: 'Sandra · ' + heure }])
+      }));
+    }, 1600);
+  };
+
+  sendPartenaire = () => {
+    const s = this.state;
+    const okMail = /.+@.+\..+/.test(s.pEmail);
+    if (!s.pTypes.length) { this.setState({ pTypeError: true }); return; }
+    if (!okMail) { this.setState({ pEmailError: true, pTypeError: false }); return; }
+    this.setState({ pEmailError: false, pTypeError: false, partSent: true });
+  };
+
+  go = (r) => () => this.setState({ route: r, menuOpen: false });
+  openMenu = () => this.setState({ menuOpen: true });
+  closeMenu = () => this.setState({ menuOpen: false });
+  toggleMenu = () => this.setState(st => ({ menuOpen: !st.menuOpen }));
+
+  navStyle(r) {
+    const on = this.state.route === r;
+    return on
+      ? 'color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;'
+      : 'color:#1E2D4A;';
+  }
+
+  badge(kind) {
+    const m = {
+      ouvert: 'font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px;',
+      bientot: 'font-size:12.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #D97706; padding:3px 11px; border-radius:999px;',
+      clos: 'font-size:12.5px; font-weight:600; color:#6B7280; background:#F3F4F6; border:1px solid #9CA3AF; padding:3px 11px; border-radius:999px;'
+    };
+    return m[kind];
+  }
+
+  chip(active) {
+    return active
+      ? 'height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#1E2D4A; color:#FDFAF7; font-size:14.5px; font-weight:600;'
+      : 'height:44px; padding:0 18px; display:inline-flex; align-items:center; border-radius:999px; background:#FDFAF7; border:1px solid #D1C9BE; color:#1E2D4A; font-size:14.5px;';
+  }
+
+  stepStyle(n) {
+    const on = this.state.step >= n;
+    return 'display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight:' + (on ? '600' : '400') + '; color:' + (on ? '#15803D' : '#9CA3AF') + ';';
+  }
+  dotStyle(n) {
+    const on = this.state.step >= n;
+    return on
+      ? 'width:24px; height:24px; border-radius:999px; background:#15803D; color:#FDFAF7; display:flex; align-items:center; justify-content:center; font-size:12.5px;'
+      : 'width:24px; height:24px; border-radius:999px; border:1px solid #D1C9BE; display:flex; align-items:center; justify-content:center; font-size:12.5px;';
+  }
+
+  next = () => {
+    const s = this.state;
+    if (s.step === 1) {
+      const ok = /.+@.+\..+/.test(s.email);
+      if (!ok) { this.setState({ emailError: true }); return; }
+      this.setState({ emailError: false, step: 2 });
+    } else if (s.step === 2) {
+      if (!s.domaine) { this.setState({ domaineError: true }); return; }
+      this.setState({ domaineError: false, step: 3 });
+    } else {
+      if (!s.consent) { this.setState({ consentError: true }); return; }
+      this.setState({ consentError: false, sent: true });
+    }
+  };
+  prev = () => {
+    if (this.state.step > 1) this.setState({ step: this.state.step - 1 });
+    else this.setState({ route: 'detail' });
+  };
+
+  fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+  renderVals() {
+    const s = this.state;
+    const r = s.route;
+    const sessions = [
+      { nom: 'Fondamentaux de la data', date: '14 sept. 2026', duree: '4 semaines', format: 'En ligne', tarif: 'Gratuit', etat: 'Ouvert', kind: 'ouvert', cat: 'Data' },
+      { nom: 'Développement web', date: '6 oct. 2026', duree: '8 semaines', format: 'Douala', tarif: '25 000 FCFA', etat: 'Ouvert', kind: 'ouvert', cat: 'Développement' },
+      { nom: 'IA appliquée aux métiers', date: '3 nov. 2026', duree: '6 semaines', format: 'En ligne', tarif: 'Gratuit', etat: 'Bientôt', kind: 'bientot', cat: 'IA' },
+      { nom: 'Cybersécurité, niveau 1', date: 'Juin 2026', duree: '3 semaines', format: 'Douala', tarif: 'Gratuit', etat: 'Terminée', kind: 'clos', cat: 'Développement' }
+    ];
+    const visibles = sessions
+      .filter(x => s.filtre === 'Toutes' || x.cat === s.filtre)
+      .map(x => Object.assign({}, x, { etatStyle: this.badge(x.kind) }));
+
+    const articles = [
+      { date: '10 août 2026', titre: 'Discussion entre #TechSisters' },
+      { date: '29 juillet 2026', titre: 'Table ronde : les défis des femmes dans la tech' },
+      { date: '22 mai 2026', titre: 'Partage ton histoire dans la tech' },
+      { date: '16 avril 2026', titre: "Retour sur le séminaire d'orientation" }
+    ];
+    const q = s.recherche.trim().toLowerCase();
+    const articlesVisibles = articles.filter(a => !q || a.titre.toLowerCase().includes(q));
+
+    const faqData = [
+      { question: 'Les programmes sont-ils payants ?', reponse: 'Le mentorat, le PAEI et GLab Sisters sont gratuits. Certaines formations ont un tarif, indiqué dans le catalogue.' },
+      { question: 'Faut-il un diplôme pour candidater ?', reponse: 'Non. Chaque programme précise ses conditions, et aucune ne repose sur un diplôme minimum.' },
+      { question: 'Puis-je devenir mentor ?', reponse: 'Oui, avec au moins cinq ans d\u2019expérience dans le domaine visé. Le formulaire est sur la page Mentorat.' }
+    ];
+
+    const horsLigne = (this.props.etatAssistant || 'En ligne') === 'Hors ligne';
+    const chatOuvert = s.chatOpen === null ? !!this.props.assistantOuvert : s.chatOpen;
+
+    const moyens = [
+      { id: 'mm', nom: 'Mobile Money', detail: 'MTN · Orange' },
+      { id: 'cb', nom: 'Carte bancaire', detail: '' },
+      { id: 'vir', nom: 'Virement bancaire', detail: '' }
+    ];
+
+    return {
+      isAccueil: r === 'accueil', isApropos: r === 'apropos', isProgrammes: r === 'programmes',
+      isDetail: r === 'detail', isCandidature: r === 'candidature', isFormations: r === 'formations',
+      isSolutions: r === 'solutions', isImpact: r === 'impact', isBlog: r === 'blog',
+      isArticle: r === 'article', isContact: r === 'contact', isDon: r === 'don',
+
+      goAccueil: this.go('accueil'), goApropos: this.go('apropos'), goProgrammes: this.go('programmes'),
+      goDetail: this.go('detail'), goCandidature: this.go('candidature'), goFormations: this.go('formations'),
+      goSolutions: this.go('solutions'), goImpact: this.go('impact'), goBlog: this.go('blog'),
+      goArticle: this.go('article'), goContact: this.go('contact'), goDon: this.go('don'),
+
+      navAccueil: this.navStyle('accueil'), navApropos: this.navStyle('apropos'),
+      navProgrammes: this.navStyle('programmes'), navSolutions: this.navStyle('solutions'),
+      navImpact: this.navStyle('impact'), navBlog: this.navStyle('blog'), navContact: this.navStyle('contact'),
+
+      programmes: [
+        { nom: 'PAEI', statut: 'Candidatures ouvertes', badgeStyle: this.badge('ouvert'), desc: "Programme d'appui à l'employabilité et à l'insertion : préparation au marché du travail, projet concret, mise en relation avec les entreprises partenaires.", duree: '6 mois', tarif: 'Gratuit', lieu: 'Douala', cta: 'Candidater', action: this.go('candidature'), ctaStyle: 'display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;' },
+        { nom: 'Mentorat', statut: 'Candidatures ouvertes', badgeStyle: this.badge('ouvert'), desc: 'Trois mois avec un professionnel de plus de dix ans d\u2019expérience, une à deux séances par semaine, dans le domaine que vous visez.', duree: '3 mois', tarif: 'Bénévole', lieu: 'À distance', cta: 'Candidater', action: this.go('candidature'), ctaStyle: 'display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;' },
+        { nom: 'Formations', statut: 'Prochaine session 14 sept.', badgeStyle: this.badge('bientot'), desc: 'Data, développement web et IA appliquée. Sessions courtes, en ligne ou à Douala, avec calendrier et tarifs publiés.', duree: '2 à 8 semaines', tarif: 'Gratuit à 25 000 FCFA', lieu: '4 sessions', cta: 'Voir le catalogue', action: this.go('formations'), ctaStyle: 'display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;' },
+        { nom: 'Stage', statut: 'Candidatures closes', badgeStyle: this.badge('clos'), desc: "Placement en entreprise partenaire à l'issue d'un programme de formation ou de mentorat.", duree: '3 à 6 mois', tarif: 'Réouverture en janvier 2027', lieu: 'Douala', cta: 'Candidater', action: () => {}, ctaStyle: 'display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#E8E2D9; color:#9CA3AF; border-radius:6px; font-size:15px; font-weight:600; cursor:not-allowed;' },
+        { nom: 'GLab Sisters', statut: 'Candidatures ouvertes', badgeStyle: this.badge('ouvert'), desc: 'Formations, mentorat, ateliers de leadership et communauté de pratique pour les jeunes filles et les femmes dans le numérique.', duree: 'Continu', tarif: 'Gratuit', lieu: 'Douala et en ligne', cta: 'Candidater', action: this.go('candidature'), ctaStyle: 'display:inline-flex; align-items:center; height:48px; padding:0 24px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;' }
+      ],
+
+      step1Style: this.stepStyle(1), step2Style: this.stepStyle(2), step3Style: this.stepStyle(3),
+      dot1Style: this.dotStyle(1), dot2Style: this.dotStyle(2), dot3Style: this.dotStyle(3),
+      atStep1: s.step === 1, atStep2: s.step === 2, atStep3: s.step === 3,
+      sent: s.sent, notSent: !s.sent,
+      prenom: s.prenom, nom: s.nom, email: s.email, tel: s.tel, motivation: s.motivation,
+      emailAffiche: s.email || 'votre adresse',
+      motivationCount: s.motivation.length + ' / 600',
+      emailError: s.emailError, domaineError: s.domaineError, consentError: s.consentError,
+      emailStyle: 'height:48px; padding:0 14px; background:#FFFFFF; border:1px solid ' + (s.emailError ? '#D97706' : '#D1C9BE') + '; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;',
+      setPrenom: e => this.setState({ prenom: e.target.value }),
+      setNom: e => this.setState({ nom: e.target.value }),
+      setEmail: e => this.setState({ email: e.target.value }),
+      setTel: e => this.setState({ tel: e.target.value }),
+      setMotivation: e => this.setState({ motivation: e.target.value.slice(0, 600) }),
+      domaines: ['Développement', 'Data et IA', 'Cybersécurité', 'Design et produit'].map(d => ({
+        nom: d,
+        pick: () => this.setState({ domaine: d, domaineError: false }),
+        style: this.chip(s.domaine === d)
+      })),
+      toggleConsent: () => this.setState({ consent: !s.consent, consentError: false }),
+      consentBoxStyle: 'width:22px; height:22px; flex:0 0 auto; border-radius:4px; border:1px solid ' + (s.consent ? '#15803D' : '#D1C9BE') + '; background:' + (s.consent ? '#15803D' : '#FFFFFF') + '; margin-top:2px;',
+      nextStep: this.next, prevStep: this.prev,
+      nextLabel: s.step === 3 ? 'Envoyer ma candidature' : 'Continuer',
+      backLabel: s.step === 1 ? '← Retour au programme' : '← Étape précédente',
+      nextStyle: 'display:inline-flex; align-items:center; height:48px; padding:0 28px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;',
+
+      filtres: ['Toutes', 'Data', 'Développement', 'IA'].map(f => ({
+        nom: f, pick: () => this.setState({ filtre: f }), style: this.chip(s.filtre === f)
+      })),
+      sessionsVisibles: visibles,
+      aucuneSession: visibles.length === 0,
+
+      recherche: s.recherche,
+      setRecherche: e => this.setState({ recherche: e.target.value }),
+      articlesVisibles: articlesVisibles,
+      aucunArticle: articlesVisibles.length === 0,
+
+      cNom: s.cNom, cEmail: s.cEmail, cMessage: s.cMessage,
+      setCNom: e => this.setState({ cNom: e.target.value }),
+      setCEmail: e => this.setState({ cEmail: e.target.value }),
+      setCMessage: e => this.setState({ cMessage: e.target.value }),
+      sendContact: () => { if (s.cMessage.trim()) this.setState({ contactSent: true }); },
+      contactSent: s.contactSent, contactNotSent: !s.contactSent,
+      contactBtnStyle: 'display:inline-flex; align-items:center; justify-content:center; align-self:flex-start; height:48px; padding:0 28px; border-radius:6px; font-size:15px; font-weight:600; background:' + (s.cMessage.trim() ? '#15803D' : '#E8E2D9') + '; color:' + (s.cMessage.trim() ? '#FDFAF7' : '#9CA3AF') + ';',
+
+      faq: faqData.map((f, i) => ({
+        question: f.question, reponse: f.reponse,
+        ouvert: s.faqOpen === i, signe: s.faqOpen === i ? '−' : '+',
+        toggle: () => this.setState({ faqOpen: s.faqOpen === i ? -1 : i })
+      })),
+
+      montants: [5000, 10000, 50000, 200000].map(m => ({
+        label: this.fmt(m),
+        pick: () => this.setState({ montant: m, donSent: false }),
+        style: s.montant === m
+          ? 'height:52px; display:inline-flex; align-items:center; justify-content:center; border:2px solid #C9952A; background:#F5E9C8; border-radius:6px; font-size:15.5px; font-weight:600; font-variant-numeric:tabular-nums;'
+          : 'height:52px; display:inline-flex; align-items:center; justify-content:center; border:1px solid #D1C9BE; background:#FFFFFF; border-radius:6px; font-size:15.5px; font-weight:600; font-variant-numeric:tabular-nums;'
+      })),
+      setUnique: () => this.setState({ freq: 'unique' }),
+      setMensuel: () => this.setState({ freq: 'mensuel' }),
+      freqUniqueStyle: 'flex:1; height:48px; display:inline-flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; background:' + (s.freq === 'unique' ? '#1E2D4A' : 'transparent') + '; color:' + (s.freq === 'unique' ? '#FDFAF7' : '#1E2D4A') + ';',
+      freqMensuelStyle: 'flex:1; height:48px; display:inline-flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; background:' + (s.freq === 'mensuel' ? '#1E2D4A' : 'transparent') + '; color:' + (s.freq === 'mensuel' ? '#FDFAF7' : '#1E2D4A') + ';',
+      moyens: moyens.map(m => ({
+        nom: m.nom, detail: m.detail,
+        pick: () => this.setState({ moyen: m.id }),
+        style: 'height:56px; padding:0 16px; display:flex; align-items:center; gap:12px; border-radius:6px; margin-bottom:10px; border:' + (s.moyen === m.id ? '2px solid #15803D' : '1px solid #D1C9BE') + '; background:' + (s.moyen === m.id ? '#F0FDF4' : '#FFFFFF') + ';',
+        radio: s.moyen === m.id
+          ? 'width:18px; height:18px; border-radius:999px; border:5px solid #15803D; background:#FDFAF7;'
+          : 'width:18px; height:18px; border-radius:999px; border:1px solid #D1C9BE;'
+      })),
+      total: this.fmt(s.montant) + ' FCFA' + (s.freq === 'mensuel' ? ' / mois' : ''),
+      payer: () => this.setState({ donSent: true }),
+      payerLabel: 'Confirmer le don',
+      payerStyle: 'display:inline-flex; align-items:center; justify-content:center; height:52px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:16px; font-weight:600;',
+      donSent: s.donSent, donNotSent: !s.donSent,
+
+      newsletter: s.newsletter,
+      setNewsletter: e => this.setState({ newsletter: e.target.value }),
+      subscribe: () => { if (s.newsletter.trim()) this.setState({ abonne: true, newsletter: '' }); },
+      newsletterLabel: s.abonne ? 'Inscrit' : "S'inscrire",
+
+      menuOpen: !!s.menuOpen,
+      openMenu: this.openMenu, closeMenu: this.closeMenu, toggleMenu: this.toggleMenu,
+      menuProgrammes: [
+        { nom: 'PAEI', sous: "Appui à l'employabilité et à l'insertion", etat: 'Candidatures ouvertes', kind: 'ouvert', action: this.go('programmes') },
+        { nom: 'Mentorat', sous: 'Accompagnement individuel de trois mois', etat: 'Candidatures ouvertes', kind: 'ouvert', action: this.go('detail') },
+        { nom: 'Formations', sous: 'Catalogue et calendrier de sessions', etat: 'Prochaine session 14 sept.', kind: 'bientot', action: this.go('formations') },
+        { nom: 'Stage', sous: 'Placement en entreprise partenaire', etat: 'Candidatures closes', kind: 'clos', action: this.go('programmes') },
+        { nom: 'GLab Sisters', sous: 'Les femmes dans le numérique', etat: 'Candidatures ouvertes', kind: 'ouvert', action: this.go('programmes') }
+      ].map(m => ({
+        nom: m.nom, sous: m.sous, etat: m.etat, action: m.action,
+        pastille: 'width:8px; height:8px; border-radius:999px; background:' + (m.kind === 'ouvert' ? '#15803D' : m.kind === 'bientot' ? '#D97706' : '#9CA3AF') + ';'
+      })),
+
+      isPartenaire: r === 'partenaire',
+      goPartenaire: this.go('partenaire'),
+      scrollPartenaire: () => {},
+      pOrga: s.pOrga, pSecteur: s.pSecteur, pContact: s.pContact, pEmail: s.pEmail, pMessage: s.pMessage,
+      setPOrga: e => this.setState({ pOrga: e.target.value }),
+      setPSecteur: e => this.setState({ pSecteur: e.target.value }),
+      setPContact: e => this.setState({ pContact: e.target.value }),
+      setPEmail: e => this.setState({ pEmail: e.target.value }),
+      setPMessage: e => this.setState({ pMessage: e.target.value }),
+      pEmailStyle: 'height:48px; padding:0 14px; background:#FFFFFF; border:1px solid ' + (s.pEmailError ? '#D97706' : '#D1C9BE') + '; border-radius:6px; font-size:15.5px; font-family:inherit; color:#1E2D4A;',
+      pEmailError: s.pEmailError, pTypeError: s.pTypeError,
+      partSent: s.partSent, partNotSent: !s.partSent,
+      pEmailAffiche: s.pEmail || 'votre adresse',
+      typesPartenariat: ['Accueillir un stagiaire', 'Mécénat de compétences', 'Don de matériel', 'Accueillir un événement'].map(t => ({
+        nom: t,
+        pick: () => this.setState(st => ({
+          pTypes: st.pTypes.includes(t) ? st.pTypes.filter(x => x !== t) : st.pTypes.concat([t]),
+          pTypeError: false
+        })),
+        style: this.chip(s.pTypes.includes(t))
+      })),
+      sendPartenaire: this.sendPartenaire,
+
+      chatOpen: chatOuvert, chatClosed: !chatOuvert,
+      chatOnline: !horsLigne, chatOffline: horsLigne,
+      chatUnread: !chatOuvert && s.chatUnread,
+      chatAmorce: horsLigne ? 'Laissez-nous un message' : 'Une question ? Écrivez-nous',
+      chatStatut: horsLigne ? 'Hors ligne · réponse par e-mail' : 'En ligne · répond en 5 min environ',
+      chatDotStyle: 'width:8px; height:8px; border-radius:999px; background:' + (horsLigne ? '#9CA3AF' : '#4ADE80') + ';',
+      chatLauncherStyle: 'position:relative; width:58px; height:58px; border-radius:999px; display:flex; align-items:center; justify-content:center; background:' + (chatOuvert ? '#1E2D4A' : '#15803D') + '; color:#FDFAF7; box-shadow:0 4px 12px rgba(0,0,0,0.18);',
+      chatMessages: s.chatMessages.map(m => ({
+        texte: m.texte, meta: m.meta,
+        rowStyle: 'display:flex; flex-direction:column; gap:5px; max-width:82%; align-self:' + (m.from === 'moi' ? 'flex-end' : 'flex-start') + ';',
+        bubbleStyle: m.from === 'moi'
+          ? 'padding:12px 15px; background:#15803D; color:#FDFAF7; border-radius:12px 12px 4px 12px; font-size:15px; line-height:1.55;'
+          : 'padding:12px 15px; background:#FDFAF7; color:#1E2D4A; border:1px solid #E8E2D9; border-radius:12px 12px 12px 4px; font-size:15px; line-height:1.55;',
+        metaStyle: 'font-size:12px; color:#9CA3AF; align-self:' + (m.from === 'moi' ? 'flex-end' : 'flex-start') + ';'
+      })),
+      chatTyping: s.chatTyping && !horsLigne,
+      chatInput: s.chatInput,
+      setChatInput: e => this.setState({ chatInput: e.target.value }),
+      chatKey: e => { if (e.key === 'Enter') this.sendChat(); },
+      sendChat: this.sendChat,
+      chatSendStyle: 'width:46px; height:46px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; border-radius:6px; background:' + (s.chatInput.trim() ? '#15803D' : '#E8E2D9') + '; color:' + (s.chatInput.trim() ? '#FDFAF7' : '#9CA3AF') + ';',
+      chatLeadEmail: s.chatLeadEmail,
+      setChatLeadEmail: e => this.setState({ chatLeadEmail: e.target.value }),
+      chatLeadSent: s.chatLeadSent, chatLeadNotSent: !s.chatLeadSent,
+      chatLeadStyle: 'display:inline-flex; align-items:center; justify-content:center; height:46px; border-radius:6px; font-size:15px; font-weight:600; background:' + (/.+@.+\..+/.test(s.chatLeadEmail) ? '#15803D' : '#E8E2D9') + '; color:' + (/.+@.+\..+/.test(s.chatLeadEmail) ? '#FDFAF7' : '#9CA3AF') + ';',
+      sendChatLead: () => { if (/.+@.+\..+/.test(s.chatLeadEmail)) this.setState({ chatLeadSent: true }); },
+      openChat: this.openChat, closeChat: this.closeChat, toggleChat: this.toggleChat
+    };
+  }
+}
+</script>
+</body>
+</html>

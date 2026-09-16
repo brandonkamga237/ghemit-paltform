@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#F7F3EE; font-family:'Source Sans 3', system-ui, sans-serif; -webkit-font-smoothing:antialiased; color:#1E2D4A; }
+  a { color:#15803D; text-decoration:none; }
+  a:hover { color:#0F5F2D; text-decoration:underline; }
+  * { box-sizing:border-box; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</helmet>
+
+<div style="width:1240px; min-width:1240px; margin:0 auto; padding:72px 40px 140px; display:flex; flex-direction:column; gap:88px;">
+
+  <!-- ENTÊTE -->
+  <div style="display:flex; flex-direction:column; gap:22px;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#9CA3AF;">Étape 2 · Système UI</span>
+      <span style="height:1px; flex:1; background:#D1C9BE;"></span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;">Direction 2a · août 2026</span>
+    </div>
+    <h1 style="margin:0; font-family:'Lora',serif; font-size:52px; line-height:1.08; font-weight:600; letter-spacing:-0.02em;">Système d'interface Gehmit</h1>
+    <p style="margin:0; font-size:19px; line-height:1.65; color:#4B5563; max-width:760px; text-wrap:pretty;">Référence unique pour développer la plateforme. Tout ce qui suit est rendu à taille réelle : les valeurs lues à l'écran sont les valeurs à implémenter. Rien n'est décoratif, chaque règle répond à un point du plan de refonte.</p>
+  </div>
+
+  <!-- 01 COULEUR -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">01</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Couleur</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Trois aplats porteurs, un accent, quatre couleurs de statut.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
+      <div style="display:flex; flex-direction:column; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; background:#FDFAF7;">
+        <div style="height:104px; background:#15803D;"></div>
+        <div style="padding:16px; display:flex; flex-direction:column; gap:5px;">
+          <span style="font-size:16px; font-weight:600;">Vert Gehmit</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">#15803D</span>
+          <span style="font-size:14px; line-height:1.5; color:#4B5563;">Marque, aplats de section, boutons primaires, liens.</span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; background:#FDFAF7;">
+        <div style="height:104px; background:#1E2D4A;"></div>
+        <div style="padding:16px; display:flex; flex-direction:column; gap:5px;">
+          <span style="font-size:16px; font-weight:600;">Navy</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">#1E2D4A</span>
+          <span style="font-size:14px; line-height:1.5; color:#4B5563;">Texte principal, pied de page, bandes de chiffres.</span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; background:#FDFAF7;">
+        <div style="height:104px; background:#F7F3EE; border-bottom:1px solid #E8E2D9;"></div>
+        <div style="padding:16px; display:flex; flex-direction:column; gap:5px;">
+          <span style="font-size:16px; font-weight:600;">Crème</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">#F7F3EE</span>
+          <span style="font-size:14px; line-height:1.5; color:#4B5563;">Fond de page. Surfaces : #FDFAF7.</span>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; background:#FDFAF7;">
+        <div style="height:104px; background:#C9952A;"></div>
+        <div style="padding:16px; display:flex; flex-direction:column; gap:5px;">
+          <span style="font-size:16px; font-weight:600;">Or</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">#C9952A</span>
+          <span style="font-size:14px; line-height:1.5; color:#4B5563;">Don et mécénat uniquement. Un usage par écran.</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
+      <div style="display:flex; align-items:center; gap:12px; padding:16px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px;">
+        <span style="width:34px; height:34px; border-radius:6px; background:#F0FDF4; border:1px solid #15803D; flex:0 0 auto;"></span>
+        <div style="display:flex; flex-direction:column;"><span style="font-size:15px; font-weight:600;">Ouvert</span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">#15803D · #F0FDF4</span></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; padding:16px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px;">
+        <span style="width:34px; height:34px; border-radius:6px; background:#FFFBEB; border:1px solid #D97706; flex:0 0 auto;"></span>
+        <div style="display:flex; flex-direction:column;"><span style="font-size:15px; font-weight:600;">Bientôt</span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">#D97706 · #FFFBEB</span></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; padding:16px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px;">
+        <span style="width:34px; height:34px; border-radius:6px; background:#F3F4F6; border:1px solid #9CA3AF; flex:0 0 auto;"></span>
+        <div style="display:flex; flex-direction:column;"><span style="font-size:15px; font-weight:600;">Clos</span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">#6B7280 · #F3F4F6</span></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; padding:16px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px;">
+        <span style="width:34px; height:34px; border-radius:6px; background:#F9FAFB; border:1px solid #D1D5DB; flex:0 0 auto;"></span>
+        <div style="display:flex; flex-direction:column;"><span style="font-size:15px; font-weight:600;">Archivé</span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">#9CA3AF · #F9FAFB</span></div>
+      </div>
+    </div>
+
+    <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-left:3px solid #15803D; border-radius:8px; padding:20px 24px; display:flex; flex-direction:column; gap:8px;">
+      <span style="font-size:16px; font-weight:600;">Règle d'emploi</span>
+      <p style="margin:0; font-size:15.5px; line-height:1.65; color:#4B5563;">Un écran n'utilise jamais plus de deux aplats de couleur pleine. Le vert signale l'action de l'utilisateur, le navy la voix de l'organisation, l'or exclusivement le don. Les couleurs de statut ne servent qu'aux états de programme et de session, jamais à la décoration : c'est ce qui les rend lisibles quand l'équipe met les contenus à jour depuis le back-office.</p>
+    </div>
+  </div>
+
+  <!-- 02 TYPOGRAPHIE -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">02</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Typographie</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Lora pour la voix, Source Sans 3 pour l'usage, JetBrains Mono pour les données.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:200px 1fr; gap:32px 40px; align-items:baseline;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">Lora 600 · 56/1.06</span>
+      <span style="font-family:'Lora',serif; font-size:56px; line-height:1.06; font-weight:600; letter-spacing:-0.02em;">Titre de page</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">Lora 600 · 32/1.2</span>
+      <span style="font-family:'Lora',serif; font-size:32px; line-height:1.2; font-weight:600;">Titre de section</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">Lora 600 · 23/1.3</span>
+      <span style="font-family:'Lora',serif; font-size:23px; line-height:1.3; font-weight:600;">Titre de carte ou de programme</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">Source Sans 3 400 · 19/1.65</span>
+      <span style="font-size:19px; line-height:1.65; color:#4B5563; max-width:680px;">Chapô. Une seule phrase sous le titre de page, jamais deux : la refonte demande des textes allégés, la contrainte est typographique avant d'être éditoriale.</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">Source Sans 3 400 · 16.5/1.7</span>
+      <span style="font-size:16.5px; line-height:1.7; color:#4B5563; max-width:680px;">Corps de texte des pages programme et articles de blog. Largeur de colonne limitée à 680 px, soit environ 78 caractères par ligne.</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">Source Sans 3 600 · 15/1.25</span>
+      <span style="font-size:15px; font-weight:600;">Libellé de navigation, bouton, champ</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#9CA3AF;">JetBrains Mono 400 · 12/0.14em</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#9CA3AF;">Surtitre, date, compteur, métadonnée</span>
+    </div>
+
+    <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-left:3px solid #15803D; border-radius:8px; padding:20px 24px;">
+      <p style="margin:0; font-size:15.5px; line-height:1.65; color:#4B5563;">Les chiffres d'impact sont éditables depuis le back-office : ils sont toujours composés en Lora avec <span style="font-family:'JetBrains Mono',monospace; font-size:14px;">font-variant-numeric: tabular-nums</span>, pour qu'une valeur passant de 200 à 1 200 ne déforme pas la mise en page.</p>
+    </div>
+  </div>
+
+  <!-- 03 ESPACEMENT ET GRILLE -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">03</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Espacement, grille, structure</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Base 4 px, grille 12 colonnes, trois rythmes verticaux.</p>
+    </div>
+
+    <div style="display:flex; align-items:flex-end; gap:14px;">
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:4px; height:4px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">4</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:8px; height:8px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">8</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:12px; height:12px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">12</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:16px; height:16px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">16</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:24px; height:24px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">24</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:32px; height:32px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">32</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:48px; height:48px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">48</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:64px; height:64px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">64</span></div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:center;"><span style="width:96px; height:96px; background:#15803D;"></span><span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#9CA3AF;">96</span></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(12,1fr); gap:24px; padding:20px; background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px;">
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+      <div style="grid-column:span 1; height:56px; background:rgba(21,128,61,0.12); border:1px solid rgba(21,128,61,0.3); border-radius:4px;"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Conteneur</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Contenu 1240 px max, gouttière 24 px, marges latérales 40 px desktop. Bandes de couleur et photographies en pleine largeur de fenêtre.</p>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Rythme vertical</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">96 px entre deux sections, 48 px entre un titre et son contenu, 24 px entre éléments d'une même famille. Trois valeurs, pas plus.</p>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Lecture</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Colonne de texte 680 px max. Au-delà, on scinde en deux colonnes ou on coupe le texte : c'est la garde-fou contre le retour de la verbosité.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 BOUTONS -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">04</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Boutons et états</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Quatre variantes, six états, hauteur 48 px.</p>
+    </div>
+
+    <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+      <div style="display:grid; grid-template-columns:150px repeat(6,minmax(150px,1fr)); background:#F7F3EE; border-bottom:1px solid #D1C9BE;">
+        <span style="padding:12px 18px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Variante</span>
+        <span style="padding:12px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Repos</span>
+        <span style="padding:12px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Survol</span>
+        <span style="padding:12px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Actif</span>
+        <span style="padding:12px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Focus</span>
+        <span style="padding:12px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Chargement</span>
+        <span style="padding:12px 10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Désactivé</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:150px repeat(6,minmax(150px,1fr)); align-items:center; border-bottom:1px solid #E8E2D9;">
+        <span style="padding:18px; font-size:15px; font-weight:600;">Primaire</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#116632; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#0E5429; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600; transform:scale(0.98);">Candidater</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600; box-shadow:0 0 0 3px rgba(43,76,126,0.45);">Candidater</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; gap:9px; height:48px; background:#116632; color:rgba(253,250,247,0.85); border-radius:6px; font-size:15px; font-weight:600;">
+          <span style="width:15px; height:15px; border:2px solid rgba(253,250,247,0.35); border-top-color:#FDFAF7; border-radius:999px; animation:spin 800ms linear infinite; display:inline-block;"></span>Envoi
+        </span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#E8E2D9; color:#9CA3AF; border-radius:6px; font-size:15px; font-weight:600;">Candidater</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:150px repeat(6,minmax(150px,1fr)); align-items:center; border-bottom:1px solid #E8E2D9;">
+        <span style="padding:18px; font-size:15px; font-weight:600;">Secondaire</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:transparent; color:#1E2D4A; border:1px solid #1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">En savoir plus</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#1E2D4A; color:#FDFAF7; border:1px solid #1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">En savoir plus</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#141E33; color:#FDFAF7; border:1px solid #141E33; border-radius:6px; font-size:15px; font-weight:600; transform:scale(0.98);">En savoir plus</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:transparent; color:#1E2D4A; border:1px solid #1E2D4A; border-radius:6px; font-size:15px; font-weight:600; box-shadow:0 0 0 3px rgba(43,76,126,0.35);">En savoir plus</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; gap:9px; height:48px; background:transparent; color:#4B5563; border:1px solid #D1C9BE; border-radius:6px; font-size:15px; font-weight:600;">
+          <span style="width:15px; height:15px; border:2px solid #E8E2D9; border-top-color:#1E2D4A; border-radius:999px; animation:spin 800ms linear infinite; display:inline-block;"></span>Chargement
+        </span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:transparent; color:#9CA3AF; border:1px solid #E8E2D9; border-radius:6px; font-size:15px; font-weight:600;">En savoir plus</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:150px repeat(6,minmax(150px,1fr)); align-items:center; border-bottom:1px solid #E8E2D9;">
+        <span style="padding:18px; font-size:15px; font-weight:600;">Texte</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; height:48px; color:#15803D; font-size:15px; font-weight:600;">Tout voir →</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; height:48px; color:#0F5F2D; font-size:15px; font-weight:600; text-decoration:underline;">Tout voir →</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; height:48px; color:#0E5429; font-size:15px; font-weight:600; text-decoration:underline;">Tout voir →</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; height:48px; padding:0 8px; color:#15803D; font-size:15px; font-weight:600; box-shadow:0 0 0 3px rgba(43,76,126,0.35); border-radius:4px;">Tout voir →</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; height:48px; color:#9CA3AF; font-size:15px; font-weight:600;">—</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; height:48px; color:#9CA3AF; font-size:15px; font-weight:600;">Tout voir →</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:150px repeat(6,minmax(150px,1fr)); align-items:center;">
+        <span style="padding:18px; font-size:15px; font-weight:600;">Don</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#B4831F; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#9E731A; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600; transform:scale(0.98);">Faire un don</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600; box-shadow:0 0 0 3px rgba(30,45,74,0.4);">Faire un don</span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; gap:9px; height:48px; background:#B4831F; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">
+          <span style="width:15px; height:15px; border:2px solid rgba(30,45,74,0.25); border-top-color:#1E2D4A; border-radius:999px; animation:spin 800ms linear infinite; display:inline-block;"></span>Paiement
+        </span>
+        <span style="margin:14px 10px; display:inline-flex; align-items:center; justify-content:center; height:48px; background:#F5E9C8; color:#9CA3AF; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+      </div>
+    </div>
+
+    <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-left:3px solid #15803D; border-radius:8px; padding:20px 24px;">
+      <p style="margin:0; font-size:15.5px; line-height:1.65; color:#4B5563;">Un seul bouton primaire par écran. Hauteur 48 px partout, y compris sur mobile, ce qui garantit la cible tactile sans règle spécifique. Le focus est un anneau bleu de 3 px, jamais une suppression d'outline : la plateforme doit rester navigable au clavier.</p>
+    </div>
+  </div>
+
+  <!-- 05 FORMULAIRES -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">05</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Formulaires</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Le remplacement des Google Forms : c'est ici que la crédibilité se gagne.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:15px; font-weight:600;">Nom complet</span>
+        <div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; color:#9CA3AF;">Votre nom</div>
+        <span style="font-size:13.5px; color:#9CA3AF;">Repos</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:15px; font-weight:600;">Adresse e-mail</span>
+        <div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #2B4C7E; border-radius:6px; font-size:15.5px; color:#1E2D4A; box-shadow:0 0 0 3px rgba(43,76,126,0.18);">amina@example.com</div>
+        <span style="font-size:13.5px; color:#2B4C7E;">Focus</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:15px; font-weight:600;">Téléphone</span>
+        <div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#FFFFFF; border:1px solid #15803D; border-radius:6px; font-size:15.5px; color:#1E2D4A;">+237 6 71 13 02 66</div>
+        <span style="display:flex; align-items:center; gap:6px; font-size:13.5px; color:#14532D;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Vérifié
+        </span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:15px; font-weight:600;">Domaine visé</span>
+        <div style="height:48px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px solid #D97706; border-radius:6px; font-size:15.5px; color:#1E2D4A;">
+          <span>Sélectionner</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <span style="display:flex; align-items:center; gap:6px; font-size:13.5px; color:#92400E;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>Choisissez un domaine pour continuer
+        </span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:15px; font-weight:600;">Programme</span>
+        <div style="height:48px; padding:0 14px; display:flex; align-items:center; background:#F3F4F6; border:1px solid #E8E2D9; border-radius:6px; font-size:15.5px; color:#9CA3AF;">Stage — candidatures closes</div>
+        <span style="font-size:13.5px; color:#9CA3AF;">Désactivé</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:15px; font-weight:600;">CV</span>
+        <div style="height:48px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; background:#FFFFFF; border:1px dashed #D1C9BE; border-radius:6px; font-size:15.5px; color:#4B5563;">
+          <span>amina-cv.pdf</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;">240 Ko</span>
+        </div>
+        <span style="font-size:13.5px; color:#9CA3AF;">PDF, 2 Mo maximum</span>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px; max-width:680px;">
+      <span style="font-size:15px; font-weight:600;">Pourquoi ce programme ?</span>
+      <div style="min-height:120px; padding:14px; background:#FFFFFF; border:1px solid #D1C9BE; border-radius:6px; font-size:15.5px; line-height:1.6; color:#9CA3AF;">Trois à cinq phrases suffisent.</div>
+      <div style="display:flex; justify-content:space-between; font-size:13.5px; color:#9CA3AF;"><span>Facultatif</span><span style="font-family:'JetBrains Mono',monospace;">0 / 600</span></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:20px;">
+      <div style="display:flex; gap:14px; padding:18px 20px; background:#F0FDF4; border:1px solid #15803D; border-radius:8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span style="font-size:16px; font-weight:600; color:#14532D;">Candidature envoyée</span>
+          <span style="font-size:15px; line-height:1.6; color:#14532D;">Vous recevrez une réponse par e-mail sous dix jours ouvrés.</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:14px; padding:18px 20px; background:#FFFBEB; border:1px solid #D97706; border-radius:8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" style="flex:0 0 auto; margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span style="font-size:16px; font-weight:600; color:#92400E;">Deux champs à compléter</span>
+          <span style="font-size:15px; line-height:1.6; color:#92400E;">Domaine visé et niveau d'études. Le reste de votre saisie est conservé.</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-left:3px solid #15803D; border-radius:8px; padding:20px 24px;">
+      <p style="margin:0; font-size:15.5px; line-height:1.65; color:#4B5563;">Aucune candidature ne dépasse un écran et demi. Validation à la sortie du champ, pas à la frappe. Les messages d'erreur disent quoi corriger, jamais que la saisie est invalide, et la saisie n'est jamais perdue. Sans compte utilisateur, l'accusé de réception par e-mail est le seul suivi promis : il doit donc être annoncé explicitement à l'envoi.</p>
+    </div>
+  </div>
+
+  <!-- 06 CARTES ET TABLEAUX -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">06</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Cartes, listes, tableaux</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">L'image d'abord, une ligne de texte, un statut si nécessaire.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+      <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+        <div style="height:200px; background:#E8E2D9; display:flex; align-items:flex-end; padding:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Image programme 4:3</span></div>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Lora',serif; font-size:22px; font-weight:600;">Mentorat</span>
+            <span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:2px 10px; border-radius:999px;">Ouvert</span>
+          </div>
+          <p style="margin:0; font-size:15.5px; line-height:1.55; color:#4B5563;">Trois mois avec un professionnel du domaine visé.</p>
+          <span style="font-size:15px; font-weight:600; color:#15803D;">Découvrir →</span>
+        </div>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+        <div style="height:200px; background:#E8E2D9; display:flex; align-items:flex-end; padding:14px;"><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a7a5e;">Visuel article 16:9</span></div>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">29 juillet 2026 · GLab Sisters</span>
+          <span style="font-family:'Lora',serif; font-size:20px; line-height:1.3; font-weight:600;">Comprendre les défis des femmes dans la tech</span>
+          <span style="font-size:15px; font-weight:600; color:#15803D;">Lire l'article →</span>
+        </div>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:14px; box-shadow:0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Session de formation</span>
+        <span style="font-family:'Lora',serif; font-size:21px; line-height:1.3; font-weight:600;">Fondamentaux de la data</span>
+        <div style="display:flex; flex-direction:column; gap:9px; padding:14px 0; border-top:1px solid #E8E2D9; border-bottom:1px solid #E8E2D9;">
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Dates</span><span style="font-weight:500;">14 sept. – 9 oct.</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Format</span><span style="font-weight:500;">En ligne, 4 semaines</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Tarif</span><span style="font-weight:500;">Gratuit</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:15px;"><span style="color:#9CA3AF;">Places</span><span style="font-weight:500;">8 restantes</span></div>
+        </div>
+        <span style="display:inline-flex; align-items:center; justify-content:center; height:48px; background:#15803D; color:#FDFAF7; border-radius:6px; font-size:15px; font-weight:600;">S'inscrire</span>
+      </div>
+    </div>
+
+    <div style="background:#FDFAF7; border:1px solid #D1C9BE; border-radius:8px; overflow:hidden;">
+      <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr 0.9fr 130px; background:#F7F3EE; border-bottom:1px solid #D1C9BE;">
+        <span style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Formation</span>
+        <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Session</span>
+        <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Durée</span>
+        <span style="padding:14px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF;">Tarif</span>
+        <span style="padding:14px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#9CA3AF; text-align:right;">État</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr 0.9fr 130px; align-items:center; border-bottom:1px solid #E8E2D9;">
+        <span style="padding:18px 20px; font-size:16px; font-weight:600;">Fondamentaux de la data</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">14 sept. 2026</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563;">4 semaines</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563;">Gratuit</span>
+        <span style="padding:18px 20px; text-align:right;"><span style="font-size:12.5px; font-weight:600; color:#14532D; background:#F0FDF4; border:1px solid #15803D; padding:3px 11px; border-radius:999px;">Ouvert</span></span>
+      </div>
+      <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr 0.9fr 130px; align-items:center; border-bottom:1px solid #E8E2D9; background:#F7F3EE;">
+        <span style="padding:18px 20px; font-size:16px; font-weight:600;">Développement web</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">6 oct. 2026</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563;">8 semaines</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563;">25 000 FCFA</span>
+        <span style="padding:18px 20px; text-align:right;"><span style="font-size:12.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #D97706; padding:3px 11px; border-radius:999px;">Bientôt</span></span>
+      </div>
+      <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr 0.9fr 130px; align-items:center;">
+        <span style="padding:18px 20px; font-size:16px; font-weight:600;">IA appliquée</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563; font-variant-numeric:tabular-nums;">Juin 2026</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563;">6 semaines</span>
+        <span style="padding:18px 12px; font-size:15.5px; color:#4B5563;">Gratuit</span>
+        <span style="padding:18px 20px; text-align:right;"><span style="font-size:12.5px; font-weight:600; color:#6B7280; background:#F3F4F6; border:1px solid #9CA3AF; padding:3px 11px; border-radius:999px;">Clos</span></span>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Survol de carte</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">L'ombre passe à 4 px, la bordure à #D1C9BE, l'image zoome de 2 % en 200 ms. Jamais de translation verticale.</p>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Chargement</span>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <span style="height:14px; width:70%; background:#E8E2D9; border-radius:4px;"></span>
+          <span style="height:14px; width:90%; background:#E8E2D9; border-radius:4px;"></span>
+          <span style="height:14px; width:45%; background:#E8E2D9; border-radius:4px;"></span>
+        </div>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Squelettes aux dimensions réelles du contenu, jamais de roue centrée sur la page.</p>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Liste vide</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">« Aucune session programmée pour le moment. » Message factuel, sans point d'exclamation, avec un lien vers la newsletter.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 NAVIGATION -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">07</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Navigation</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Sept entrées, un bouton de don, un seul déroulant.</p>
+    </div>
+
+    <div style="border:1px solid #D1C9BE; border-radius:8px; overflow:hidden; background:#FDFAF7;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:22px 32px; border-bottom:1px solid #E8E2D9;">
+        <div style="display:flex; align-items:center; gap:44px;">
+          <span style="font-family:'Lora',serif; font-size:27px; font-weight:700; color:#15803D;">Gehmit</span>
+          <div style="display:flex; gap:28px; font-size:15px; font-weight:500; white-space:nowrap;">
+            <span>Accueil</span><span>À propos</span>
+            <span style="display:inline-flex; align-items:center; gap:6px; color:#15803D; font-weight:600; border-bottom:2px solid #15803D; padding-bottom:3px;">Programmes
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+            <span>Solutions</span><span>Notre impact</span><span>Blog</span><span>Contact</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:18px; white-space:nowrap;">
+          <div style="display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#9CA3AF;"><span style="color:#1E2D4A; font-weight:500;">FR</span><span>/</span><span>EN</span></div>
+          <span style="display:inline-flex; align-items:center; height:44px; padding:0 20px; background:#C9952A; color:#1E2D4A; border-radius:6px; font-size:15px; font-weight:600;">Faire un don</span>
+        </div>
+      </div>
+      <div style="padding:28px 32px 32px; background:#F7F3EE; display:grid; grid-template-columns:repeat(5,1fr); gap:20px; box-shadow:0 4px 16px rgba(0,0,0,0.12) inset;">
+        <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">PAEI</span><span style="font-size:14.5px; line-height:1.5; color:#4B5563;">Appui à l'insertion</span></div>
+        <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600; color:#15803D;">Mentorat</span><span style="font-size:14.5px; line-height:1.5; color:#4B5563;">Accompagnement individuel</span></div>
+        <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">Formations</span><span style="font-size:14.5px; line-height:1.5; color:#4B5563;">Catalogue et sessions</span></div>
+        <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">Stage</span><span style="font-size:14.5px; line-height:1.5; color:#4B5563;">Mise en entreprise</span></div>
+        <div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:17px; font-weight:600;">GLab Sisters</span><span style="font-size:14.5px; line-height:1.5; color:#4B5563;">Femmes et numérique</span></div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Hiérarchie</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Un seul déroulant, Programmes, qui contient les cinq programmes y compris GLab Sisters. Solutions accueille TechPath. Les contenus de même nature vivent au même niveau.</p>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Repères</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Entrée courante soulignée en vert. Fil d'Ariane sur toute page de niveau 2. Barre collante à partir de 400 px de défilement, réduite à 64 px de haut.</p>
+      </div>
+      <div style="background:#FDFAF7; border:1px solid #E8E2D9; border-radius:8px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#9CA3AF;">Pied de page</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Navy, quatre colonnes, bloc newsletter à gauche, logos partenaires et réseaux sociaux gérés depuis le back-office.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 RESPONSIVE -->
+  <div style="display:flex; flex-direction:column; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:18px; padding-bottom:14px; border-bottom:2px solid #1E2D4A;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">08</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600;">Responsive</h2>
+      <p style="margin:0 0 0 auto; font-size:16px; color:#4B5563;">Trois paliers, une seule règle par palier.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:start;">
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="border:1px solid #D1C9BE; border-radius:8px; background:#FDFAF7; padding:12px; display:flex; flex-direction:column; gap:8px;">
+          <span style="height:22px; background:#15803D; border-radius:3px;"></span>
+          <div style="display:flex; gap:8px;"><span style="flex:0 0 42%; height:96px; background:#15803D; opacity:0.25; border-radius:3px;"></span><span style="flex:1; height:96px; background:#E8E2D9; border-radius:3px;"></span></div>
+          <div style="display:flex; gap:8px;"><span style="flex:1; height:52px; background:#E8E2D9; border-radius:3px;"></span><span style="flex:1; height:52px; background:#E8E2D9; border-radius:3px;"></span><span style="flex:1; height:52px; background:#E8E2D9; border-radius:3px;"></span></div>
+        </div>
+        <span style="font-size:16px; font-weight:600;">Desktop · ≥ 1024 px</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">12 colonnes, gouttière 24 px. Héros en deux panneaux, programmes par trois, tableaux complets.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="border:1px solid #D1C9BE; border-radius:8px; background:#FDFAF7; padding:12px; width:78%; display:flex; flex-direction:column; gap:8px;">
+          <span style="height:22px; background:#15803D; border-radius:3px;"></span>
+          <span style="height:76px; background:#15803D; opacity:0.25; border-radius:3px;"></span>
+          <span style="height:76px; background:#E8E2D9; border-radius:3px;"></span>
+          <div style="display:flex; gap:8px;"><span style="flex:1; height:52px; background:#E8E2D9; border-radius:3px;"></span><span style="flex:1; height:52px; background:#E8E2D9; border-radius:3px;"></span></div>
+        </div>
+        <span style="font-size:16px; font-weight:600;">Tablette · 768 – 1023 px</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">8 colonnes, gouttière 20 px. Le héros s'empile, les programmes passent par deux, les tableaux gardent quatre colonnes sur cinq.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="border:1px solid #D1C9BE; border-radius:8px; background:#FDFAF7; padding:10px; width:46%; display:flex; flex-direction:column; gap:7px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="width:36%; height:16px; background:#15803D; border-radius:3px;"></span><span style="width:18px; height:14px; background:#1E2D4A; border-radius:2px;"></span></div>
+          <span style="height:70px; background:#15803D; opacity:0.25; border-radius:3px;"></span>
+          <span style="height:56px; background:#E8E2D9; border-radius:3px;"></span>
+          <span style="height:56px; background:#E8E2D9; border-radius:3px;"></span>
+          <span style="height:34px; background:#15803D; border-radius:3px;"></span>
+        </div>
+        <span style="font-size:16px; font-weight:600;">Mobile · ≤ 767 px</span>
+        <p style="margin:0; font-size:15px; line-height:1.6; color:#4B5563;">Une colonne, marges 20 px. Menu plein écran, bouton de don en barre basse persistante, tableaux convertis en listes clé-valeur.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 CE QUI FAIT SÉRIEUX -->
+  <div style="background:#1E2D4A; border-radius:12px; padding:48px 52px; display:flex; flex-direction:column; gap:32px;">
+    <div style="display:flex; align-items:baseline; gap:18px;">
+      <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#C9952A;">09</span>
+      <h2 style="margin:0; font-family:'Lora',serif; font-size:32px; font-weight:600; color:#FDFAF7;">Ce qui donne l'impression d'un produit sérieux</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px;">
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <span style="font-size:17px; font-weight:600; color:#C9952A;">La retenue</span>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:rgba(253,250,247,0.8);">Deux familles typographiques, quatre couleurs, trois espacements verticaux. La cohérence est plus crédible que la variété.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <span style="font-size:17px; font-weight:600; color:#C9952A;">La précision</span>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:rgba(253,250,247,0.8);">Dates réelles, durées, tarifs, places restantes, chiffres alignés. Un site qui affiche des données exactes se lit comme une institution qui tient ses engagements.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <span style="font-size:17px; font-weight:600; color:#C9952A;">La photographie</span>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:rgba(253,250,247,0.8);">Vos vraies images d'événements, cadrées large et traitées uniformément. Aucune illustration générique, aucune icône décorative.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <span style="font-size:17px; font-weight:600; color:#C9952A;">L'absence de friction</span>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:rgba(253,250,247,0.8);">Pas de compte à créer, pas de formulaire à rallonge, pas de lien mort. Chaque programme mène à sa page, chaque page mène à une action.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <span style="font-size:17px; font-weight:600; color:#C9952A;">Le ton</span>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:rgba(253,250,247,0.8);">Phrases courtes, aucun point d'exclamation, aucun superlatif. On énonce ce que Gehmit fait, on ne le vend pas.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <span style="font-size:17px; font-weight:600; color:#C9952A;">La tenue dans le temps</span>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:rgba(253,250,247,0.8);">Chaque composant supporte une valeur vide, longue ou traduite en anglais. Le site doit rester juste après cent modifications de l'équipe.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+</body>
+</html>
