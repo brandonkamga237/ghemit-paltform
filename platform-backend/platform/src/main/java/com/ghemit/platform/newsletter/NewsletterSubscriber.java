@@ -24,6 +24,10 @@ public class NewsletterSubscriber {
 	@Column(nullable = false, unique = true)
 	private String email;
 
+	private String name;
+
+	private String source;
+
 	@Column(nullable = false)
 	private boolean active = true;
 

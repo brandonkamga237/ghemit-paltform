@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router"
 import { useAuth } from "@/lib/auth"
+import { LoginPage } from "@/pages/login"
 import { AdminLayout } from "@/layouts/admin-layout"
 import { DashboardPage } from "@/pages/dashboard"
 import {
@@ -16,33 +17,13 @@ import { SettingsPage } from "@/pages/settings"
 import { MediaPage } from "@/pages/media"
 import { NewsletterPage } from "@/pages/newsletter"
 import { MessagesPage } from "@/pages/messages"
-import { Button } from "@/components/ui/button"
+import { CandidaturesPage } from "@/pages/candidatures"
 
 export default function App() {
-  const { ready, authenticated, isAdmin, logout } = useAuth()
+  const { authenticated } = useAuth()
 
-  if (!ready || !authenticated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <span className="text-[15px] text-muted-foreground">
-          Connexion à Keycloak…
-        </span>
-      </div>
-    )
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
-        <h1 className="font-heading text-2xl font-semibold">Accès refusé</h1>
-        <p className="text-[15px] text-muted-foreground">
-          Votre compte n'a pas le rôle « admin » du realm gehmit.
-        </p>
-        <Button variant="outline" onClick={logout}>
-          Se déconnecter
-        </Button>
-      </div>
-    )
+  if (!authenticated) {
+    return <LoginPage />
   }
 
   return (
@@ -61,6 +42,7 @@ export default function App() {
           <Route path="reglages" element={<SettingsPage />} />
           <Route path="medias" element={<MediaPage />} />
           <Route path="newsletter" element={<NewsletterPage />} />
+          <Route path="candidatures" element={<CandidaturesPage />} />
           <Route path="messages" element={<MessagesPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

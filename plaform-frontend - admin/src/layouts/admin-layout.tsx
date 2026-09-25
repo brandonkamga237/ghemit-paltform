@@ -11,6 +11,7 @@ import {
   LayoutDashboardIcon,
   LogOutIcon,
   MailIcon,
+  MessageSquareIcon,
   Settings2Icon,
   TrophyIcon,
   UsersIcon,
@@ -49,7 +50,8 @@ const contentLinks = [
 const siteLinks = [
   { to: "/medias", label: "Médiathèque", icon: FolderOpenIcon },
   { to: "/newsletter", label: "Newsletter", icon: MailIcon },
-  { to: "/messages", label: "Boîte de réception", icon: InboxIcon },
+  { to: "/candidatures", label: "Candidatures", icon: InboxIcon },
+  { to: "/messages", label: "Messages", icon: MessageSquareIcon },
 ]
 
 export function AdminLayout() {

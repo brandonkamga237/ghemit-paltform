@@ -29,6 +29,10 @@ public class MediaFile {
 
 	private String contentType;
 
+	/** Dossier logique de la médiathèque (ex. « articles », « partenaires »). Vide = racine. */
+	@Column(columnDefinition = "varchar not null default ''")
+	private String folder = "";
+
 	private long size;
 
 	@Column(nullable = false)

@@ -1,19 +1,28 @@
-import { keycloak } from "./keycloak"
+import { getAccessToken, logoutTokens } from "./token"
 
 export const API_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8080"
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  await keycloak.updateToken(30).catch(() => keycloak.login())
+  const token = await getAccessToken()
+  if (!token) {
+    logoutTokens()
+    window.location.reload()
+    throw new Error("Session expirée")
+  }
   const isForm = init?.body instanceof FormData
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       ...(isForm ? {} : { "Content-Type": "application/json" }),
-      Authorization: `Bearer ${keycloak.token}`,
+      Authorization: `Bearer ${token}`,
       ...init?.headers,
     },
   })
+  if (res.status === 401) {
+    logoutTokens()
+    window.location.reload()
+  }
   if (!res.ok) {
     const text = await res.text().catch(() => "")
     throw new Error(`${res.status} ${text}`.trim())
@@ -31,6 +40,7 @@ export const api = {
     }),
   put: <T>(path: string, body: unknown) =>
     request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
-  patch: <T>(path: string) => request<T>(path, { method: "PATCH" }),
+  patch: <T>(path: string, body?: unknown) =>
+    request<T>(path, { method: "PATCH", body: JSON.stringify(body ?? {}) }),
   del: (path: string) => request<void>(path, { method: "DELETE" }),
 }

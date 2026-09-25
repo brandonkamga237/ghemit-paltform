@@ -1,6 +1,8 @@
 import { Link, Navigate, useParams } from "react-router"
 import { motion } from "motion/react"
+import type { ReactNode } from "react"
 import { articles } from "@/data/content"
+import { API_URL } from "@/lib/api"
 import { Container } from "@/components/site/bands"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
@@ -8,6 +10,36 @@ import { Breadcrumb } from "@/components/site/page-header"
 import { Button } from "@/components/ui/button"
 
 const ease = [0.22, 1, 0.36, 1] as const
+
+const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
+
+/** Transforme les liens « [libellé](url) » insérés dans le texte en vrais liens. */
+function linkify(text: string): ReactNode[] {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
+  return parts.map((part, i) => {
+    const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (!m) return part
+    const [, label, href] = m
+    if (href.startsWith("/")) {
+      return (
+        <Link key={i} to={href} className="font-medium text-gehmit underline underline-offset-4">
+          {label}
+        </Link>
+      )
+    }
+    return (
+      <a
+        key={i}
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="font-medium text-gehmit underline underline-offset-4"
+      >
+        {label}
+      </a>
+    )
+  })
+}
 
 export function ArticlePage() {
   const { slug } = useParams()
@@ -40,10 +72,18 @@ export function ArticlePage() {
       </Container>
 
       <Container className="flex justify-center pb-12">
-        <Photo
-          label={article.photoLabel + " — 2080 × 920"}
-          className="h-[240px] w-full max-w-[1040px] rounded-lg sm:h-[460px]"
-        />
+        {article.imageUrl ? (
+          <img
+            src={mediaUrl(article.imageUrl)}
+            alt={article.title}
+            className="h-[240px] w-full max-w-[1040px] rounded-lg object-cover sm:h-[460px]"
+          />
+        ) : (
+          <Photo
+            label={article.photoLabel + " — 2080 × 920"}
+            className="h-[240px] w-full max-w-[1040px] rounded-lg sm:h-[460px]"
+          />
+        )}
       </Container>
 
       <Container className="flex flex-col items-center pb-16">
@@ -67,9 +107,28 @@ export function ArticlePage() {
                 </Reveal>
               )
             }
+            if (block.type === "image") {
+              return (
+                <Reveal key={i}>
+                  <figure className="flex flex-col gap-2">
+                    <img
+                      src={mediaUrl(block.url)}
+                      alt={block.text ?? ""}
+                      className="w-full rounded-lg object-cover"
+                      loading="lazy"
+                    />
+                    {block.text ? (
+                      <figcaption className="text-center text-sm text-ink-faint">
+                        {block.text}
+                      </figcaption>
+                    ) : null}
+                  </figure>
+                </Reveal>
+              )
+            }
             return (
               <Reveal key={i}>
-                <p className="text-lg leading-[1.8] text-ink-muted">{block.text}</p>
+                <p className="text-lg leading-[1.8] text-ink-muted">{linkify(block.text)}</p>
               </Reveal>
             )
           })}

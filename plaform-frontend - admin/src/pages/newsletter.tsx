@@ -144,7 +144,9 @@ export function NewsletterPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="pl-6">E-mail</TableHead>
+                  <TableHead className="pl-6">Nom</TableHead>
+                  <TableHead>E-mail</TableHead>
+                  <TableHead>Origine</TableHead>
                   <TableHead>Inscrit le</TableHead>
                   <TableHead>Statut</TableHead>
                   <TableHead className="w-[60px]" />
@@ -153,7 +155,11 @@ export function NewsletterPage() {
               <TableBody>
                 {subscribers.map((s) => (
                   <TableRow key={s.id}>
-                    <TableCell className="pl-6">{s.email}</TableCell>
+                    <TableCell className="pl-6">{s.name || "—"}</TableCell>
+                    <TableCell>{s.email}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{s.source || "newsletter"}</Badge>
+                    </TableCell>
                     <TableCell>{new Date(s.createdAt).toLocaleDateString("fr-FR")}</TableCell>
                     <TableCell>
                       <Badge variant={s.active ? "default" : "outline"}>
@@ -174,7 +180,7 @@ export function NewsletterPage() {
                 ))}
                 {subscribers.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="py-8 text-center text-muted-foreground">
+                    <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
                       Aucun abonné pour le moment.
                     </TableCell>
                   </TableRow>

@@ -29,16 +29,14 @@ const programsConfig: CrudConfig = {
     { name: "meta", label: "Métadonnées", kind: "tags", hint: "Ex. 6 mois, Gratuit, Douala" },
     {
       name: "primaryCta",
-      label: "CTA principal",
-      kind: "json",
-      hint: '{ "label": "Candidater", "to": "/candidature/x", "disabled": false }',
+      label: "Bouton principal",
+      kind: "linkCta",
     },
-    { name: "secondaryCta", label: "CTA secondaire", kind: "json" },
+    { name: "secondaryCta", label: "Bouton secondaire", kind: "linkCta" },
     {
       name: "detail",
       label: "Page détail",
-      kind: "json",
-      hint: "heroTitle, heroText, facts, sections, steps, sideTitle…",
+      kind: "programDetail",
     },
   ],
 }
@@ -118,14 +116,19 @@ const articlesConfig: CrudConfig = {
     { name: "excerpt", label: "Résumé", kind: "textarea" },
     { name: "readingTime", label: "Temps de lecture", placeholder: "Ex. 4 min de lecture" },
     { name: "featured", label: "Mettre à la une", kind: "checkbox" },
-    { name: "photoLabel", label: "Libellé de la photo" },
+    {
+      name: "imageUrl",
+      label: "Image de couverture",
+      kind: "image",
+      hint: "Affichée en haut de l'article. Vide = visuel par défaut.",
+    },
+    { name: "photoLabel", label: "Libellé de la photo", hint: "Texte affiché si aucune image n'est choisie" },
     {
       name: "body",
       label: "Corps de l'article",
-      kind: "json",
-      hint: '[{ "type": "p"|"h2"|"quote", "text": "…" }]',
+      kind: "blocks",
     },
-    { name: "cta", label: "Encart CTA", kind: "json" },
+    { name: "cta", label: "Encart CTA", kind: "articleCta" },
   ],
 }
 
@@ -147,8 +150,30 @@ const partnersConfig: CrudConfig = {
   type: "partners",
   title: "Partenaires",
   description: "Les partenaires affichés sur l'accueil et /partenaire.",
-  columns: [{ key: "name", label: "Nom" }],
-  fields: [{ name: "name", label: "Nom du partenaire" }],
+  columns: [
+    { key: "name", label: "Nom" },
+    {
+      key: "logoUrl",
+      label: "Logo",
+      render: (i) =>
+        i.payload.logoUrl ? <StatusBadge value="open" /> : "—",
+    },
+  ],
+  fields: [
+    { name: "name", label: "Nom du partenaire" },
+    {
+      name: "description",
+      label: "Description",
+      kind: "textarea",
+      hint: "Une phrase sur le partenariat (affichée sur /partenaire).",
+    },
+    {
+      name: "logoUrl",
+      label: "Logo / image",
+      kind: "image",
+      hint: "Depuis la médiathèque ou votre machine. Vide = le nom seul est affiché.",
+    },
+  ],
 }
 
 const statsConfig: CrudConfig = {

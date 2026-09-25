@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { motion } from "motion/react"
 import { MessageCircleIcon } from "lucide-react"
-import { contact, faq } from "@/data/content"
+import { contact, faq, pg, whatsappUrl } from "@/data/content"
 import { apiPost } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -50,10 +50,10 @@ export function ContactPage() {
       >
         <div className="flex flex-col gap-3.5">
           <h1 className="font-heading text-4xl leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[44px]">
-            Nous écrire
+            {pg("contact.hero.title")}
           </h1>
           <p className="text-lg leading-relaxed text-ink-muted">
-            Réponse sous 48 heures ouvrées.
+            {pg("contact.hero.lede")}
           </p>
         </div>
 
@@ -173,12 +173,17 @@ export function ContactPage() {
           </Accordion>
         </div>
 
-        <div className="flex items-center gap-3 rounded-lg bg-white/8 px-4.5 py-4">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 rounded-lg bg-white/8 px-4.5 py-4 transition-colors hover:bg-white/12"
+        >
           <MessageCircleIcon className="size-5 shrink-0 text-gold" strokeWidth={1.8} />
           <span className="text-[15px] leading-normal text-surface/85">
-            Un chat est disponible sur toutes les pages du site.
+            Une réponse rapide ? Écrivez-nous directement sur WhatsApp.
           </span>
-        </div>
+        </a>
       </motion.aside>
     </div>
   )

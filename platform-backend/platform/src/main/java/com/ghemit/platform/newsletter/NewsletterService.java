@@ -23,15 +23,30 @@ public class NewsletterService {
 
 	@Transactional
 	public NewsletterSubscriber subscribe(String email) {
+		return subscribe(email, null, null);
+	}
+
+	@Transactional
+	public NewsletterSubscriber subscribe(String email, String name, String source) {
 		String normalized = email.trim().toLowerCase();
+		String cleanName = name == null || name.isBlank() ? null : name.trim();
+		String cleanSource = source == null || source.isBlank() ? null : source.trim();
 		return subscribers.findByEmailIgnoreCase(normalized)
 				.map(s -> {
 					s.setActive(true);
+					if (cleanName != null && (s.getName() == null || s.getName().isBlank())) {
+						s.setName(cleanName);
+					}
+					if (cleanSource != null && (s.getSource() == null || s.getSource().isBlank())) {
+						s.setSource(cleanSource);
+					}
 					return subscribers.save(s);
 				})
 				.orElseGet(() -> {
 					NewsletterSubscriber s = new NewsletterSubscriber();
 					s.setEmail(normalized);
+					s.setName(cleanName);
+					s.setSource(cleanSource);
 					return subscribers.save(s);
 				});
 	}

@@ -1,7 +1,8 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
-import { articles, partners, programs, stats } from "@/data/content"
+import { articles, partners, pg, programs, stats } from "@/data/content"
+import { API_URL } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { ArticleCard, ProgramCard } from "@/components/site/cards"
@@ -9,6 +10,8 @@ import { Container, SectionHeading, StatBand } from "@/components/site/bands"
 import { Button } from "@/components/ui/button"
 
 const ease = [0.22, 1, 0.36, 1] as const
+
+const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
 
 export function HomePage() {
   const featured = ["mentorat", "formations", "glab-sisters"]
@@ -39,7 +42,7 @@ export function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18, duration: 0.55, ease }}
           >
-            Votre place dans le numérique existe.
+            {pg("home.hero.title")}
           </motion.h1>
           <motion.p
             className="text-[19px] leading-relaxed text-surface/90"
@@ -47,7 +50,7 @@ export function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.28, duration: 0.55, ease }}
           >
-            Nous vous aidons à la trouver.
+            {pg("home.hero.lede")}
           </motion.p>
           <motion.div
             className="pt-1.5"
@@ -142,9 +145,18 @@ export function HomePage() {
           <span className="mono-label">Ils nous accompagnent</span>
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
             {partners.map((p, i) => (
-              <Reveal key={p} delay={i * 0.04}>
-                <div className="flex h-[72px] items-center justify-center rounded-lg border border-sand bg-cream">
-                  <span className="font-mono text-[11px] text-ink-faint">{p}</span>
+              <Reveal key={p.name} delay={i * 0.04}>
+                <div className="flex h-[72px] items-center justify-center rounded-lg border border-sand bg-cream px-4">
+                  {p.logoUrl ? (
+                    <img
+                      src={mediaUrl(p.logoUrl)}
+                      alt={p.name}
+                      className="max-h-10 max-w-full object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="font-mono text-[11px] text-ink-faint">{p.name}</span>
+                  )}
                 </div>
               </Reveal>
             ))}

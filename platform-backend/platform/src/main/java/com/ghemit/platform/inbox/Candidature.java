@@ -35,6 +35,14 @@ public class Candidature {
 	@Column(nullable = false)
 	private boolean readFlag;
 
+	/** État de traitement : new, in_progress, accepted, rejected, archived. */
+	@Column(columnDefinition = "varchar not null default 'new'")
+	private String status = "new";
+
+	/** Note interne de l'équipe (jamais exposée publiquement). */
+	@Column(columnDefinition = "text")
+	private String note;
+
 	@Column(nullable = false)
 	private Instant createdAt = Instant.now();
 }

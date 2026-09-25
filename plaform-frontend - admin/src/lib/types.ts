@@ -12,6 +12,7 @@ export interface MediaFile {
   objectKey: string
   filename: string
   contentType: string
+  folder?: string
   size: number
   createdAt: string
   url: string
@@ -20,6 +21,8 @@ export interface MediaFile {
 export interface Subscriber {
   id: string
   email: string
+  name?: string
+  source?: string
   active: boolean
   createdAt: string
 }
@@ -42,10 +45,40 @@ export interface ContactMessage {
   createdAt: string
 }
 
+export type CandidatureStatus =
+  | "new"
+  | "in_progress"
+  | "accepted"
+  | "rejected"
+  | "archived"
+
 export interface Candidature {
   id: string
   program: string
   form: Record<string, unknown>
   readFlag: boolean
+  status: CandidatureStatus
+  note?: string
   createdAt: string
+}
+
+/** Réponse paginée Spring Data (Page<T>). */
+export interface Page<T> {
+  content: T[]
+  totalElements: number
+  totalPages: number
+  number: number
+  size: number
+}
+
+export interface CandidaturesSummary {
+  total: number
+  unread: number
+  byProgram: Record<string, number>
+  byStatus: Record<string, number>
+}
+
+export interface MessagesSummary {
+  total: number
+  unread: number
 }

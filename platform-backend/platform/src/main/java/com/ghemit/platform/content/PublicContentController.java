@@ -27,12 +27,11 @@ public class PublicContentController {
 		out.put("articles", payloads(ContentType.ARTICLE));
 		out.put("blogCategories", setting("blog-categories").getOrDefault("items", List.of()));
 		out.put("faq", payloads(ContentType.FAQ));
-		out.put("partners", repository.findByTypeOrderByPositionAsc(ContentType.PARTNER).stream()
-				.map(i -> i.getPayload().get("name"))
-				.toList());
+		out.put("partners", payloads(ContentType.PARTNER));
 		out.put("stats", payloads(ContentType.STAT));
 		out.put("achievements", payloads(ContentType.ACHIEVEMENT));
 		out.put("contact", setting("contact"));
+		out.put("pageTexts", setting("page-texts").getOrDefault("texts", Map.of()));
 		return out;
 	}
 

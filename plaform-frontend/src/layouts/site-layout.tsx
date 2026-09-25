@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
 import { Header } from "@/components/site/header"
 import { Footer } from "@/components/site/footer"
+import { WhatsAppButton } from "@/components/site/whatsapp-button"
 
 export function ScrollToTop() {
   const { pathname } = useLocation()
@@ -50,6 +51,7 @@ export function SiteLayout() {
         </motion.main>
       </AnimatePresence>
       <Footer />
+      <WhatsAppButton />
     </div>
   )
 }
@@ -73,6 +75,7 @@ export function FormLayout() {
         </motion.main>
       </AnimatePresence>
       <Footer />
+      <WhatsAppButton />
     </div>
   )
 }

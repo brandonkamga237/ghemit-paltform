@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from "react-router"
 import { motion } from "motion/react"
 import { CheckIcon } from "lucide-react"
 import { programs } from "@/data/content"
+import { API_URL } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -22,10 +23,10 @@ export function ProgrammeDetailPage() {
 
   return (
     <div className="flex flex-col">
-      {/* Héros */}
+      {/* Héros — bannière compacte (page secondaire) */}
       <section className="grid lg:grid-cols-[0.9fr_1.1fr]">
         <motion.div
-          className="flex flex-col justify-center gap-5 bg-gehmit px-6 py-14 sm:px-11"
+          className="flex flex-col justify-center gap-4 bg-gehmit px-6 py-10 sm:px-11"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, ease }}
@@ -34,7 +35,7 @@ export function ProgrammeDetailPage() {
             Programmes / {program.name}
           </span>
           <motion.h1
-            className="font-heading text-4xl leading-[1.08] font-semibold tracking-[-0.02em] text-surface sm:text-[46px]"
+            className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.02em] text-surface sm:text-4xl"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease }}
@@ -71,8 +72,16 @@ export function ProgrammeDetailPage() {
             )}
           </motion.div>
         </motion.div>
-        <div className="min-h-[280px] lg:min-h-[400px]">
-          <Photo label={d.photoLabel} className="h-full" />
+        <div className="min-h-[200px] lg:min-h-[260px]">
+          {d.imageUrl ? (
+            <img
+              src={d.imageUrl.startsWith("/") ? `${API_URL}${d.imageUrl}` : d.imageUrl}
+              alt={d.heroTitle}
+              className="h-full w-full rounded-lg object-cover"
+            />
+          ) : (
+            <Photo label={d.photoLabel} className="h-full" />
+          )}
         </div>
       </section>
 

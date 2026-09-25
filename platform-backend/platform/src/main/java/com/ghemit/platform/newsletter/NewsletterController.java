@@ -25,14 +25,14 @@ public class NewsletterController {
 	private final NewsletterSubscriberRepository subscribers;
 	private final NewsletterCampaignRepository campaigns;
 
-	public record SubscribeRequest(@NotBlank @Email String email) {}
+	public record SubscribeRequest(@NotBlank @Email String email, String name, String source) {}
 	public record SendRequest(@NotBlank String subject, @NotBlank String body) {}
 
 	// ---- Public ----
 
 	@PostMapping("/api/public/newsletter/subscribe")
 	public ResponseEntity<Void> subscribe(@Valid @RequestBody SubscribeRequest req) {
-		service.subscribe(req.email());
+		service.subscribe(req.email(), req.name(), req.source());
 		return ResponseEntity.ok().build();
 	}
 

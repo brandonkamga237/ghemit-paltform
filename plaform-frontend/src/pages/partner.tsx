@@ -4,7 +4,7 @@ import { motion } from "motion/react"
 import { CheckCircle2Icon } from "lucide-react"
 import { cn } from "cn"
 import { contact, partners } from "@/data/content"
-import { apiPost } from "@/lib/api"
+import { API_URL, apiPost } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
 const ease = [0.22, 1, 0.36, 1] as const
+const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
 const inputCls =
   "h-12 rounded-md border-sand-dark bg-white px-3.5 text-[15.5px] placeholder:text-ink-faint focus-visible:border-focus focus-visible:ring-focus/20"
 
@@ -187,10 +188,20 @@ export function PartnerPage() {
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
             {partners.map((p) => (
               <div
-                key={p}
-                className="flex h-[72px] items-center justify-center rounded-lg border border-sand bg-cream"
+                key={p.name}
+                title={p.description ?? p.name}
+                className="flex h-[72px] items-center justify-center rounded-lg border border-sand bg-cream px-4"
               >
-                <span className="font-mono text-[11px] text-ink-faint">{p}</span>
+                {p.logoUrl ? (
+                  <img
+                    src={mediaUrl(p.logoUrl)}
+                    alt={p.name}
+                    className="max-h-10 max-w-full object-contain"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="font-mono text-[11px] text-ink-faint">{p.name}</span>
+                )}
               </div>
             ))}
           </div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export function Footer() {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
@@ -13,7 +14,7 @@ export function Footer() {
   return (
     <footer className="bg-navy">
       <div className="mx-auto flex max-w-[1240px] flex-col gap-11 px-5 pt-14 pb-8 sm:px-10">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           <div className="flex flex-col gap-4">
             <Link to="/" className="font-heading text-[26px] font-bold text-surface">
               Gehmit
@@ -32,7 +33,11 @@ export function Footer() {
                   e.preventDefault()
                   if (!email.trim()) return
                   try {
-                    await apiPost("/api/public/newsletter/subscribe", { email })
+                    await apiPost("/api/public/newsletter/subscribe", {
+                      name: name.trim() || undefined,
+                      email,
+                      source: "newsletter",
+                    })
                     setSent(true)
                   } catch {
                     setError(true)
@@ -41,11 +46,18 @@ export function Footer() {
               >
                 <div className="flex gap-2.5">
                 <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nom"
+                  aria-label="Nom"
+                  className="h-[46px] flex-1 rounded-md border-0 bg-white px-3.5 text-[15px] text-navy placeholder:text-ink-faint"
+                />
+                <Input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="votre@email.com"
+                  placeholder="Email"
                   className="h-[46px] flex-1 rounded-md border-0 bg-white px-3.5 text-[15px] text-navy placeholder:text-ink-faint"
                 />
                 <Button
@@ -79,6 +91,15 @@ export function Footer() {
               { label: "Blog", to: "/blog" },
               { label: "Contact", to: "/contact" },
               { label: "Devenir partenaire", to: "/partenaire" },
+            ]}
+          />
+          <FooterCol
+            title="Communauté"
+            links={[
+              { label: "Junior Builders", to: "/junior-builders" },
+              { label: "Louer un développeur", to: "/louer-developpeur" },
+              { label: "Caravanes", to: "/caravanes" },
+              { label: "Rencontre Challenge", to: "/rencontre-challenge" },
             ]}
           />
           <div className="flex flex-col gap-3">

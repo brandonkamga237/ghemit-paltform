@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon, FileTextIcon } from "lucide-react"
 import { cn } from "cn"
 import { programs } from "@/data/content"
-import { apiPost } from "@/lib/api"
+import { apiPost, uploadCv } from "@/lib/api"
 import { Container } from "@/components/site/bands"
 import { Breadcrumb } from "@/components/site/page-header"
 import { Button } from "@/components/ui/button"
@@ -59,6 +59,7 @@ export function CandidaturePage() {
     motivation: "",
     cv: "",
   })
+  const [cvFile, setCvFile] = useState<File | null>(null)
 
   if (!program || program.status === "closed") {
     return <Navigate to="/programmes" replace />
@@ -92,7 +93,12 @@ export function CandidaturePage() {
     setSending(true)
     setSubmitError(false)
     try {
-      await apiPost("/api/public/candidatures", { program: program.slug, form })
+      let payload: Record<string, string> = { ...form }
+      if (cvFile) {
+        const cv = await uploadCv(cvFile)
+        payload = { ...payload, cv: cv.filename, cvUrl: cv.url }
+      }
+      await apiPost("/api/public/candidatures", { program: program.slug, form: payload })
       setSent(true)
     } catch {
       setSubmitError(true)
@@ -248,7 +254,7 @@ export function CandidaturePage() {
                 )}
 
                 {step === 2 && (
-                  <Field label="CV ou profil" hint="PDF, 2 Mo maximum. Facultatif.">
+                  <Field label="CV ou profil" error={errors.cv} hint="PDF, 2 Mo maximum. Facultatif.">
                     <label className="flex h-12 cursor-pointer items-center justify-between rounded-md border border-dashed border-sand-dark bg-white px-3.5 text-[15.5px] transition-colors hover:border-gehmit">
                       <span className={form.cv ? "text-navy" : "text-ink-muted"}>
                         {form.cv || "Choisir un fichier"}
@@ -256,9 +262,17 @@ export function CandidaturePage() {
                       <FileTextIcon className="size-4 text-ink-faint" />
                       <input
                         type="file"
-                        accept=".pdf"
+                        accept=".pdf,application/pdf"
                         className="sr-only"
-                        onChange={(e) => set("cv", e.target.files?.[0]?.name ?? "")}
+                        onChange={(e) => {
+                          const f = e.target.files?.[0] ?? null
+                          if (f && f.size > 2 * 1024 * 1024) {
+                            setErrors((prev) => ({ ...prev, cv: "Le fichier dépasse 2 Mo." }))
+                            return
+                          }
+                          setCvFile(f)
+                          set("cv", f?.name ?? "")
+                        }}
                       />
                     </label>
                   </Field>

@@ -6,6 +6,27 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+
+/** Textes de pages modifiables — mêmes clés que pageTextDefaults du site public. */
+const PAGE_TEXT_LABELS: Record<string, string> = {
+  "home.hero.title": "Accueil — titre du héros",
+  "home.hero.lede": "Accueil — chapô du héros",
+  "about.hero.title": "À propos — titre",
+  "about.hero.lede": "À propos — chapô",
+  "techpath.hero.title": "Solutions (TechPath) — titre",
+  "techpath.hero.lede": "Solutions (TechPath) — chapô",
+  "contact.hero.title": "Contact — titre",
+  "contact.hero.lede": "Contact — chapô",
+  "juniorbuilders.hero.title": "Junior Builders — titre",
+  "juniorbuilders.hero.lede": "Junior Builders — chapô",
+  "hiredeveloper.hero.title": "Louer un développeur — titre",
+  "hiredeveloper.hero.lede": "Louer un développeur — chapô",
+  "caravanes.hero.title": "Caravanes — titre",
+  "caravanes.hero.lede": "Caravanes — chapô",
+  "challenge.hero.title": "Rencontre Challenge — titre",
+  "challenge.hero.lede": "Rencontre Challenge — chapô",
+}
 
 export function SettingsPage() {
   const [settings, setSettings] = useState<ContentItem[]>([])
@@ -46,7 +67,64 @@ export function SettingsPage() {
           onSaved={refresh}
         />
       </div>
+      <PageTextsCard item={settings.find((s) => s.slug === "page-texts")} onSaved={refresh} />
     </div>
+  )
+}
+
+function PageTextsCard({
+  item,
+  onSaved,
+}: {
+  item: ContentItem | undefined
+  onSaved: () => void
+}) {
+  const [texts, setTexts] = useState<Record<string, string>>({})
+  const { saving, save } = useSettingSave(item, onSaved)
+
+  useEffect(() => {
+    const t = item?.payload.texts
+    setTexts(t && typeof t === "object" && !Array.isArray(t) ? (t as Record<string, string>) : {})
+  }, [item])
+
+  if (!item) return null
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Textes des pages</CardTitle>
+        <CardDescription>
+          Titres et chapôs des pages publiques. Laissez vide pour utiliser le texte
+          par défaut du site.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="grid gap-4 lg:grid-cols-2">
+          {Object.entries(PAGE_TEXT_LABELS).map(([key, label]) => (
+            <div key={key} className="flex flex-col gap-1.5">
+              <Label>{label}</Label>
+              <Textarea
+                value={texts[key] ?? ""}
+                onChange={(e) => setTexts((t) => ({ ...t, [key]: e.target.value }))}
+                rows={2}
+              />
+            </div>
+          ))}
+        </div>
+        <Button
+          className="self-start"
+          disabled={saving}
+          onClick={() => {
+            const cleaned = Object.fromEntries(
+              Object.entries(texts).filter(([, v]) => v.trim() !== "")
+            )
+            void save({ texts: cleaned })
+          }}
+        >
+          {saving ? "Enregistrement…" : "Enregistrer"}
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 

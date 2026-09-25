@@ -4,6 +4,7 @@ import type {
   ContactInfo,
   FaqItem,
   Formation,
+  Partner,
   Program,
 } from "@/data/content"
 
@@ -17,10 +18,11 @@ export interface RemoteContent {
   articles?: Article[]
   blogCategories?: string[]
   faq?: FaqItem[]
-  partners?: string[]
+  partners?: (Partner | string)[]
   stats?: { value: string; label: string; gold?: boolean }[]
   achievements?: Achievement[]
   contact?: Partial<ContactInfo>
+  pageTexts?: Record<string, string>
 }
 
 export async function fetchRemoteContent(timeoutMs = 3500): Promise<RemoteContent | null> {
@@ -44,4 +46,18 @@ export async function apiPost(path: string, body: unknown): Promise<void> {
     body: JSON.stringify(body),
   })
   if (!res.ok) throw new Error(`API ${res.status}`)
+}
+
+export interface CvUpload {
+  objectKey: string
+  url: string
+  filename: string
+}
+
+export async function uploadCv(file: File): Promise<CvUpload> {
+  const data = new FormData()
+  data.append("file", file)
+  const res = await fetch(`${API_URL}/api/public/cv`, { method: "POST", body: data })
+  if (!res.ok) throw new Error(`API ${res.status}`)
+  return (await res.json()) as CvUpload
 }

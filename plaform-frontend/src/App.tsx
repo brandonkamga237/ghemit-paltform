@@ -7,6 +7,10 @@ import { ProgrammeDetailPage } from "@/pages/programme-detail"
 import { CandidaturePage } from "@/pages/candidature"
 import { FormationsPage } from "@/pages/formations"
 import { TechPathPage } from "@/pages/techpath"
+import { JuniorBuildersPage } from "@/pages/junior-builders"
+import { HireDeveloperPage } from "@/pages/hire-developer"
+import { CaravanesPage } from "@/pages/caravanes"
+import { RencontreChallengePage } from "@/pages/rencontre-challenge"
 import { ImpactPage } from "@/pages/impact"
 import { BlogPage } from "@/pages/blog"
 import { ArticlePage } from "@/pages/article"
@@ -25,6 +29,10 @@ export default function App() {
           <Route path="programmes/:slug" element={<ProgrammeDetailPage />} />
           <Route path="formations" element={<FormationsPage />} />
           <Route path="solutions" element={<TechPathPage />} />
+          <Route path="junior-builders" element={<JuniorBuildersPage />} />
+          <Route path="louer-developpeur" element={<HireDeveloperPage />} />
+          <Route path="caravanes" element={<CaravanesPage />} />
+          <Route path="rencontre-challenge" element={<RencontreChallengePage />} />
           <Route path="notre-impact" element={<ImpactPage />} />
           <Route path="blog" element={<BlogPage />} />
           <Route path="blog/:slug" element={<ArticlePage />} />

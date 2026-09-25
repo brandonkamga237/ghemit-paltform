@@ -23,6 +23,8 @@ export interface Program {
     sideSecondary?: string
     related: string[]
     photoLabel: string
+    /** URL de l'image du héros (médiathèque). Vide = visuel par défaut. */
+    imageUrl?: string
   }
 }
 
@@ -364,10 +366,13 @@ export interface Article {
   readingTime: string
   featured?: boolean
   photoLabel: string
+  /** URL de l'image de couverture (médiathèque). Vide = visuel par défaut. */
+  imageUrl?: string
   body: (
     | { type: "p"; text: string }
     | { type: "h2"; text: string }
     | { type: "quote"; text: string }
+    | { type: "image"; url: string; text?: string }
   )[]
   cta?: { title: string; text: string; label: string; to: string }
 }
@@ -506,7 +511,16 @@ export const faq: FaqItem[] = [
   },
 ]
 
-export const partners = Array.from({ length: 6 }, (_, i) => `Partenaire ${i + 1}`)
+export interface Partner {
+  name: string
+  description?: string
+  /** URL du logo (médiathèque). Vide = le nom seul est affiché. */
+  logoUrl?: string
+}
+
+export const partners: Partner[] = Array.from({ length: 6 }, (_, i) => ({
+  name: `Partenaire ${i + 1}`,
+}))
 
 export const stats = [
   { value: "200+", label: "Étudiants encadrés" },
@@ -555,6 +569,51 @@ export const contact: ContactInfo = {
   city: "Douala, Cameroun",
 }
 
+/** URL de l'outil TechPath (application externe existante). */
+export const techpathUrl = "https://techpath.gehmit.org"
+
+/** Lien WhatsApp direct (wa.me). */
+export const whatsappUrl = "https://wa.me/237671130266"
+
+/**
+ * Textes de pages modifiables depuis le back office (réglage « Textes des pages »).
+ * Chaque clé remplace le texte codé en dur ; en l'absence de valeur, le repli
+ * statique ci-dessous est utilisé.
+ */
+export const pageTexts: Record<string, string> = {}
+
+export const pageTextDefaults: Record<string, string> = {
+  "home.hero.title": "Votre place dans le numérique existe.",
+  "home.hero.lede": "Nous vous aidons à la trouver.",
+  "about.hero.title": "Réduire la part de hasard dans une carrière tech.",
+  "about.hero.lede":
+    "Gehmit est une organisation à but non lucratif. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique, et nous facilitons leur insertion.",
+  "techpath.hero.title": "Un coach d'orientation, disponible à toute heure.",
+  "techpath.hero.lede":
+    "Quelques questions sur votre profil, une recommandation de métier, d'école et de programme Gehmit.",
+  "contact.hero.title": "Nous écrire",
+  "contact.hero.lede": "Réponse sous 48 heures ouvrées.",
+  "juniorbuilders.hero.title":
+    "Junior Builders : votre code parle, nous vous mettons en relation.",
+  "juniorbuilders.hero.lede":
+    "Rejoignez le vivier de jeunes talents du numérique. Missions, projets et embauches auprès des entreprises partenaires de Gehmit.",
+  "hiredeveloper.hero.title": "Un développeur qualifié, sans cabinet de recrutement.",
+  "hiredeveloper.hero.lede":
+    "Décrivez votre besoin : nous mettons en relation votre entreprise avec les jeunes talents du vivier Junior Builders, sans commission.",
+  "caravanes.hero.title": "Les caravanes : un après-midi dans une entreprise tech.",
+  "caravanes.hero.lede":
+    "Chaque mois, un groupe de jeunes visite une entreprise de la sous-région : métiers, équipes, coulisses — et les premières rencontres qui comptent.",
+  "challenge.hero.title": "La Rencontre Challenge : résolvez, présentez, rencontrez.",
+  "challenge.hero.lede":
+    "Une journée, un défi réel posé par une entreprise, et un jury de professionnels — de quoi se faire repérer autrement que sur CV.",
+}
+
+/** Retourne le texte modifié en back office s'il existe, sinon le texte par défaut. */
+export function pg(key: keyof typeof pageTextDefaults & string): string {
+  const v = pageTexts[key]
+  return v && v.trim() ? v : pageTextDefaults[key]
+}
+
 /**
  * Remplace le contenu embarqué par celui renvoyé par l'API (GET /api/public/content).
  * Les tableaux/objets exportés sont mutés avant le premier rendu — les imports
@@ -568,10 +627,11 @@ export function applyRemoteContent(c: {
   articles?: Article[]
   blogCategories?: string[]
   faq?: FaqItem[]
-  partners?: string[]
+  partners?: (Partner | string)[]
   stats?: { value: string; label: string; gold?: boolean }[]
   achievements?: Achievement[]
   contact?: Partial<ContactInfo>
+  pageTexts?: Record<string, string>
 }) {
   const replace = <T,>(arr: T[], next: T[] | undefined) => {
     if (Array.isArray(next) && next.length > 0) arr.splice(0, arr.length, ...next)
@@ -582,8 +642,15 @@ export function applyRemoteContent(c: {
   replace(articles, c.articles)
   replace(blogCategories, c.blogCategories)
   replace(faq, c.faq)
-  replace(partners, c.partners)
+  if (Array.isArray(c.partners) && c.partners.length > 0) {
+    partners.splice(
+      0,
+      partners.length,
+      ...c.partners.map((p) => (typeof p === "string" ? { name: p } : p))
+    )
+  }
   replace(stats, c.stats)
   replace(achievements, c.achievements)
   if (c.contact) Object.assign(contact, c.contact)
+  if (c.pageTexts) Object.assign(pageTexts, c.pageTexts)
 }

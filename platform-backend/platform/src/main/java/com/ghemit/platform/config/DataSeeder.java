@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataSeeder implements ApplicationRunner {
 
 	private final ContentItemRepository repository;
-	private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Value("${app.content.seed:true}")
 	private boolean seedEnabled;
@@ -34,9 +34,13 @@ public class DataSeeder implements ApplicationRunner {
 	@Override
 	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
-		if (!seedEnabled || repository.count() > 0) {
-			return;
+		if (seedEnabled && repository.count() == 0) {
+			seed();
 		}
+		ensurePageTextsSetting();
+	}
+
+	private void seed() throws Exception {
 		ClassPathResource resource = new ClassPathResource("seed/content.json");
 		if (!resource.exists()) {
 			log.warn("seed/content.json absent — aucun contenu initial inséré");
@@ -60,6 +64,21 @@ public class DataSeeder implements ApplicationRunner {
 			}
 		}
 		log.info("Contenu initial inséré : {} éléments", count);
+	}
+
+	/**
+	 * Garantit l'existence du réglage « page-texts » (textes de pages modifiables
+	 * depuis le back office), même quand le seed initial a déjà été joué.
+	 */
+	private void ensurePageTextsSetting() {
+		if (repository.findByTypeAndSlug(ContentType.SETTING, "page-texts").isEmpty()) {
+			ContentItem item = new ContentItem();
+			item.setType(ContentType.SETTING);
+			item.setSlug("page-texts");
+			item.setPosition(0);
+			item.setPayload(new java.util.LinkedHashMap<>(Map.of("texts", Map.of())));
+			repository.save(item);
+		}
 	}
 
 	private record SeedItem(String slug, Map<String, Object> payload) {}

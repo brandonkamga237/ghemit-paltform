@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
+import { pg } from "@/data/content"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container, CtaBand } from "@/components/site/bands"
@@ -26,7 +27,7 @@ export function AboutPage() {
     <div className="flex flex-col">
       {/* En-tête éditorial */}
       <section className="bg-cream">
-        <Container className="grid items-end gap-10 pt-16 pb-14 lg:grid-cols-2 lg:gap-14">
+        <Container className="grid items-end gap-8 pt-10 pb-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
             className="flex flex-col gap-5"
             initial={{ opacity: 0, y: 16 }}
@@ -36,8 +37,8 @@ export function AboutPage() {
             <Breadcrumb
               trail={[{ label: "Accueil", to: "/" }, { label: "À propos" }]}
             />
-            <h1 className="font-heading text-4xl leading-[1.08] font-semibold tracking-[-0.02em] text-balance sm:text-[52px]">
-              Réduire la part de hasard dans une carrière tech.
+            <h1 className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.02em] text-balance sm:text-4xl">
+              {pg("about.hero.title")}
             </h1>
           </motion.div>
           <motion.p
@@ -46,9 +47,7 @@ export function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            Gehmit est une organisation à but non lucratif. Nous informons, formons
-            et orientons les jeunes et les professionnels qui veulent construire
-            une carrière dans le numérique, et nous facilitons leur insertion.
+            {pg("about.hero.lede")}
           </motion.p>
         </Container>
       </section>
@@ -56,7 +55,7 @@ export function AboutPage() {
       {/* Photo panoramique */}
       <Photo
         label="Photo panoramique — équipe ou événement, 2400 × 900"
-        className="h-[260px] sm:h-[420px]"
+        className="h-[180px] sm:h-[260px]"
       />
 
       {/* Pourquoi */}

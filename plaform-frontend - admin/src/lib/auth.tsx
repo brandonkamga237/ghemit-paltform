@@ -1,50 +1,59 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { initKeycloak, keycloak } from "./keycloak"
+import { createContext, useContext, useState, type ReactNode } from "react"
+import { currentUser, hasSession, loginWithPassword, logoutTokens } from "./token"
 
 interface AuthState {
   ready: boolean
   authenticated: boolean
   isAdmin: boolean
   username: string
+  login: (username: string, password: string) => Promise<void>
   logout: () => void
 }
 
 const AuthContext = createContext<AuthState>({
-  ready: false,
+  ready: true,
   authenticated: false,
   isAdmin: false,
   username: "",
+  login: () => Promise.resolve(),
   logout: () => {},
 })
 
 export const useAuth = () => useContext(AuthContext)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
-    ready: false,
-    authenticated: false,
-    isAdmin: false,
-    username: "",
-    logout: () => keycloak.logout({ redirectUri: window.location.origin }),
-  })
+  // Session restaurée si un refresh token valide est en sessionStorage.
+  const initial = hasSession() ? currentUser() : null
+  const [session, setSession] = useState<{ username: string; isAdmin: boolean } | null>(initial)
 
-  useEffect(() => {
-    keycloak.onTokenExpired = () => {
-      keycloak.updateToken(30).catch(() => keycloak.login())
+  const login = async (username: string, password: string) => {
+    await loginWithPassword(username, password)
+    const u = currentUser()
+    if (!u?.isAdmin) {
+      logoutTokens()
+      setSession(null)
+      throw new Error("forbidden")
     }
-    initKeycloak()
-      .then((authenticated) =>
-        setState((s) => ({
-          ...s,
-          ready: true,
-          authenticated,
-          isAdmin: keycloak.hasRealmRole("admin"),
-          username:
-            (keycloak.tokenParsed?.preferred_username as string | undefined) ?? "",
-        }))
-      )
-      .catch(() => setState((s) => ({ ...s, ready: true })))
-  }, [])
+    setSession(u)
+  }
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
+  const logout = () => {
+    logoutTokens()
+    setSession(null)
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        ready: true,
+        authenticated: !!session,
+        isAdmin: session?.isAdmin ?? false,
+        username: session?.username ?? "",
+        login,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
