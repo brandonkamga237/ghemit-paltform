@@ -1,1 +1,8 @@
 rootProject.name = 'platform'
+
+// Un module par couche de l'hexagone : le compilateur garantit la direction des
+// dépendances (domain <- application <- infrastructure <- bootstrap).
+include 'domain'
+include 'application'
+include 'infrastructure'
+include 'bootstrap'

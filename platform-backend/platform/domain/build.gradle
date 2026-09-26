@@ -1,0 +1,4 @@
+description = "Cœur métier : agrégats, objets valeur, règles et ports d'accès aux données"
+
+// Aucune dépendance de production : le domaine est du Java pur.
+// Toute tentative d'y importer Spring, Jakarta ou Hibernate échouera à la compilation.

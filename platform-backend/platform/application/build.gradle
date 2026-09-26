@@ -1,0 +1,8 @@
+description = "Cas d'usage : ports entrants (use cases), ports sortants techniques et orchestration"
+
+dependencies {
+	api project(':domain')
+
+	// Uniquement les annotations @Transactional : aucun conteneur, aucun démarrage Spring ici.
+	implementation 'org.springframework:spring-tx'
+}

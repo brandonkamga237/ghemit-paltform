@@ -1,0 +1,35 @@
+description = "Assemblage : application Spring Boot, câblage des cas d'usage et configuration"
+
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+	implementation project(':infrastructure')
+	implementation 'org.springframework.boot:spring-boot-starter'
+
+	runtimeOnly 'org.postgresql:postgresql'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+}
+
+// Les tests de contrat REST tournent sans infrastructure ; le test de câblage
+// complet a besoin de PostgreSQL et n'est lancé que par `integrationTest`.
+tasks.named('test') {
+	useJUnitPlatform {
+		excludeTags 'integration'
+	}
+}
+
+tasks.register('integrationTest', Test) {
+	description = "Vérifie le câblage complet de l'application (PostgreSQL requis)"
+	group = 'verification'
+	testClassesDirs = sourceSets.test.output.classesDirs
+	classpath = sourceSets.test.runtimeClasspath
+	useJUnitPlatform {
+		includeTags 'integration'
+	}
+}

@@ -9,7 +9,7 @@ informe, forme et oriente les jeunes vers les métiers du numérique.
 |---|---|---|
 | `plaform-frontend/` | Site public | React 19, TypeScript, Vite, Tailwind CSS 4, shadcn (base-nova), Motion, react-router 7 |
 | `plaform-frontend - admin/` | Back office d'administration | Même stack, authentification Keycloak |
-| `platform-backend/` | API REST | Spring Boot (Java, Gradle), JPA/Hibernate |
+| `platform-backend/` | API REST, architecture hexagonale & DDD (`domain` / `application` / `infrastructure` / `bootstrap`) — voir [son README](platform-backend/platform/README.md) | Spring Boot (Java, Gradle), JPA/Hibernate |
 | `docker-compose.yml` | Services d'infrastructure | PostgreSQL 16, MinIO, Mailhog, Keycloak 26 |
 | `keycloak/` | Realm `gehmit` importé au démarrage | — |
 
@@ -21,7 +21,7 @@ docker compose up -d
 
 # 2. Backend (http://localhost:8080)
 cd platform-backend/platform
-./gradlew bootRun
+./gradlew :bootstrap:bootRun
 
 # 3. Site public (http://localhost:5173)
 cd plaform-frontend
