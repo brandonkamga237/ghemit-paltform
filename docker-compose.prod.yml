@@ -3,9 +3,10 @@ name: gehmit
 # ── Déploiement production derrière Traefik ─────────────────────────────────
 # Réseau externe partagé : traefik-public (voir /root/traefik/docker-compose.yml)
 # Domaines :
-#   public.ghemit.brandonkamga.com  → frontend public
-#   admin.ghemit.brandonkamga.com   → back office
-#   api.ghemit.brandonkamga.com     → backend (/api) + Keycloak (/auth)
+#   gehmit.org + www.gehmit.org  → frontend public
+#   admin.gehmit.org             → back office
+#   api.gehmit.org               → backend (/api)
+#   auth.gehmit.org              → Keycloak
 
 services:
   postgres:
@@ -51,13 +52,12 @@ services:
     command:
       - start-dev
       - --import-realm
-      - --http-relative-path=/auth
       - --proxy-headers=xforwarded
       - --http-enabled=true
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_ADMIN:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:?KC_ADMIN_PASSWORD requis}
-      KC_HOSTNAME: https://api.ghemit.brandonkamga.com/auth
+      KC_HOSTNAME: https://auth.gehmit.org
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-platform}
       KC_DB_USERNAME: ${DB_USER:-platform}
@@ -71,11 +71,11 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
       # HTTP → HTTPS
-      - traefik.http.routers.gehmit-kc-http.rule=Host(`api.ghemit.brandonkamga.com`) && PathPrefix(`/auth`)
+      - traefik.http.routers.gehmit-kc-http.rule=Host(`auth.gehmit.org`)
       - traefik.http.routers.gehmit-kc-http.entrypoints=web
       - traefik.http.routers.gehmit-kc-http.middlewares=gehmit-https-redirect
       # HTTPS
-      - traefik.http.routers.gehmit-kc.rule=Host(`api.ghemit.brandonkamga.com`) && PathPrefix(`/auth`)
+      - traefik.http.routers.gehmit-kc.rule=Host(`auth.gehmit.org`)
       - traefik.http.routers.gehmit-kc.entrypoints=websecure
       - traefik.http.routers.gehmit-kc.tls.certresolver=le
       - traefik.http.routers.gehmit-kc.priority=10
@@ -90,8 +90,8 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-platform}
       DB_USER: ${DB_USER:-platform}
       DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD requis}
-      KEYCLOAK_JWK_URI: http://keycloak:8080/auth/realms/gehmit/protocol/openid-connect/certs
-      CORS_ORIGINS: https://public.ghemit.brandonkamga.com,https://admin.ghemit.brandonkamga.com
+      KEYCLOAK_JWK_URI: http://keycloak:8080/realms/gehmit/protocol/openid-connect/certs
+      CORS_ORIGINS: https://gehmit.org,https://www.gehmit.org,https://admin.gehmit.org
       SEED_CONTENT: ${SEED_CONTENT:-true}
       MINIO_ENDPOINT: http://minio:9000
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:?MINIO_ROOT_USER requis}
@@ -110,10 +110,10 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.gehmit-api-http.rule=Host(`api.ghemit.brandonkamga.com`)
+      - traefik.http.routers.gehmit-api-http.rule=Host(`api.gehmit.org`)
       - traefik.http.routers.gehmit-api-http.entrypoints=web
       - traefik.http.routers.gehmit-api-http.middlewares=gehmit-https-redirect
-      - traefik.http.routers.gehmit-api.rule=Host(`api.ghemit.brandonkamga.com`)
+      - traefik.http.routers.gehmit-api.rule=Host(`api.gehmit.org`)
       - traefik.http.routers.gehmit-api.entrypoints=websecure
       - traefik.http.routers.gehmit-api.tls.certresolver=le
       - traefik.http.routers.gehmit-api.priority=1
@@ -130,7 +130,7 @@ services:
     build:
       context: ./plaform-frontend
       args:
-        VITE_API_URL: https://api.ghemit.brandonkamga.com
+        VITE_API_URL: https://api.gehmit.org
     container_name: gehmit-frontend-public
     restart: unless-stopped
     networks:
@@ -138,10 +138,10 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.gehmit-public-http.rule=Host(`public.ghemit.brandonkamga.com`)
+      - traefik.http.routers.gehmit-public-http.rule=Host(`gehmit.org`) || Host(`www.gehmit.org`)
       - traefik.http.routers.gehmit-public-http.entrypoints=web
       - traefik.http.routers.gehmit-public-http.middlewares=gehmit-https-redirect
-      - traefik.http.routers.gehmit-public.rule=Host(`public.ghemit.brandonkamga.com`)
+      - traefik.http.routers.gehmit-public.rule=Host(`gehmit.org`) || Host(`www.gehmit.org`)
       - traefik.http.routers.gehmit-public.entrypoints=websecure
       - traefik.http.routers.gehmit-public.tls.certresolver=le
       - traefik.http.services.gehmit-public.loadbalancer.server.port=80
@@ -152,8 +152,8 @@ services:
     build:
       context: "plaform-frontend - admin"
       args:
-        VITE_API_URL: https://api.ghemit.brandonkamga.com
-        VITE_KEYCLOAK_URL: https://api.ghemit.brandonkamga.com/auth
+        VITE_API_URL: https://api.gehmit.org
+        VITE_KEYCLOAK_URL: https://auth.gehmit.org
         VITE_KEYCLOAK_REALM: gehmit
         VITE_KEYCLOAK_CLIENT: admin-frontend
     container_name: gehmit-frontend-admin
@@ -163,10 +163,10 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.gehmit-admin-http.rule=Host(`admin.ghemit.brandonkamga.com`)
+      - traefik.http.routers.gehmit-admin-http.rule=Host(`admin.gehmit.org`)
       - traefik.http.routers.gehmit-admin-http.entrypoints=web
       - traefik.http.routers.gehmit-admin-http.middlewares=gehmit-https-redirect
-      - traefik.http.routers.gehmit-admin.rule=Host(`admin.ghemit.brandonkamga.com`)
+      - traefik.http.routers.gehmit-admin.rule=Host(`admin.gehmit.org`)
       - traefik.http.routers.gehmit-admin.entrypoints=websecure
       - traefik.http.routers.gehmit-admin.tls.certresolver=le
       - traefik.http.services.gehmit-admin.loadbalancer.server.port=80

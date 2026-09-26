@@ -4,8 +4,8 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
-ARG VITE_API_URL=https://api.ghemit.brandonkamga.com
-ARG VITE_KEYCLOAK_URL=https://api.ghemit.brandonkamga.com/auth
+ARG VITE_API_URL=https://api.gehmit.org
+ARG VITE_KEYCLOAK_URL=https://auth.gehmit.org
 ARG VITE_KEYCLOAK_REALM=gehmit
 ARG VITE_KEYCLOAK_CLIENT=admin-frontend
 ENV VITE_API_URL=${VITE_API_URL} \

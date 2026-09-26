@@ -4,7 +4,7 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
-ARG VITE_API_URL=https://api.ghemit.brandonkamga.com
+ARG VITE_API_URL=https://api.gehmit.org
 ENV VITE_API_URL=${VITE_API_URL}
 COPY . .
 RUN pnpm exec tsc -b && pnpm exec vite build
