@@ -16,11 +16,12 @@ public record PublicContentResponse(
 		List<Map<String, Object>> stats,
 		List<Map<String, Object>> achievements,
 		Map<String, Object> contact,
-		Map<String, Object> pageTexts) {
+		Map<String, Object> pageTexts,
+		Map<String, Object> pageImages) {
 
 	public static PublicContentResponse from(PublicContentView view) {
 		return new PublicContentResponse(view.programs(), view.formations(), view.calendarRows(),
 				view.articles(), view.blogCategories(), view.faq(), view.partners(), view.stats(),
-				view.achievements(), view.contact(), view.pageTexts());
+				view.achievements(), view.contact(), view.pageTexts(), view.pageImages());
 	}
 }

@@ -11,6 +11,9 @@ import type {
 export const API_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8080"
 
+/** Préfixe les URLs relatives de la médiathèque par l'origine de l'API. */
+export const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
+
 export interface RemoteContent {
   programs?: Program[]
   formations?: Formation[]
@@ -23,6 +26,7 @@ export interface RemoteContent {
   achievements?: Achievement[]
   contact?: Partial<ContactInfo>
   pageTexts?: Record<string, string>
+  pageImages?: Record<string, string>
 }
 
 export async function fetchRemoteContent(timeoutMs = 3500): Promise<RemoteContent | null> {

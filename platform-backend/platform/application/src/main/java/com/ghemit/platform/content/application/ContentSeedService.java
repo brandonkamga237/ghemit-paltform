@@ -46,5 +46,9 @@ public class ContentSeedService implements SeedContentUseCase {
 			repository.save(ContentItem.create(ContentType.SETTING, PublicContentService.PAGE_TEXTS_SLUG, 0,
 					Payload.of(Map.of("texts", Map.of()))));
 		}
+		if (repository.findByTypeAndSlug(ContentType.SETTING, PublicContentService.PAGE_IMAGES_SLUG).isEmpty()) {
+			repository.save(ContentItem.create(ContentType.SETTING, PublicContentService.PAGE_IMAGES_SLUG, 0,
+					Payload.of(Map.of("images", Map.of()))));
+		}
 	}
 }

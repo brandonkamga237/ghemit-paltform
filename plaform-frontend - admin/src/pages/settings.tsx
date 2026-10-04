@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { ImageField } from "@/components/admin/media-picker"
 
 /** Textes de pages modifiables — mêmes clés que pageTextDefaults du site public. */
 const PAGE_TEXT_LABELS: Record<string, string> = {
@@ -26,6 +27,20 @@ const PAGE_TEXT_LABELS: Record<string, string> = {
   "caravanes.hero.lede": "Caravanes — chapô",
   "challenge.hero.title": "Rencontre Challenge — titre",
   "challenge.hero.lede": "Rencontre Challenge — chapô",
+}
+
+/** Emplacements d'images modifiables — mêmes clés que pageImageLabels du site public. */
+const PAGE_IMAGE_LABELS: Record<string, string> = {
+  "home.hero": "Accueil — photo du héros",
+  "home.techpath": "Accueil — photo TechPath",
+  "about.panorama": "À propos — photo panoramique",
+  "techpath.product": "Solutions (TechPath) — visuel produit",
+  "juniorbuilders.session": "Junior Builders — session de travail",
+  "hiredeveloper.interview": "Louer un développeur — entretien",
+  "caravanes.visit": "Caravanes — visite d'entreprise",
+  "challenge.jury": "Rencontre Challenge — jury",
+  "impact.portrait": "Notre impact — portrait bénéficiaire",
+  "partner.visit": "Partenaires — signature de convention",
 }
 
 export function SettingsPage() {
@@ -68,7 +83,62 @@ export function SettingsPage() {
         />
       </div>
       <PageTextsCard item={settings.find((s) => s.slug === "page-texts")} onSaved={refresh} />
+      <PageImagesCard item={settings.find((s) => s.slug === "page-images")} onSaved={refresh} />
     </div>
+  )
+}
+
+function PageImagesCard({
+  item,
+  onSaved,
+}: {
+  item: ContentItem | undefined
+  onSaved: () => void
+}) {
+  const [images, setImages] = useState<Record<string, string>>({})
+  const { saving, save } = useSettingSave(item, onSaved)
+
+  useEffect(() => {
+    const m = item?.payload.images
+    setImages(m && typeof m === "object" && !Array.isArray(m) ? (m as Record<string, string>) : {})
+  }, [item])
+
+  if (!item) return null
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Images des pages</CardTitle>
+        <CardDescription>
+          Photos des emplacements fixes du site public. Laissez vide pour garder le
+          visuel par défaut. Les images des articles se gèrent dans la section Blog.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="grid gap-5 lg:grid-cols-2">
+          {Object.entries(PAGE_IMAGE_LABELS).map(([key, label]) => (
+            <ImageField
+              key={key}
+              label={label}
+              value={images[key] ?? ""}
+              onChange={(url) => setImages((m) => ({ ...m, [key]: url }))}
+            />
+          ))}
+        </div>
+        <Button
+          className="self-start"
+          disabled={saving}
+          onClick={() => {
+            const cleaned = Object.fromEntries(
+              Object.entries(images).filter(([, v]) => v.trim() !== "")
+            )
+            void save({ images: cleaned })
+          }}
+        >
+          {saving ? "Enregistrement…" : "Enregistrer"}
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -371,8 +371,13 @@ export interface Article {
   body: (
     | { type: "p"; text: string }
     | { type: "h2"; text: string }
+    | { type: "h3"; text: string }
     | { type: "quote"; text: string }
+    | { type: "ul"; text: string }
+    | { type: "ol"; text: string }
+    | { type: "code"; text: string }
     | { type: "image"; url: string; text?: string }
+    | { type: "hr" }
   )[]
   cta?: { title: string; text: string; label: string; to: string }
 }
@@ -615,6 +620,32 @@ export function pg(key: keyof typeof pageTextDefaults & string): string {
 }
 
 /**
+ * Images d'emplacements fixes des pages (réglage « Images des pages » en back
+ * office). Clés stables, ex. "home.hero" ; vide = le visuel par défaut (Photo).
+ */
+export const pageImages: Record<string, string> = {}
+
+/** Retourne l'URL de l'image choisie en back office pour l'emplacement, sinon undefined. */
+export function pageImage(key: keyof typeof pageImageLabels & string): string | undefined {
+  const v = pageImages[key]
+  return v && v.trim() ? v : undefined
+}
+
+/** Emplacements d'images proposés au back office — même liste que dans l'admin. */
+export const pageImageLabels: Record<string, string> = {
+  "home.hero": "Accueil — photo du héros",
+  "home.techpath": "Accueil — photo TechPath",
+  "about.panorama": "À propos — photo panoramique",
+  "techpath.product": "Solutions (TechPath) — visuel produit",
+  "juniorbuilders.session": "Junior Builders — session de travail",
+  "hiredeveloper.interview": "Louer un développeur — entretien",
+  "caravanes.visit": "Caravanes — visite d'entreprise",
+  "challenge.jury": "Rencontre Challenge — jury",
+  "impact.portrait": "Notre impact — portrait bénéficiaire",
+  "partner.visit": "Partenaires — signature de convention",
+}
+
+/**
  * Remplace le contenu embarqué par celui renvoyé par l'API (GET /api/public/content).
  * Les tableaux/objets exportés sont mutés avant le premier rendu — les imports
  * existants dans les pages restent valides. Les entrées absentes ou vides sont
@@ -632,6 +663,7 @@ export function applyRemoteContent(c: {
   achievements?: Achievement[]
   contact?: Partial<ContactInfo>
   pageTexts?: Record<string, string>
+  pageImages?: Record<string, string>
 }) {
   const replace = <T,>(arr: T[], next: T[] | undefined) => {
     if (Array.isArray(next) && next.length > 0) arr.splice(0, arr.length, ...next)
@@ -653,4 +685,5 @@ export function applyRemoteContent(c: {
   replace(achievements, c.achievements)
   if (c.contact) Object.assign(contact, c.contact)
   if (c.pageTexts) Object.assign(pageTexts, c.pageTexts)
+  if (c.pageImages) Object.assign(pageImages, c.pageImages)
 }

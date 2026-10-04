@@ -1,10 +1,12 @@
-import { achievements } from "@/data/content"
+import { achievements, pageImage } from "@/data/content"
+import { mediaUrl } from "@/lib/api"
 import { PageHeader } from "@/components/site/page-header"
 import { Container, CtaBand, StatBand } from "@/components/site/bands"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 
 export function ImpactPage() {
+  const portraitImage = pageImage("impact.portrait")
   const impactStats = [
     { value: "200+", label: "Étudiants encadrés" },
     { value: "20+", label: "Professionnels reconvertis" },
@@ -55,7 +57,11 @@ export function ImpactPage() {
       {/* Témoignage */}
       <section className="grid border-t border-sand bg-cream lg:grid-cols-2">
         <div className="min-h-[280px] lg:min-h-[360px]">
-          <Photo label="Portrait — bénéficiaire" className="h-full" />
+          <Photo
+            src={portraitImage ? mediaUrl(portraitImage) : undefined}
+            label="Portrait — bénéficiaire"
+            className="h-full"
+          />
         </div>
         <Reveal className="flex flex-col justify-center gap-5 px-6 py-14 sm:px-11">
           <span className="mono-label">Témoignage</span>

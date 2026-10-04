@@ -2,8 +2,8 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { cn } from "cn"
-import { pg } from "@/data/content"
-import { apiPost } from "@/lib/api"
+import { pageImage, pg } from "@/data/content"
+import { apiPost, mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -55,6 +55,7 @@ const steps = [
 ]
 
 export function HireDeveloperPage() {
+  const interviewImage = pageImage("hiredeveloper.interview")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)
@@ -154,7 +155,12 @@ export function HireDeveloperPage() {
           </motion.div>
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
-          <Photo label="Photo — entretien entreprise / jeune développeur" dark className="h-full" />
+          <Photo
+            src={interviewImage ? mediaUrl(interviewImage) : undefined}
+            label="Photo — entretien entreprise / jeune développeur"
+            dark
+            className="h-full"
+          />
         </div>
       </section>
 

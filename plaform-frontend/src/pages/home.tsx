@@ -1,8 +1,8 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
-import { articles, partners, pg, programs, stats } from "@/data/content"
-import { API_URL } from "@/lib/api"
+import { articles, pageImage, partners, pg, programs, stats } from "@/data/content"
+import { mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { ArticleCard, ProgramCard } from "@/components/site/cards"
@@ -11,74 +11,81 @@ import { Button } from "@/components/ui/button"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
-
 export function HomePage() {
   const featured = ["mentorat", "formations", "glab-sisters"]
     .map((s) => programs.find((p) => p.slug === s)!)
     .filter(Boolean)
+  const heroImage = pageImage("home.hero")
+  const techpathImage = pageImage("home.techpath")
 
   return (
     <div className="flex flex-col">
-      {/* Héros — deux panneaux */}
-      <section className="grid lg:grid-cols-[0.85fr_1.15fr]">
-        <motion.div
-          className="flex flex-col justify-center gap-6 bg-gehmit px-6 py-14 sm:px-11 sm:py-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease }}
-        >
-          <motion.span
-            className="font-mono text-xs tracking-[0.16em] text-surface/70 uppercase"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5, ease }}
-          >
-            Depuis 2021 · Cameroun
-          </motion.span>
-          <motion.h1
-            className="font-heading text-4xl leading-[1.08] font-semibold tracking-[-0.02em] text-balance text-surface sm:text-[50px]"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.18, duration: 0.55, ease }}
-          >
-            {pg("home.hero.title")}
-          </motion.h1>
-          <motion.p
-            className="text-[19px] leading-relaxed text-surface/90"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.28, duration: 0.55, ease }}
-          >
-            {pg("home.hero.lede")}
-          </motion.p>
+      {/* Héros — panneau vert, photo qui chevauche la bande suivante */}
+      <section className="bg-gehmit">
+        <Container className="grid items-center gap-10 pt-16 pb-24 lg:grid-cols-2 lg:gap-14 lg:pt-[76px] lg:pb-[60px]">
           <motion.div
-            className="pt-1.5"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.38, duration: 0.55, ease }}
+            className="flex flex-col gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease }}
           >
-            <Button
-              render={<Link to="/programmes" />}
-              className="h-12 gap-2.5 rounded-md bg-surface px-7 text-base font-semibold text-gehmit hover:bg-cream"
+            <motion.span
+              className="h-0.5 w-14 bg-gold"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5, ease }}
+            />
+            <motion.h1
+              className="font-heading text-4xl leading-[1.06] font-medium tracking-[-0.02em] text-balance text-surface sm:text-[54px]"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18, duration: 0.55, ease }}
             >
-              Découvrir les programmes
-              <ArrowRightIcon className="size-[17px]" />
-            </Button>
+              {pg("home.hero.title")}
+            </motion.h1>
+            <motion.p
+              className="text-[19px] leading-relaxed text-surface/90"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.28, duration: 0.55, ease }}
+            >
+              {pg("home.hero.lede")}
+            </motion.p>
+            <motion.div
+              className="pt-2"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.38, duration: 0.55, ease }}
+            >
+              <Button
+                render={<Link to="/programmes" />}
+                className="h-12 gap-2.5 rounded-md bg-surface px-7 text-base font-semibold text-gehmit hover:bg-cream"
+              >
+                Découvrir les programmes
+                <ArrowRightIcon className="size-[17px]" />
+              </Button>
+            </motion.div>
           </motion.div>
-        </motion.div>
-        <div className="min-h-[300px] lg:min-h-[540px]">
-          <Photo
-            label={"Photo plein cadre — 1200 × 900 min.\nSéminaire d'orientation"}
-            className="h-full"
-            captionClassName="whitespace-pre-line"
-          />
-        </div>
+          <motion.div
+            className="relative z-10 lg:-mb-[200px] lg:self-end"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6, ease }}
+          >
+            <Photo
+              dark
+              src={heroImage ? mediaUrl(heroImage) : undefined}
+              label={"Photo portrait — 1000 × 1200\nchevauche la bande suivante"}
+              className="h-[300px] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.10),0_1px_3px_rgba(0,0,0,0.06)] sm:h-[380px] lg:h-[560px]"
+              captionClassName="whitespace-pre-line"
+            />
+          </motion.div>
+        </Container>
       </section>
 
       {/* Programmes */}
       <section className="bg-cream">
-        <Container className="flex flex-col gap-7 py-16">
+        <Container className="flex flex-col gap-7 py-16 lg:pt-[170px]">
           <Reveal>
             <SectionHeading title="Cinq programmes" linkLabel="Tout voir" linkTo="/programmes" />
           </Reveal>
@@ -98,7 +105,11 @@ export function HomePage() {
       {/* TechPath */}
       <section className="grid bg-surface lg:grid-cols-2">
         <div className="min-h-[280px] lg:min-h-[340px]">
-          <Photo label="Photo — coach TechPath en usage" className="h-full" />
+          <Photo
+            src={techpathImage ? mediaUrl(techpathImage) : undefined}
+            label="Photo — coach TechPath en usage"
+            className="h-full"
+          />
         </div>
         <Reveal className="flex flex-col justify-center gap-5 px-6 py-14 sm:px-11">
           <span className="mono-label">Solutions</span>
@@ -146,12 +157,12 @@ export function HomePage() {
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
             {partners.map((p, i) => (
               <Reveal key={p.name} delay={i * 0.04}>
-                <div className="flex h-[72px] items-center justify-center rounded-lg border border-sand bg-cream px-4">
+                <div className="flex h-[72px] items-center justify-center overflow-hidden rounded-lg border border-sand bg-cream">
                   {p.logoUrl ? (
                     <img
                       src={mediaUrl(p.logoUrl)}
                       alt={p.name}
-                      className="max-h-10 max-w-full object-contain"
+                      className="h-full w-full object-contain"
                       loading="lazy"
                     />
                   ) : (

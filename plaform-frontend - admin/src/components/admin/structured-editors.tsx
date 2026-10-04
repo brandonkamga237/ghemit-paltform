@@ -1,4 +1,20 @@
-import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon } from "lucide-react"
+import { useCallback, useRef, useState } from "react"
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  BoldIcon,
+  Code2Icon,
+  ImageIcon,
+  ItalicIcon,
+  LinkIcon,
+  ListIcon,
+  ListOrderedIcon,
+  MinusIcon,
+  PlusIcon,
+  QuoteIcon,
+  Trash2Icon,
+  TypeIcon,
+} from "lucide-react"
 import { ImageField } from "@/components/admin/media-picker"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -13,22 +29,48 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-// ─── Éditeur de blocs (corps d'article : paragraphes, intertitres, citations) ──
+// ─── Éditeur de blocs professionnel (style Medium) ─────────────────────────────
 
 export interface Block {
-  type: "p" | "h2" | "quote" | "image"
+  type: "p" | "h2" | "h3" | "quote" | "image" | "hr" | "ul" | "ol" | "code"
   /** Texte du bloc ; pour « image », c'est la légende (facultative). */
   text: string
   /** Pour « image » : URL du média choisi. */
   url?: string
 }
 
-const BLOCK_TYPES: { value: Block["type"]; label: string }[] = [
-  { value: "p", label: "Paragraphe" },
-  { value: "h2", label: "Intertitre" },
-  { value: "quote", label: "Citation" },
-  { value: "image", label: "Image" },
+const BLOCK_TYPES: { value: Block["type"]; label: string; icon?: typeof TypeIcon }[] = [
+  { value: "p", label: "Paragraphe", icon: TypeIcon },
+  { value: "h2", label: "Titre", icon: TypeIcon },
+  { value: "h3", label: "Sous-titre", icon: TypeIcon },
+  { value: "quote", label: "Citation", icon: QuoteIcon },
+  { value: "ul", label: "Liste à puces", icon: ListIcon },
+  { value: "ol", label: "Liste numérotée", icon: ListOrderedIcon },
+  { value: "code", label: "Bloc de code", icon: Code2Icon },
+  { value: "hr", label: "Séparateur", icon: MinusIcon },
+  { value: "image", label: "Image", icon: ImageIcon },
 ]
+
+const FORMATTABLE_TYPES: Block["type"][] = ["p", "h2", "h3", "quote"]
+
+function blockPlaceholder(type: Block["type"]): string {
+  switch (type) {
+    case "h2":
+      return "Titre de section…"
+    case "h3":
+      return "Sous-titre…"
+    case "quote":
+      return "« Une citation marquante… »"
+    case "ul":
+      return "Un élément par ligne"
+    case "ol":
+      return "Un élément par ligne"
+    case "code":
+      return "console.log('exemple');"
+    default:
+      return "Écrivez votre paragraphe…"
+  }
+}
 
 export function BlocksField({
   value,
@@ -37,104 +79,307 @@ export function BlocksField({
   value: Block[]
   onChange: (blocks: Block[]) => void
 }) {
+  const blocks = (value ?? []).map((b) => ({
+    type: b.type,
+    text: b.text ?? "",
+    url: b.url,
+  })) as Block[]
+
+  const [active, setActive] = useState<number | null>(null)
+  const [nextType, setNextType] = useState<Block["type"]>("p")
+  const refs = useRef<(HTMLTextAreaElement | null)[]>([])
+
   const move = (i: number, dir: -1 | 1) => {
     const j = i + dir
-    if (j < 0 || j >= value.length) return
-    const next = [...value]
+    if (j < 0 || j >= blocks.length) return
+    const next = [...blocks]
     const [b] = next.splice(i, 1)
     next.splice(j, 0, b)
     onChange(next)
   }
 
   const update = (i: number, patch: Partial<Block>) => {
-    const next = value.map((b, idx) => (idx === i ? { ...b, ...patch } : b))
-    onChange(next)
+    onChange(blocks.map((b, idx) => (idx === i ? { ...b, ...patch } : b)))
+  }
+
+  const remove = (i: number) => {
+    onChange(blocks.filter((_, idx) => idx !== i))
+    if (active === i) setActive(null)
+  }
+
+  const add = useCallback(
+    (type: Block["type"]) => {
+      const block: Block =
+        type === "image" ? { type, text: "", url: "" } : { type, text: "" }
+      const idx = blocks.length
+      onChange([...blocks, block])
+      setActive(idx)
+      setTimeout(() => {
+        if (type === "image" || type === "hr") return
+        refs.current[idx]?.focus()
+      }, 0)
+    },
+    [blocks, onChange]
+  )
+
+  const setRef = (el: HTMLTextAreaElement | null, i: number) => {
+    refs.current[i] = el
+  }
+
+  const applyFormat = (i: number, format: "bold" | "italic" | "link") => {
+    const el = refs.current[i]
+    if (!el) return
+    const start = el.selectionStart ?? 0
+    const end = el.selectionEnd ?? 0
+    const text = el.value
+    const selected = text.slice(start, end)
+    let next = text
+    let nextStart = start
+    let nextEnd = end
+
+    if (format === "bold") {
+      if (selected) {
+        next = text.slice(0, start) + `**${selected}**` + text.slice(end)
+        nextStart = start + 2
+        nextEnd = end + 2
+      } else {
+        const ph = "texte en gras"
+        next = text.slice(0, start) + `**${ph}**` + text.slice(end)
+        nextStart = start + 2
+        nextEnd = start + 2 + ph.length
+      }
+    } else if (format === "italic") {
+      if (selected) {
+        next = text.slice(0, start) + `*${selected}*` + text.slice(end)
+        nextStart = start + 1
+        nextEnd = end + 1
+      } else {
+        const ph = "texte en italique"
+        next = text.slice(0, start) + `*${ph}*` + text.slice(end)
+        nextStart = start + 1
+        nextEnd = start + 1 + ph.length
+      }
+    } else if (format === "link") {
+      const url = window.prompt("URL du lien")
+      if (!url) return
+      if (selected) {
+        const inserted = `[${selected}](${url})`
+        next = text.slice(0, start) + inserted + text.slice(end)
+        nextStart = start
+        nextEnd = start + inserted.length
+      } else {
+        const ph = "libellé"
+        const inserted = `[${ph}](${url})`
+        next = text.slice(0, start) + inserted + text.slice(end)
+        nextStart = start + 1
+        nextEnd = start + 1 + ph.length
+      }
+    }
+
+    update(i, { text: next })
+    setTimeout(() => {
+      const nextEl = refs.current[i]
+      if (!nextEl) return
+      nextEl.focus()
+      nextEl.setSelectionRange(nextStart, nextEnd)
+    }, 0)
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <Label className="text-[14px] font-semibold">Corps de l'article</Label>
-      <div className="flex flex-col gap-3">
-        {value.map((block, i) => (
-          <div key={i} className="flex flex-col gap-2 rounded-lg border p-3">
-            <div className="flex items-center gap-2">
-              <Select
-                value={block.type}
-                onValueChange={(v) => update(i, { type: v as Block["type"] })}
-              >
-                <SelectTrigger className="w-[160px]" size="sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {BLOCK_TYPES.map((t) => (
-                    <SelectItem key={t.value} value={t.value}>
-                      {t.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="ml-auto flex items-center gap-0.5">
-                <Button type="button" variant="ghost" size="icon" disabled={i === 0} onClick={() => move(i, -1)} aria-label="Monter">
-                  <ArrowUpIcon className="size-4" />
-                </Button>
-                <Button type="button" variant="ghost" size="icon" disabled={i === value.length - 1} onClick={() => move(i, 1)} aria-label="Descendre">
-                  <ArrowDownIcon className="size-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onChange(value.filter((_, idx) => idx !== i))}
-                  aria-label="Supprimer le bloc"
+
+      <div className="flex flex-col gap-4">
+        {blocks.map((block, i) => {
+          const formatable = FORMATTABLE_TYPES.includes(block.type)
+          return (
+            <div
+              key={i}
+              className={`flex flex-col gap-2 rounded-xl border bg-surface p-4 transition-shadow ${
+                active === i ? "ring-1 ring-ring/30" : ""
+              }`}
+              onFocus={() => setActive(i)}
+              tabIndex={-1}
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <Select
+                  value={block.type}
+                  onValueChange={(v) => update(i, { type: v as Block["type"] })}
                 >
-                  <Trash2Icon className="size-4 text-destructive" />
-                </Button>
+                  <SelectTrigger className="h-8 w-[150px]" size="sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BLOCK_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>
+                        <span className="flex items-center gap-2">
+                          {t.icon && <t.icon className="size-4" />}
+                          {t.label}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {formatable && (
+                  <>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => applyFormat(i, "bold")}
+                      aria-label="Gras"
+                    >
+                      <BoldIcon className="size-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => applyFormat(i, "italic")}
+                      aria-label="Italique"
+                    >
+                      <ItalicIcon className="size-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => applyFormat(i, "link")}
+                      aria-label="Lien"
+                    >
+                      <LinkIcon className="size-4" />
+                    </Button>
+                  </>
+                )}
+
+                <div className="ml-auto flex items-center gap-0.5">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    disabled={i === 0}
+                    onClick={() => move(i, -1)}
+                    aria-label="Monter"
+                  >
+                    <ArrowUpIcon className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    disabled={i === blocks.length - 1}
+                    onClick={() => move(i, 1)}
+                    aria-label="Descendre"
+                  >
+                    <ArrowDownIcon className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => remove(i)}
+                    aria-label="Supprimer le bloc"
+                  >
+                    <Trash2Icon className="size-4 text-destructive" />
+                  </Button>
+                </div>
               </div>
-            </div>
-            {block.type === "image" ? (
-              <>
-                <ImageField
-                  label="Image du bloc"
-                  value={block.url ?? ""}
-                  onChange={(url) => update(i, { url })}
-                />
-                <Input
+
+              {block.type === "image" ? (
+                <div className="flex flex-col gap-3">
+                  <ImageField
+                    label="Image du bloc"
+                    value={block.url ?? ""}
+                    onChange={(url) => update(i, { url })}
+                  />
+                  <Input
+                    value={block.text}
+                    onChange={(e) => update(i, { text: e.target.value })}
+                    placeholder="Légende (facultative)"
+                  />
+                </div>
+              ) : block.type === "hr" ? (
+                <div className="flex items-center gap-4 py-3">
+                  <hr className="flex-1 border-t border-sand" />
+                  <span className="mono-label">Séparateur</span>
+                  <hr className="flex-1 border-t border-sand" />
+                </div>
+              ) : (
+                <Textarea
+                  ref={(el) => setRef(el, i)}
                   value={block.text}
                   onChange={(e) => update(i, { text: e.target.value })}
-                  placeholder="Légende (facultative)"
+                  onFocus={() => setActive(i)}
+                  placeholder={blockPlaceholder(block.type)}
+                  rows={
+                    block.type === "p" || block.type === "ul" || block.type === "ol" || block.type === "code"
+                      ? 4
+                      : 2
+                  }
+                  className={`
+                    w-full resize-none border-0 bg-transparent p-0 shadow-none
+                    focus-visible:ring-0 focus-visible:ring-offset-0
+                    ${
+                      block.type === "p"
+                        ? "text-lg leading-[1.8] text-ink-muted placeholder:text-ink-faint/60"
+                        : block.type === "h2"
+                          ? "font-heading text-[26px] font-semibold leading-tight text-foreground placeholder:text-ink-faint"
+                          : block.type === "h3"
+                            ? "font-heading text-[22px] font-semibold leading-tight text-foreground placeholder:text-ink-faint"
+                            : block.type === "quote"
+                              ? "italic text-lg leading-relaxed text-navy border-l-[3px] border-gold pl-4 placeholder:text-ink-faint"
+                              : block.type === "code"
+                                ? "font-mono text-sm bg-muted rounded-lg p-3 text-foreground placeholder:text-ink-faint"
+                                : block.type === "ul" || block.type === "ol"
+                                  ? "text-lg leading-relaxed text-ink-muted placeholder:text-ink-faint/60"
+                                  : ""
+                    }
+                  `}
                 />
-              </>
-            ) : (
-              <Textarea
-                value={block.text}
-                onChange={(e) => update(i, { text: e.target.value })}
-                placeholder={
-                  block.type === "h2"
-                    ? "Titre de section…"
-                    : block.type === "quote"
-                      ? "« Une citation marquante… »"
-                      : "Votre paragraphe… Pour un lien : [libellé](https://…)"
-                }
-                rows={block.type === "p" ? 4 : 2}
-                className={block.type === "quote" ? "italic" : ""}
-              />
-            )}
-          </div>
-        ))}
+              )}
+
+              {(block.type === "ul" || block.type === "ol") && (
+                <span className="text-[12px] text-ink-faint">
+                  Une ligne = un élément de liste.
+                </span>
+              )}
+            </div>
+          )
+        })}
       </div>
-      <div className="flex gap-2">
-        {BLOCK_TYPES.map((t) => (
-          <Button
-            key={t.value}
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onChange([...value, { type: t.value, text: "" }])}
-          >
-            <PlusIcon className="mr-1 size-3.5" />
-            {t.label}
-          </Button>
-        ))}
+
+      <div className="flex items-center gap-2">
+        <Select value={nextType} onValueChange={(v) => setNextType(v as Block["type"])}>
+          <SelectTrigger className="h-9 w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {BLOCK_TYPES.map((t) => (
+              <SelectItem key={t.value} value={t.value}>
+                <span className="flex items-center gap-2">
+                  {t.icon && <t.icon className="size-4" />}
+                  {t.label}
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => add(nextType)}
+        >
+          <PlusIcon className="mr-1 size-3.5" />
+          Ajouter un bloc
+        </Button>
       </div>
     </div>
   )

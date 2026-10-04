@@ -194,14 +194,22 @@ function toPayload(fields: FieldDef[], draft: Draft): Record<string, unknown> {
       case "blocks": {
         const arr = (Array.isArray(raw) ? raw : []) as Block[]
         payload[f.name] = arr
-          .filter((b) => (b.type === "image" ? Boolean(b.url) : b.text.trim() !== ""))
-          .map((b) =>
-            b.type === "image"
-              ? b.text.trim()
+          .filter((b) => {
+            if (b.type === "image") return Boolean(b.url)
+            if (b.type === "hr") return true
+            return b.text.trim() !== ""
+          })
+          .map((b) => {
+            if (b.type === "image") {
+              return b.text.trim()
                 ? { type: "image", url: b.url, text: b.text }
                 : { type: "image", url: b.url }
-              : { type: b.type, text: b.text }
-          )
+            }
+            if (b.type === "hr") {
+              return { type: "hr" }
+            }
+            return { type: b.type, text: b.text }
+          })
         break
       }
       case "pairList": {

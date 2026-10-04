@@ -15,6 +15,7 @@ public class PublicContentService implements PublicContentQuery {
 	static final String BLOG_CATEGORIES_SLUG = "blog-categories";
 	static final String CONTACT_SLUG = "contact";
 	static final String PAGE_TEXTS_SLUG = "page-texts";
+	static final String PAGE_IMAGES_SLUG = "page-images";
 
 	private final ContentItemRepository repository;
 
@@ -35,7 +36,8 @@ public class PublicContentService implements PublicContentQuery {
 				payloads(ContentType.STAT),
 				payloads(ContentType.ACHIEVEMENT),
 				setting(CONTACT_SLUG).asMap(),
-				nestedMap(setting(PAGE_TEXTS_SLUG), "texts"));
+				nestedMap(setting(PAGE_TEXTS_SLUG), "texts"),
+				nestedMap(setting(PAGE_IMAGES_SLUG), "images"));
 	}
 
 	private List<Map<String, Object>> payloads(ContentType type) {

@@ -2,8 +2,8 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { cn } from "cn"
-import { pg } from "@/data/content"
-import { apiPost } from "@/lib/api"
+import { pageImage, pg } from "@/data/content"
+import { apiPost, mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -40,6 +40,7 @@ const formats = [
 ]
 
 export function RencontreChallengePage() {
+  const juryImage = pageImage("challenge.jury")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)
@@ -123,7 +124,12 @@ export function RencontreChallengePage() {
           </motion.div>
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
-          <Photo label="Photo — équipe présentant sa solution au jury" dark className="h-full" />
+          <Photo
+            src={juryImage ? mediaUrl(juryImage) : undefined}
+            label="Photo — équipe présentant sa solution au jury"
+            dark
+            className="h-full"
+          />
         </div>
       </section>
 

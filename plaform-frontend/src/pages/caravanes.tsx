@@ -2,8 +2,8 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { cn } from "cn"
-import { pg } from "@/data/content"
-import { apiPost } from "@/lib/api"
+import { pageImage, pg } from "@/data/content"
+import { apiPost, mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -31,6 +31,7 @@ const apartes = [
 ]
 
 export function CaravanesPage() {
+  const visitImage = pageImage("caravanes.visit")
   const [tab, setTab] = useState<"jeune" | "entreprise">("jeune")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
@@ -121,7 +122,12 @@ export function CaravanesPage() {
           </motion.div>
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
-          <Photo label="Photo — groupe en visite dans une entreprise" dark className="h-full" />
+          <Photo
+            src={visitImage ? mediaUrl(visitImage) : undefined}
+            label="Photo — groupe en visite dans une entreprise"
+            dark
+            className="h-full"
+          />
         </div>
       </section>
 

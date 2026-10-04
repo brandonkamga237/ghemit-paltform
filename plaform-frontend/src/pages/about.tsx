@@ -1,6 +1,7 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
-import { pg } from "@/data/content"
+import { pageImage, pg } from "@/data/content"
+import { mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container, CtaBand } from "@/components/site/bands"
@@ -23,6 +24,7 @@ const missions = [
 ]
 
 export function AboutPage() {
+  const panoramaImage = pageImage("about.panorama")
   return (
     <div className="flex flex-col">
       {/* En-tête éditorial */}
@@ -54,6 +56,7 @@ export function AboutPage() {
 
       {/* Photo panoramique */}
       <Photo
+        src={panoramaImage ? mediaUrl(panoramaImage) : undefined}
         label="Photo panoramique — équipe ou événement, 2400 × 900"
         className="h-[180px] sm:h-[260px]"
       />

@@ -1,7 +1,8 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
-import { pg, techpathUrl } from "@/data/content"
+import { pageImage, pg, techpathUrl } from "@/data/content"
+import { mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -25,6 +26,7 @@ const steps = [
 ]
 
 export function TechPathPage() {
+  const productImage = pageImage("techpath.product")
   return (
     <div className="flex flex-col">
       {/* Héros navy — bannière compacte (page secondaire) */}
@@ -68,7 +70,12 @@ export function TechPathPage() {
           </motion.div>
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
-          <Photo label="Capture produit — interface du coach" dark className="h-full" />
+          <Photo
+            src={productImage ? mediaUrl(productImage) : undefined}
+            label="Capture produit — interface du coach"
+            dark
+            className="h-full"
+          />
         </div>
       </section>
 

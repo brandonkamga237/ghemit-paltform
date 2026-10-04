@@ -2,8 +2,8 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon, FileTextIcon } from "lucide-react"
 import { cn } from "cn"
-import { pg } from "@/data/content"
-import { apiPost, uploadCv } from "@/lib/api"
+import { pageImage, pg } from "@/data/content"
+import { apiPost, mediaUrl, uploadCv } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -58,6 +58,7 @@ const infos = [
 ]
 
 export function JuniorBuildersPage() {
+  const sessionImage = pageImage("juniorbuilders.session")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)
@@ -155,7 +156,12 @@ export function JuniorBuildersPage() {
           </motion.div>
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
-          <Photo label="Photo — jeunes développeurs en session de travail" dark className="h-full" />
+          <Photo
+            src={sessionImage ? mediaUrl(sessionImage) : undefined}
+            label="Photo — jeunes développeurs en session de travail"
+            dark
+            className="h-full"
+          />
         </div>
       </section>
 

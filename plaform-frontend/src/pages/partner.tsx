@@ -3,8 +3,8 @@ import { Link } from "react-router"
 import { motion } from "motion/react"
 import { CheckCircle2Icon } from "lucide-react"
 import { cn } from "cn"
-import { contact, partners } from "@/data/content"
-import { API_URL, apiPost } from "@/lib/api"
+import { contact, pageImage, partners } from "@/data/content"
+import { apiPost, mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
 const ease = [0.22, 1, 0.36, 1] as const
-const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
 const inputCls =
   "h-12 rounded-md border-sand-dark bg-white px-3.5 text-[15.5px] placeholder:text-ink-faint focus-visible:border-focus focus-visible:ring-focus/20"
 
@@ -74,6 +73,7 @@ export function PartnerPage() {
   const [sending, setSending] = useState(false)
   const [error, setError] = useState(false)
   const [email, setEmail] = useState("")
+  const visitImage = pageImage("partner.visit")
 
   const toggle = (t: string) =>
     setPicked((p) => (p.includes(t) ? p.filter((x) => x !== t) : [...p, t]))
@@ -123,6 +123,7 @@ export function PartnerPage() {
         </motion.div>
         <div className="min-h-[280px] lg:min-h-[400px]">
           <Photo
+            src={visitImage ? mediaUrl(visitImage) : undefined}
             label="Photo — signature de convention ou visite d'entreprise"
             dark
             className="h-full"
@@ -190,13 +191,13 @@ export function PartnerPage() {
               <div
                 key={p.name}
                 title={p.description ?? p.name}
-                className="flex h-[72px] items-center justify-center rounded-lg border border-sand bg-cream px-4"
+                className="flex h-[72px] items-center justify-center overflow-hidden rounded-lg border border-sand bg-cream"
               >
                 {p.logoUrl ? (
                   <img
                     src={mediaUrl(p.logoUrl)}
                     alt={p.name}
-                    className="max-h-10 max-w-full object-contain"
+                    className="h-full w-full object-contain"
                     loading="lazy"
                   />
                 ) : (

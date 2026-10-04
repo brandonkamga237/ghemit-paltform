@@ -18,5 +18,6 @@ public record PublicContentView(
 		List<Map<String, Object>> stats,
 		List<Map<String, Object>> achievements,
 		Map<String, Object> contact,
-		Map<String, Object> pageTexts) {
+		Map<String, Object> pageTexts,
+		Map<String, Object> pageImages) {
 }

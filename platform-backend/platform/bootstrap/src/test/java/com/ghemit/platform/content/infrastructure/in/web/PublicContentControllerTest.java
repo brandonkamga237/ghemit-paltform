@@ -38,7 +38,8 @@ class PublicContentControllerTest {
 				List.of("Tous", "Orientation"),
 				List.of(), List.of(), List.of(), List.of(),
 				Map.of("email", "info.gehmit@gmail.com"),
-				Map.of("home.title", "Gehmit")));
+				Map.of("home.title", "Gehmit"),
+				Map.of("home.hero", "/api/public/media/hero.jpg")));
 
 		mockMvc.perform(get("/api/public/content"))
 				.andExpect(status().isOk())
@@ -52,6 +53,7 @@ class PublicContentControllerTest {
 				.andExpect(jsonPath("$.stats").isArray())
 				.andExpect(jsonPath("$.achievements").isArray())
 				.andExpect(jsonPath("$.contact.email").value("info.gehmit@gmail.com"))
-				.andExpect(jsonPath("$.pageTexts['home.title']").value("Gehmit"));
+				.andExpect(jsonPath("$.pageTexts['home.title']").value("Gehmit"))
+				.andExpect(jsonPath("$.pageImages['home.hero']").value("/api/public/media/hero.jpg"));
 	}
 }

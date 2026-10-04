@@ -2,7 +2,7 @@ import { Link, Navigate, useParams } from "react-router"
 import { motion } from "motion/react"
 import { CheckIcon } from "lucide-react"
 import { programs } from "@/data/content"
-import { API_URL } from "@/lib/api"
+import { mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -75,7 +75,7 @@ export function ProgrammeDetailPage() {
         <div className="min-h-[200px] lg:min-h-[260px]">
           {d.imageUrl ? (
             <img
-              src={d.imageUrl.startsWith("/") ? `${API_URL}${d.imageUrl}` : d.imageUrl}
+              src={mediaUrl(d.imageUrl)}
               alt={d.heroTitle}
               className="h-full w-full rounded-lg object-cover"
             />

@@ -2,42 +2,43 @@ import { Link, Navigate, useParams } from "react-router"
 import { motion } from "motion/react"
 import type { ReactNode } from "react"
 import { articles } from "@/data/content"
-import { API_URL } from "@/lib/api"
+import { mediaUrl } from "@/lib/api"
 import { Container } from "@/components/site/bands"
-import { Photo } from "@/components/site/photo"
+import { imageSrcSet, Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Breadcrumb } from "@/components/site/page-header"
 import { Button } from "@/components/ui/button"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
-
-/** Transforme les liens « [libellé](url) » insérés dans le texte en vrais liens. */
-function linkify(text: string): ReactNode[] {
-  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
+/** Transforme le markdown léger du rédacteur en éléments React. */
+function richText(text: string): ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g)
   return parts.map((part, i) => {
+    if (/^\*\*[^*]+\*\*$/.test(part)) {
+      return <strong key={i} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>
+    }
+    if (/^\*[^*]+\*$/.test(part)) {
+      return <em key={i} className="italic">{part.slice(1, -1)}</em>
+    }
     const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
-    if (!m) return part
-    const [, label, href] = m
-    if (href.startsWith("/")) {
+    if (m) {
+      const [, label, href] = m
+      const className = "font-medium text-gehmit underline underline-offset-4"
+      if (href.startsWith("/")) {
+        return (
+          <Link key={i} to={href} className={className}>
+            {label}
+          </Link>
+        )
+      }
       return (
-        <Link key={i} to={href} className="font-medium text-gehmit underline underline-offset-4">
+        <a key={i} href={href} target="_blank" rel="noreferrer" className={className}>
           {label}
-        </Link>
+        </a>
       )
     }
-    return (
-      <a
-        key={i}
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        className="font-medium text-gehmit underline underline-offset-4"
-      >
-        {label}
-      </a>
-    )
+    return part
   })
 }
 
@@ -75,7 +76,12 @@ export function ArticlePage() {
         {article.imageUrl ? (
           <img
             src={mediaUrl(article.imageUrl)}
+            srcSet={imageSrcSet(mediaUrl(article.imageUrl))}
+            sizes="(max-width: 640px) 100vw, 1040px"
             alt={article.title}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
             className="h-[240px] w-full max-w-[1040px] rounded-lg object-cover sm:h-[460px]"
           />
         ) : (
@@ -92,7 +98,14 @@ export function ArticlePage() {
             if (block.type === "h2") {
               return (
                 <Reveal key={i}>
-                  <h2 className="font-heading text-[28px] font-semibold">{block.text}</h2>
+                  <h2 className="font-heading text-[28px] font-semibold">{richText(block.text)}</h2>
+                </Reveal>
+              )
+            }
+            if (block.type === "h3") {
+              return (
+                <Reveal key={i}>
+                  <h3 className="font-heading text-[24px] font-semibold">{richText(block.text)}</h3>
                 </Reveal>
               )
             }
@@ -101,7 +114,7 @@ export function ArticlePage() {
                 <Reveal key={i}>
                   <blockquote className="rounded-r-lg border-l-[3px] border-gold bg-cream px-7 py-6">
                     <p className="font-heading text-[22px] leading-[1.5] text-navy italic">
-                      {block.text}
+                      {richText(block.text)}
                     </p>
                   </blockquote>
                 </Reveal>
@@ -113,9 +126,13 @@ export function ArticlePage() {
                   <figure className="flex flex-col gap-2">
                     <img
                       src={mediaUrl(block.url)}
+                      srcSet={imageSrcSet(mediaUrl(block.url))}
+                      sizes="(max-width: 680px) 100vw, 680px"
                       alt={block.text ?? ""}
-                      className="w-full rounded-lg object-cover"
                       loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                      className="w-full rounded-lg object-cover"
                     />
                     {block.text ? (
                       <figcaption className="text-center text-sm text-ink-faint">
@@ -126,9 +143,53 @@ export function ArticlePage() {
                 </Reveal>
               )
             }
+            if (block.type === "hr") {
+              return (
+                <Reveal key={i}>
+                  <hr className="border-t border-sand" />
+                </Reveal>
+              )
+            }
+            if (block.type === "ul") {
+              return (
+                <Reveal key={i}>
+                  <ul className="list-disc pl-6 text-lg leading-[1.8] text-ink-muted space-y-2">
+                    {block.text
+                      .split("\n")
+                      .filter((l) => l.trim() !== "")
+                      .map((line, idx) => (
+                        <li key={idx}>{richText(line)}</li>
+                      ))}
+                  </ul>
+                </Reveal>
+              )
+            }
+            if (block.type === "ol") {
+              return (
+                <Reveal key={i}>
+                  <ol className="list-decimal pl-6 text-lg leading-[1.8] text-ink-muted space-y-2">
+                    {block.text
+                      .split("\n")
+                      .filter((l) => l.trim() !== "")
+                      .map((line, idx) => (
+                        <li key={idx}>{richText(line)}</li>
+                      ))}
+                  </ol>
+                </Reveal>
+              )
+            }
+            if (block.type === "code") {
+              return (
+                <Reveal key={i}>
+                  <pre className="rounded-lg bg-cream p-4 overflow-x-auto">
+                    <code className="font-mono text-sm text-navy">{block.text}</code>
+                  </pre>
+                </Reveal>
+              )
+            }
             return (
               <Reveal key={i}>
-                <p className="text-lg leading-[1.8] text-ink-muted">{linkify(block.text)}</p>
+                <p className="text-lg leading-[1.8] text-ink-muted">{richText(block.text)}</p>
               </Reveal>
             )
           })}
