@@ -4,6 +4,7 @@ import { contact, programs } from "@/data/content"
 import { apiPost } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import logoWhiteUrl from "@/assets/logo-gehmit-blanc.webp"
 
 export function Footer() {
   const [name, setName] = useState("")
@@ -16,8 +17,14 @@ export function Footer() {
       <div className="mx-auto flex max-w-[1240px] flex-col gap-11 px-5 pt-14 pb-8 sm:px-10">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           <div className="flex flex-col gap-4">
-            <Link to="/" className="font-heading text-[26px] font-bold text-surface">
-              Gehmit
+            <Link to="/" aria-label="Gehmit — accueil">
+              <img
+                src={logoWhiteUrl}
+                alt="Gehmit"
+                width={472}
+                height={192}
+                className="h-12 w-auto"
+              />
             </Link>
             <p className="max-w-[300px] text-[15.5px] leading-relaxed text-surface/70">
               Recevez les sessions et appels à candidature, une fois par mois.

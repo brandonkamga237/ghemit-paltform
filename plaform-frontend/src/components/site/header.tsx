@@ -5,6 +5,7 @@ import { ChevronDownIcon, MenuIcon, XIcon } from "lucide-react"
 import { cn } from "cn"
 import { programs } from "@/data/content"
 import { Button } from "@/components/ui/button"
+import logoUrl from "@/assets/logo-gehmit.webp"
 
 const navItems = [
   { label: "Accueil", to: "/" },
@@ -65,11 +66,17 @@ export function Header() {
           )}
         >
           <div className="flex items-center gap-9 xl:gap-11">
-            <Link
-              to="/"
-              className="font-heading text-[27px] font-bold tracking-[-0.01em] text-gehmit"
-            >
-              Gehmit
+            <Link to="/" aria-label="Gehmit — accueil">
+              <img
+                src={logoUrl}
+                alt="Gehmit"
+                width={472}
+                height={192}
+                className={cn(
+                  "w-auto transition-all duration-200",
+                  scrolled ? "h-10" : "h-12"
+                )}
+              />
             </Link>
             <nav className="hidden items-center gap-6 text-[15px] font-medium whitespace-nowrap lg:flex xl:gap-7">
               {navItems.map((item) =>
@@ -105,11 +112,6 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-4 whitespace-nowrap">
-            <div className="hidden items-center gap-1.5 font-mono text-xs text-ink-faint md:flex">
-              <button className="font-medium text-navy">FR</button>
-              <span>/</span>
-              <button className="transition-colors hover:text-gehmit">EN</button>
-            </div>
             <Button
               render={<Link to="/don" />}
               className="hidden h-11 rounded-md bg-gold px-5 text-[15px] font-semibold text-navy hover:bg-gold-hover sm:inline-flex"

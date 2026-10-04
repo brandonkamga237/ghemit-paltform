@@ -29,7 +29,7 @@ export interface RemoteContent {
   pageImages?: Record<string, string>
 }
 
-export async function fetchRemoteContent(timeoutMs = 3500): Promise<RemoteContent | null> {
+export async function fetchRemoteContent(timeoutMs = 900): Promise<RemoteContent | null> {
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), timeoutMs)
   try {

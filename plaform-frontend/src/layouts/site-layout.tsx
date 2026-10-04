@@ -1,9 +1,10 @@
 import { useEffect } from "react"
-import { Outlet, useLocation } from "react-router"
+import { Link, Outlet, useLocation } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
 import { Header } from "@/components/site/header"
 import { Footer } from "@/components/site/footer"
 import { WhatsAppButton } from "@/components/site/whatsapp-button"
+import logoUrl from "@/assets/logo-gehmit.webp"
 
 export function ScrollToTop() {
   const { pathname } = useLocation()
@@ -18,14 +19,14 @@ export function SlimHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-sand bg-surface">
       <div className="mx-auto flex h-[88px] max-w-[1240px] items-center justify-between px-5 sm:px-10">
-        <a href="/" className="font-heading text-[28px] font-bold text-gehmit">
-          Gehmit
-        </a>
+        <Link to="/" aria-label="Gehmit — accueil">
+          <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-12 w-auto" />
+        </Link>
         <div className="flex items-center gap-4 text-[15px] text-ink-muted">
           <span className="hidden sm:inline">Besoin d'aide ?</span>
-          <a href="/contact" className="font-semibold text-gehmit hover:underline">
+          <Link to="/contact" className="font-semibold text-gehmit hover:underline">
             Nous écrire
-          </a>
+          </Link>
         </div>
       </div>
     </header>

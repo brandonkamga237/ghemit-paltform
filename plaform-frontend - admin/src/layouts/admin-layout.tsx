@@ -34,6 +34,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import logoUrl from "@/assets/logo-gehmit.webp"
 
 const contentLinks = [
   { to: "/programmes", label: "Programmes", icon: GraduationCapIcon },
@@ -61,8 +62,14 @@ export function AdminLayout() {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex flex-col gap-0.5 px-2 py-3">
-            <span className="font-heading text-xl font-bold">Gehmit</span>
+          <div className="flex flex-col gap-1.5 px-2 py-3">
+            <img
+              src={logoUrl}
+              alt="Gehmit"
+              width={472}
+              height={192}
+              className="h-10 w-auto self-start"
+            />
             <span className="text-[13px] text-muted-foreground">
               Administration du site
             </span>
