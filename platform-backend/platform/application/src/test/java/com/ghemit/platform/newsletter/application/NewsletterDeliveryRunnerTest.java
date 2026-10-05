@@ -36,6 +36,9 @@ class NewsletterDeliveryRunnerTest {
 					return subscribers.values().stream().filter(Subscriber::isActive).toList();
 				}
 				public List<Subscriber> findAllNewestFirst() { return List.copyOf(subscribers.values()); }
+				public Map<java.time.LocalDate, Long> countByDay(java.time.LocalDate since) {
+					return Map.of();
+				}
 				public void delete(Subscriber s) { subscribers.remove(s.id()); }
 			},
 			new CampaignRepository() {

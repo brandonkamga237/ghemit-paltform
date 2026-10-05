@@ -75,7 +75,9 @@ export function CandidaturesPage() {
   // Filtres
   const [group, setGroup] = useState("all") // "all" | groupe d'origine | programme isolé
   const [program, setProgram] = useState("all") // sous-filtre : programme exact
-  const [status, setStatus] = useState("all")
+  const [status, setStatus] = useState(
+    () => new URLSearchParams(window.location.search).get("status") ?? "all"
+  )
   const [q, setQ] = useState("")
   const [pageNo, setPageNo] = useState(0)
   const [size, setSize] = useState(20)

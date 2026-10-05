@@ -2,6 +2,7 @@ package com.ghemit.platform.bootstrap;
 
 import com.ghemit.platform.inbox.application.CandidatureService;
 import com.ghemit.platform.inbox.application.ContactMessageService;
+import com.ghemit.platform.inbox.application.InboxActivityService;
 import com.ghemit.platform.inbox.application.port.out.NewsletterEnrollment;
 import com.ghemit.platform.inbox.domain.CandidatureRepository;
 import com.ghemit.platform.inbox.domain.ContactMessageRepository;
@@ -22,5 +23,11 @@ class InboxConfiguration {
 	ContactMessageService contactMessageService(ContactMessageRepository repository,
 			NewsletterEnrollment newsletterEnrollment) {
 		return new ContactMessageService(repository, newsletterEnrollment);
+	}
+
+	@Bean
+	InboxActivityService inboxActivityService(CandidatureRepository candidatures,
+			ContactMessageRepository messages) {
+		return new InboxActivityService(candidatures, messages);
 	}
 }

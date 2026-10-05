@@ -12,6 +12,8 @@ import com.ghemit.platform.inbox.domain.CandidatureRepository;
 import com.ghemit.platform.shared.domain.EmailAddress;
 import com.ghemit.platform.shared.domain.Page;
 import com.ghemit.platform.shared.domain.PageRequest;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -114,6 +116,14 @@ class CandidatureServiceTest {
 		@Override
 		public Map<String, Long> countByStatus() {
 			return count(c -> c.status().code());
+		}
+
+		@Override
+		public Map<LocalDate, Long> countByDay(LocalDate since) {
+			return store.values().stream()
+					.map(c -> c.createdAt().atZone(ZoneId.systemDefault()).toLocalDate())
+					.filter(d -> !d.isBefore(since))
+					.collect(Collectors.groupingBy(d -> d, Collectors.counting()));
 		}
 
 		@Override

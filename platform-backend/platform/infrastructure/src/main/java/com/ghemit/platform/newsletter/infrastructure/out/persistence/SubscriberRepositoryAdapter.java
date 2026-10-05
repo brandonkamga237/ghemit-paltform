@@ -4,7 +4,10 @@ import com.ghemit.platform.newsletter.domain.Subscriber;
 import com.ghemit.platform.newsletter.domain.SubscriberId;
 import com.ghemit.platform.newsletter.domain.SubscriberRepository;
 import com.ghemit.platform.shared.domain.EmailAddress;
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -40,6 +43,14 @@ public class SubscriberRepositoryAdapter implements SubscriberRepository {
 		return jpaRepository.findAllByOrderByCreatedAtDesc().stream()
 				.map(NewsletterMapper::toDomain)
 				.toList();
+	}
+
+	@Override
+	public Map<LocalDate, Long> countByDay(LocalDate since) {
+		Map<LocalDate, Long> counts = new LinkedHashMap<>();
+		jpaRepository.countDailySince(since).forEach(row ->
+				counts.put(LocalDate.parse(String.valueOf(row[0])), ((Number) row[1]).longValue()));
+		return counts;
 	}
 
 	@Override

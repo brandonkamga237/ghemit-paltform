@@ -150,6 +150,11 @@ class NewsletterServiceTest {
 		}
 
 		@Override
+		public Map<java.time.LocalDate, Long> countByDay(java.time.LocalDate since) {
+			return java.util.Map.of();
+		}
+
+		@Override
 		public void delete(Subscriber subscriber) {
 			store.remove(subscriber.id());
 		}

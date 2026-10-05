@@ -88,3 +88,16 @@ export interface MessagesSummary {
   total: number
   unread: number
 }
+
+/** Un jour d'activité de la boîte de réception (tableau de bord). */
+export interface DayActivity {
+  day: string
+  candidatures: number
+  messages: number
+}
+
+/** Inscriptions newsletter par jour (tableau de bord). */
+export interface DayCount {
+  day: string
+  count: number
+}

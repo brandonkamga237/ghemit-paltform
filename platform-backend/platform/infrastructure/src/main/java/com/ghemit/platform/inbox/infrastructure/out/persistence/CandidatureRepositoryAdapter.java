@@ -7,6 +7,7 @@ import com.ghemit.platform.inbox.domain.CandidatureRepository;
 import com.ghemit.platform.shared.domain.Page;
 import com.ghemit.platform.shared.domain.PageRequest;
 import com.ghemit.platform.shared.infrastructure.out.persistence.Pageables;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,11 @@ public class CandidatureRepositoryAdapter implements CandidatureRepository {
 	}
 
 	@Override
+	public Map<LocalDate, Long> countByDay(LocalDate since) {
+		return toDayMap(jpaRepository.countDailySince(since));
+	}
+
+	@Override
 	public long countUnread() {
 		return jpaRepository.countByReadFlagFalse();
 	}
@@ -60,6 +66,14 @@ public class CandidatureRepositoryAdapter implements CandidatureRepository {
 	private static Map<String, Long> toMap(List<Object[]> rows) {
 		Map<String, Long> counts = new LinkedHashMap<>();
 		rows.forEach(row -> counts.put(String.valueOf(row[0]), (Long) row[1]));
+		return counts;
+	}
+
+	/** created_at::date arrive en java.sql.Date ; count(*) en long. */
+	private static Map<LocalDate, Long> toDayMap(List<Object[]> rows) {
+		Map<LocalDate, Long> counts = new LinkedHashMap<>();
+		rows.forEach(row -> counts.put(LocalDate.parse(String.valueOf(row[0])),
+				((Number) row[1]).longValue()));
 		return counts;
 	}
 }

@@ -46,7 +46,9 @@ export function MessagesPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const [read, setRead] = useState("all")
+  const [read, setRead] = useState(
+    () => new URLSearchParams(window.location.search).get("read") ?? "all"
+  )
   const [q, setQ] = useState("")
   const [pageNo, setPageNo] = useState(0)
   const [size, setSize] = useState(20)

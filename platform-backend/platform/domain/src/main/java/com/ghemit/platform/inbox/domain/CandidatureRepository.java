@@ -2,6 +2,7 @@ package com.ghemit.platform.inbox.domain;
 
 import com.ghemit.platform.shared.domain.Page;
 import com.ghemit.platform.shared.domain.PageRequest;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,6 +22,9 @@ public interface CandidatureRepository {
 
 	/** Nombre de candidatures par code de statut. */
 	Map<String, Long> countByStatus();
+
+	/** Dépôts par jour depuis {@code since} inclus (jours absents non listés). */
+	Map<LocalDate, Long> countByDay(LocalDate since);
 
 	long countUnread();
 }

@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router"
+import { NavLink, Outlet, useLocation } from "react-router"
 import {
   BookOpenIcon,
   CalendarDaysIcon,
@@ -48,8 +48,14 @@ const siteLinks = [
   { to: "/newsletter", label: "Newsletter", icon: MailIcon },
 ]
 
+const PAGE_TITLES: Record<string, string> = {
+  "/": "Tableau de bord",
+  ...Object.fromEntries([...contentLinks, ...siteLinks].map((l) => [l.to, l.label])),
+}
+
 export function AdminLayout() {
   const { username, logout } = useAuth()
+  const { pathname } = useLocation()
 
   return (
     <SidebarProvider>
@@ -148,7 +154,9 @@ export function AdminLayout() {
       <SidebarInset>
         <header className="flex h-14 items-center gap-3 border-b px-5">
           <SidebarTrigger />
-          <span className="text-[15px] font-semibold">Back-office</span>
+          <span className="text-[15px] font-semibold">
+            {PAGE_TITLES[pathname] ?? "Administration"}
+          </span>
         </header>
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

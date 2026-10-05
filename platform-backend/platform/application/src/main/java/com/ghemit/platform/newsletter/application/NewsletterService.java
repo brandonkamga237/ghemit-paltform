@@ -21,7 +21,10 @@ import com.ghemit.platform.newsletter.domain.SubscriberRepository;
 import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 import com.ghemit.platform.shared.domain.EmailAddress;
 import com.ghemit.platform.shared.domain.EntityNotFoundException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Cycle de vie des abonnements, des brouillons et de l'envoi des campagnes. */
@@ -144,6 +147,18 @@ public class NewsletterService implements SubscribeToNewsletterUseCase,
 	@Override
 	public List<Campaign> campaigns() {
 		return campaigns.findAllNewestFirst();
+	}
+
+	@Override
+	public List<DayCount> subscriberActivity(int days) {
+		int span = Math.min(Math.max(days, 1), 365);
+		LocalDate first = LocalDate.now().minusDays(span - 1L);
+		Map<LocalDate, Long> byDay = subscribers.countByDay(first);
+		List<DayCount> series = new ArrayList<>(span);
+		for (LocalDate day = first; !day.isAfter(LocalDate.now()); day = day.plusDays(1)) {
+			series.add(new DayCount(day, byDay.getOrDefault(day, 0L)));
+		}
+		return series;
 	}
 
 	private Campaign draft(CampaignId id) {

@@ -7,7 +7,10 @@ import com.ghemit.platform.inbox.domain.ContactMessageRepository;
 import com.ghemit.platform.shared.domain.Page;
 import com.ghemit.platform.shared.domain.PageRequest;
 import com.ghemit.platform.shared.infrastructure.out.persistence.Pageables;
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -43,5 +46,13 @@ public class ContactMessageRepositoryAdapter implements ContactMessageRepository
 	@Override
 	public List<ContactMessage> findAll() {
 		return jpaRepository.findAll().stream().map(InboxMapper::toDomain).toList();
+	}
+
+	@Override
+	public Map<LocalDate, Long> countByDay(LocalDate since) {
+		Map<LocalDate, Long> counts = new LinkedHashMap<>();
+		jpaRepository.countDailySince(since).forEach(row ->
+				counts.put(LocalDate.parse(String.valueOf(row[0])), ((Number) row[1]).longValue()));
+		return counts;
 	}
 }

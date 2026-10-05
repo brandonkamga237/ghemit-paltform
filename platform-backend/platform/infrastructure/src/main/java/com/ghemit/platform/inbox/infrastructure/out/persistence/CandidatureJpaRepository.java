@@ -15,5 +15,9 @@ interface CandidatureJpaRepository extends JpaRepository<CandidatureJpaEntity, U
 	@Query("select c.status, count(c) from CandidatureJpaEntity c group by c.status")
 	List<Object[]> countGroupedByStatus();
 
+	@Query(value = "select created_at::date as day, count(*) from candidatures "
+			+ "where created_at >= :since group by 1", nativeQuery = true)
+	List<Object[]> countDailySince(java.time.LocalDate since);
+
 	long countByReadFlagFalse();
 }

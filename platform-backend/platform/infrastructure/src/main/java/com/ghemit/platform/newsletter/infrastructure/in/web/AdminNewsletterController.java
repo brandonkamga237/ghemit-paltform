@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,6 +51,13 @@ public class AdminNewsletterController {
 	@GetMapping("/campaigns")
 	public List<CampaignResponse> campaigns() {
 		return query.campaigns().stream().map(CampaignResponse::from).toList();
+	}
+
+	@GetMapping("/activity")
+	public List<Map<String, Object>> activity(@RequestParam(defaultValue = "30") int days) {
+		return query.subscriberActivity(days).stream()
+				.<Map<String, Object>>map(d -> Map.of("day", d.day(), "count", d.count()))
+				.toList();
 	}
 
 	/** Crée un brouillon. */

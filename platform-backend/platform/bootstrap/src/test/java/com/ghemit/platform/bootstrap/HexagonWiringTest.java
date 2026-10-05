@@ -94,6 +94,7 @@ class HexagonWiringTest {
 				org.springframework.web.bind.annotation.RestController.class).keySet())
 				.contains("adminContentController", "publicContentController", "publicInboxController",
 						"adminCandidatureController", "adminContactMessageController",
+						"adminInboxController",
 						"adminMediaController", "publicMediaController",
 						"publicNewsletterController", "adminNewsletterController");
 	}
