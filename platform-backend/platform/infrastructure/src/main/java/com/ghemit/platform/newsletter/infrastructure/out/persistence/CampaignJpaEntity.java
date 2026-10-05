@@ -24,9 +24,17 @@ public class CampaignJpaEntity {
 	@Column(nullable = false, columnDefinition = "text")
 	private String body;
 
+	/** DRAFT, SENDING, SENT, FAILED — null sur les lignes antérieures = SENT. */
+	@Column
+	private String status;
+
 	@Column(nullable = false)
 	private int recipientCount;
 
 	@Column(nullable = false)
-	private Instant sentAt = Instant.now();
+	private Instant createdAt = Instant.now();
+
+	/** Null tant que la campagne n'est pas partie. */
+	@Column
+	private Instant sentAt;
 }

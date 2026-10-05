@@ -56,6 +56,9 @@ const ArticlePage = lazy(() =>
 const ContactPage = lazy(() =>
   import("@/pages/contact").then((m) => ({ default: m.ContactPage }))
 )
+const DesinscriptionPage = lazy(() =>
+  import("@/pages/desinscription").then((m) => ({ default: m.DesinscriptionPage }))
+)
 const DonatePage = lazy(() =>
   import("@/pages/donate").then((m) => ({ default: m.DonatePage }))
 )
@@ -87,6 +90,7 @@ export default function App() {
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:slug" element={<ArticlePage />} />
             <Route path="contact" element={<ContactPage />} />
+            <Route path="desinscription" element={<DesinscriptionPage />} />
             <Route path="don" element={<DonatePage />} />
             <Route path="partenaire" element={<PartnerPage />} />
           </Route>

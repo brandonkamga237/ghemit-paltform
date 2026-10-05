@@ -5,7 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ghemit.platform.newsletter.application.port.in.DraftCampaignUseCase;
 import com.ghemit.platform.newsletter.application.port.in.NewsletterQuery;
+import com.ghemit.platform.newsletter.application.port.in.PreviewNewsletterUseCase;
 import com.ghemit.platform.newsletter.application.port.in.RemoveSubscriberUseCase;
 import com.ghemit.platform.newsletter.application.port.in.SendCampaignUseCase;
 import com.ghemit.platform.newsletter.domain.Subscriber;
@@ -35,6 +37,12 @@ class AdminNewsletterControllerTest {
 
 	@MockitoBean
 	private SendCampaignUseCase sendCampaign;
+
+	@MockitoBean
+	private DraftCampaignUseCase drafts;
+
+	@MockitoBean
+	private PreviewNewsletterUseCase preview;
 
 	@MockitoBean
 	private RemoveSubscriberUseCase removeSubscriber;

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react"
-import { SendIcon, Trash2Icon } from "lucide-react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { EyeIcon, PencilIcon, SaveIcon, SendIcon, Trash2Icon } from "lucide-react"
 import { api } from "@/lib/api"
-import type { Campaign, Subscriber } from "@/lib/types"
+import type { Campaign, CampaignStatus, Subscriber } from "@/lib/types"
 import { toast } from "@/components/ui/toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import {
   Table,
   TableBody,
@@ -18,13 +26,25 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+const STATUS_LABELS: Record<CampaignStatus, { label: string; variant: "default" | "secondary" | "outline" | "destructive" }> = {
+  draft: { label: "Brouillon", variant: "secondary" },
+  sending: { label: "Envoi en cours", variant: "outline" },
+  sent: { label: "Envoyée", variant: "default" },
+  failed: { label: "Échec", variant: "destructive" },
+}
+
 export function NewsletterPage() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([])
   const [campaigns, setCampaigns] = useState<Campaign[]>([])
   const [subject, setSubject] = useState("")
   const [body, setBody] = useState("")
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
+  const [savingDraft, setSavingDraft] = useState(false)
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const pollRef = useRef<number | null>(null)
 
   const refresh = useCallback(async () => {
     try {
@@ -44,29 +64,98 @@ export function NewsletterPage() {
     void refresh()
   }, [refresh])
 
-  const activeCount = subscribers.filter((s) => s.active).length
+  // Recharge tant qu'une campagne est en cours d'envoi.
+  useEffect(() => {
+    const sendingCampaign = campaigns.some((c) => c.status === "sending")
+    if (sendingCampaign && pollRef.current === null) {
+      pollRef.current = window.setInterval(() => void refresh(), 3000)
+    } else if (!sendingCampaign && pollRef.current !== null) {
+      clearInterval(pollRef.current)
+      pollRef.current = null
+    }
+    return () => {
+      if (pollRef.current !== null) {
+        clearInterval(pollRef.current)
+        pollRef.current = null
+      }
+    }
+  }, [campaigns, refresh])
 
-  const send = async () => {
-    setSending(true)
+  const activeCount = subscribers.filter((s) => s.active).length
+  const canCompose = subject.trim() !== "" && body.trim() !== ""
+
+  const openPreview = async () => {
+    setPreviewLoading(true)
     try {
-      const campaign = await api.post<Campaign>("/api/admin/newsletter/send", {
-        subject,
-        body,
-      })
-      toast.add({
-        title: "Campagne envoyée",
-        description: `${campaign.recipientCount} destinataire(s) — visible dans Mailhog (http://localhost:8025)`,
-      })
-      setSubject("")
-      setBody("")
+      const res = await api.post<{ html: string }>("/api/admin/newsletter/preview", { body })
+      setPreviewHtml(res.html)
+    } catch (e) {
+      toast.add({ title: "Aperçu impossible", description: e instanceof Error ? e.message : undefined })
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
+
+  const resetCompose = () => {
+    setSubject("")
+    setBody("")
+    setEditingId(null)
+  }
+
+  const saveDraft = async () => {
+    setSavingDraft(true)
+    try {
+      if (editingId) {
+        await api.put(`/api/admin/newsletter/campaigns/${editingId}`, { subject, body })
+      } else {
+        await api.post("/api/admin/newsletter/campaigns", { subject, body })
+      }
+      toast.add({ title: "Brouillon enregistré" })
+      resetCompose()
       await refresh()
     } catch (e) {
-      toast.add({
-        title: "Envoi impossible",
-        description: e instanceof Error ? e.message : undefined,
-      })
+      toast.add({ title: "Enregistrement impossible", description: e instanceof Error ? e.message : undefined })
+    } finally {
+      setSavingDraft(false)
+    }
+  }
+
+  const sendNow = async () => {
+    setSending(true)
+    try {
+      if (editingId) {
+        await api.post(`/api/admin/newsletter/campaigns/${editingId}/send`)
+      } else {
+        await api.post("/api/admin/newsletter/send", { subject, body })
+      }
+      toast.add({ title: "Envoi lancé", description: `${activeCount} destinataire(s) — envoi en arrière-plan.` })
+      resetCompose()
+      await refresh()
+    } catch (e) {
+      toast.add({ title: "Envoi impossible", description: e instanceof Error ? e.message : undefined })
     } finally {
       setSending(false)
+    }
+  }
+
+  const sendDraft = async (id: string) => {
+    try {
+      await api.post(`/api/admin/newsletter/campaigns/${id}/send`)
+      toast.add({ title: "Envoi lancé", description: "Envoi en arrière-plan." })
+      await refresh()
+    } catch (e) {
+      toast.add({ title: "Envoi impossible", description: e instanceof Error ? e.message : undefined })
+    }
+  }
+
+  const deleteDraft = async (id: string) => {
+    try {
+      await api.del(`/api/admin/newsletter/campaigns/${id}`)
+      if (editingId === id) resetCompose()
+      toast.add({ title: "Brouillon supprimé" })
+      await refresh()
+    } catch (e) {
+      toast.add({ title: "Suppression impossible", description: e instanceof Error ? e.message : undefined })
     }
   }
 
@@ -89,8 +178,8 @@ export function NewsletterPage() {
           Newsletter
         </h1>
         <p className="text-[15px] text-ink-muted">
-          {activeCount} abonné(s) actif(s). Les e-mails partent vers Mailhog en
-          développement.
+          {activeCount} abonné(s) actif(s). Chaque e-mail emporte un lien de
+          désinscription signé.
         </p>
       </div>
       {error && (
@@ -101,9 +190,10 @@ export function NewsletterPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Envoyer une campagne</CardTitle>
+          <CardTitle>{editingId ? "Modifier le brouillon" : "Composer une campagne"}</CardTitle>
           <CardDescription>
-            Envoyée à tous les abonnés actifs via le serveur SMTP configuré.
+            Mise en forme : **gras**, *italique*, [lien](https://…), lignes « - » pour les listes.
+            Le rendu est celui du gabarit Gehmit (en-tête et pied de page inclus).
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -112,7 +202,7 @@ export function NewsletterPage() {
             <Input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="Ex. Les inscriptions de septembre sont ouvertes"
+              placeholder="Ex. Les inscriptions de novembre sont ouvertes"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -120,18 +210,43 @@ export function NewsletterPage() {
             <Textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              placeholder="Texte de l'e-mail…"
-              className="min-h-[140px]"
+              placeholder={"Bonjour,\n\nVoici les nouvelles de Gehmit…\n\n- Premier point\n- Deuxième point"}
+              className="min-h-[160px]"
             />
           </div>
-          <Button
-            className="gap-2 self-start"
-            disabled={sending || !subject.trim() || !body.trim() || activeCount === 0}
-            onClick={send}
-          >
-            <SendIcon className="size-4" />
-            {sending ? "Envoi…" : `Envoyer à ${activeCount} abonné(s)`}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              disabled={previewLoading || !body.trim()}
+              onClick={openPreview}
+            >
+              <EyeIcon className="size-4" />
+              {previewLoading ? "Rendu…" : "Aperçu"}
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2"
+              disabled={savingDraft || !canCompose}
+              onClick={saveDraft}
+            >
+              <SaveIcon className="size-4" />
+              {savingDraft ? "Enregistrement…" : "Enregistrer le brouillon"}
+            </Button>
+            <Button
+              className="gap-2"
+              disabled={sending || !canCompose || activeCount === 0}
+              onClick={sendNow}
+            >
+              <SendIcon className="size-4" />
+              {sending ? "Envoi…" : `Envoyer à ${activeCount} abonné(s)`}
+            </Button>
+            {editingId && (
+              <Button variant="ghost" onClick={resetCompose}>
+                Annuler l'édition
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
 
@@ -192,24 +307,88 @@ export function NewsletterPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Campagnes envoyées</CardTitle>
+            <CardTitle>Campagnes</CardTitle>
+            <CardDescription>Brouillons et historique d'envois.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {campaigns.length === 0 && (
-              <p className="text-[14px] text-muted-foreground">Aucune campagne envoyée.</p>
+              <p className="text-[14px] text-muted-foreground">Aucune campagne pour le moment.</p>
             )}
-            {campaigns.map((c) => (
-              <div key={c.id} className="flex flex-col gap-1 rounded-md border px-4 py-3">
-                <span className="text-[15px] font-semibold">{c.subject}</span>
-                <span className="text-[13px] text-muted-foreground">
-                  {new Date(c.sentAt).toLocaleString("fr-FR")} — {c.recipientCount}{" "}
-                  destinataire(s)
-                </span>
-              </div>
-            ))}
+            {campaigns.map((c) => {
+              const st = STATUS_LABELS[c.status] ?? STATUS_LABELS.sent
+              return (
+                <div key={c.id} className="flex items-center gap-3 rounded-md border px-4 py-3">
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="truncate text-[15px] font-semibold">{c.subject}</span>
+                      <Badge variant={st.variant}>{st.label}</Badge>
+                    </div>
+                    <span className="text-[13px] text-muted-foreground">
+                      {c.status === "draft"
+                        ? `Créée le ${new Date(c.createdAt).toLocaleString("fr-FR")}`
+                        : `${c.sentAt ? new Date(c.sentAt).toLocaleString("fr-FR") : "—"} — ${c.recipientCount} destinataire(s)`}
+                    </span>
+                  </div>
+                  {c.status === "draft" && (
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Modifier"
+                        onClick={() => {
+                          setEditingId(c.id)
+                          setSubject(c.subject)
+                          setBody(c.body)
+                        }}
+                      >
+                        <PencilIcon className="size-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Envoyer"
+                        onClick={() => void sendDraft(c.id)}
+                      >
+                        <SendIcon className="size-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Supprimer"
+                        onClick={() => void deleteDraft(c.id)}
+                      >
+                        <Trash2Icon className="size-4 text-destructive" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={previewHtml !== null} onOpenChange={(o) => !o && setPreviewHtml(null)}>
+        <DialogContent className="max-h-[90vh] sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Aperçu de l'e-mail</DialogTitle>
+            <DialogDescription>
+              Rendu fidèle du gabarit envoyé aux abonnés (lien de désinscription factice).
+            </DialogDescription>
+          </DialogHeader>
+          <iframe
+            title="Aperçu de l'e-mail"
+            srcDoc={previewHtml ?? ""}
+            sandbox=""
+            className="h-[60vh] w-full rounded-lg border bg-white"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPreviewHtml(null)}>
+              Fermer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

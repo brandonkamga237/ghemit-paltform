@@ -27,12 +27,16 @@ export interface Subscriber {
   createdAt: string
 }
 
+export type CampaignStatus = "draft" | "sending" | "sent" | "failed"
+
 export interface Campaign {
   id: string
   subject: string
   body: string
+  status: CampaignStatus
   recipientCount: number
-  sentAt: string
+  createdAt: string
+  sentAt: string | null
 }
 
 export interface ContactMessage {

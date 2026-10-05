@@ -37,7 +37,9 @@ final class NewsletterMapper {
 				CampaignId.of(entity.getId()),
 				entity.getSubject(),
 				entity.getBody(),
+				Campaign.statusOrSent(entity.getStatus()),
 				entity.getRecipientCount(),
+				entity.getCreatedAt(),
 				entity.getSentAt());
 	}
 
@@ -46,7 +48,9 @@ final class NewsletterMapper {
 		entity.setId(campaign.id().value());
 		entity.setSubject(campaign.subject());
 		entity.setBody(campaign.body());
+		entity.setStatus(campaign.status().name());
 		entity.setRecipientCount(campaign.recipientCount());
+		entity.setCreatedAt(campaign.createdAt());
 		entity.setSentAt(campaign.sentAt());
 		return entity;
 	}

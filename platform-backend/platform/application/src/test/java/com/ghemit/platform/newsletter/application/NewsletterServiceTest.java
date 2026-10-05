@@ -1,17 +1,22 @@
 package com.ghemit.platform.newsletter.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ghemit.platform.newsletter.application.port.in.SendCampaignCommand;
 import com.ghemit.platform.newsletter.application.port.in.SubscribeCommand;
-import com.ghemit.platform.newsletter.application.port.out.MailDeliveryException;
-import com.ghemit.platform.newsletter.application.port.out.NewsletterMailSender;
+import com.ghemit.platform.newsletter.application.port.out.CampaignDelivery;
+import com.ghemit.platform.newsletter.application.port.out.NewsletterTemplate;
+import com.ghemit.platform.newsletter.application.port.out.UnsubscribeTokens;
 import com.ghemit.platform.newsletter.domain.Campaign;
+import com.ghemit.platform.newsletter.domain.CampaignId;
 import com.ghemit.platform.newsletter.domain.CampaignRepository;
 import com.ghemit.platform.newsletter.domain.Subscriber;
 import com.ghemit.platform.newsletter.domain.SubscriberId;
 import com.ghemit.platform.newsletter.domain.SubscriberRepository;
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 import com.ghemit.platform.shared.domain.EmailAddress;
+import com.ghemit.platform.shared.domain.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -28,8 +33,10 @@ class NewsletterServiceTest {
 
 	private final InMemorySubscribers subscribers = new InMemorySubscribers();
 	private final InMemoryCampaigns campaigns = new InMemoryCampaigns();
-	private final RecordingMailSender mailSender = new RecordingMailSender();
-	private final NewsletterService service = new NewsletterService(subscribers, campaigns, mailSender);
+	private final RecordingDelivery delivery = new RecordingDelivery();
+	private final NewsletterService service = new NewsletterService(subscribers, campaigns, delivery,
+			(body, url) -> "<html>" + body + "</html>",
+			new EchoTokens());
 
 	@Test
 	void une_inscription_est_idempotente_sur_l_adresse() {
@@ -61,25 +68,53 @@ class NewsletterServiceTest {
 	}
 
 	@Test
-	void une_campagne_ne_compte_que_les_envois_aboutis() {
-		service.subscribe(new SubscribeCommand("ok@gehmit.org", null, null));
-		service.subscribe(new SubscribeCommand("ko@gehmit.org", null, null));
-		mailSender.failFor("ko@gehmit.org");
+	void un_lien_de_desinscription_signe_desinscrit_le_bon_abonne() {
+		service.subscribe(new SubscribeCommand("awa@gehmit.org", null, null));
 
-		Campaign campaign = service.send(new SendCampaignCommand("Sujet", "Corps"));
+		boolean ok = service.unsubscribeToken(EchoTokens.TOKEN_PREFIX + "awa@gehmit.org");
 
-		assertThat(campaign.recipientCount()).isEqualTo(1);
-		assertThat(service.campaigns()).hasSize(1);
+		assertThat(ok).isTrue();
+		assertThat(subscribers.findAllActive()).isEmpty();
+		assertThat(service.unsubscribeToken("faux-jeton")).isFalse();
 	}
 
 	@Test
-	void une_campagne_n_est_pas_envoyee_aux_desinscrits() {
-		service.subscribe(new SubscribeCommand("parti@gehmit.org", null, null));
-		service.unsubscribe("parti@gehmit.org");
+	void l_envoi_direct_cree_la_campagne_puis_la_marque_en_cours() {
+		Campaign campaign = service.send(new SendCampaignCommand("Sujet", "Corps"));
 
-		service.send(new SendCampaignCommand("Sujet", "Corps"));
+		assertThat(campaign.status()).isEqualTo(Campaign.Status.SENDING);
+		assertThat(delivery.started).containsExactly(campaign.id());
+	}
 
-		assertThat(mailSender.sentTo).isEmpty();
+	@Test
+	void le_cycle_brouillon_modification_envoi() {
+		Campaign draft = service.saveDraft(new SendCampaignCommand("Sujet", "Corps"));
+		assertThat(draft.status()).isEqualTo(Campaign.Status.DRAFT);
+
+		service.updateDraft(draft.id(), new SendCampaignCommand("Sujet 2", "Corps 2"));
+		assertThat(campaigns.findById(draft.id()).orElseThrow().subject()).isEqualTo("Sujet 2");
+
+		Campaign sent = service.sendDraft(draft.id());
+		assertThat(sent.status()).isEqualTo(Campaign.Status.SENDING);
+		assertThat(delivery.started).containsExactly(draft.id());
+	}
+
+	@Test
+	void un_brouillon_envoye_ne_peut_plus_etre_modifie_ni_supprime() {
+		Campaign draft = service.saveDraft(new SendCampaignCommand("Sujet", "Corps"));
+		service.sendDraft(draft.id());
+
+		assertThatThrownBy(() -> service.updateDraft(draft.id(), new SendCampaignCommand("a", "b")))
+				.isInstanceOf(BusinessRuleViolationException.class);
+		assertThatThrownBy(() -> service.deleteDraft(draft.id()))
+				.isInstanceOf(BusinessRuleViolationException.class);
+	}
+
+	@Test
+	void agit_sur_un_brouillon_inconnu_renvoie_une_erreur_metier() {
+		CampaignId inconnu = CampaignId.newId();
+		assertThatThrownBy(() -> service.sendDraft(inconnu))
+				.isInstanceOf(EntityNotFoundException.class);
 	}
 
 	private static final class InMemorySubscribers implements SubscriberRepository {
@@ -126,31 +161,52 @@ class NewsletterServiceTest {
 
 		@Override
 		public Campaign save(Campaign campaign) {
+			store.removeIf(c -> c.id().equals(campaign.id()));
 			store.add(campaign);
 			return campaign;
+		}
+
+		@Override
+		public Optional<Campaign> findById(CampaignId id) {
+			return store.stream().filter(c -> c.id().equals(id)).findFirst();
 		}
 
 		@Override
 		public List<Campaign> findAllNewestFirst() {
 			return List.copyOf(store);
 		}
+
+		@Override
+		public void delete(Campaign campaign) {
+			store.removeIf(c -> c.id().equals(campaign.id()));
+		}
 	}
 
-	private static final class RecordingMailSender implements NewsletterMailSender {
+	private static final class RecordingDelivery implements CampaignDelivery {
 
-		private final List<String> sentTo = new ArrayList<>();
-		private final List<String> failing = new ArrayList<>();
+		private final List<CampaignId> started = new ArrayList<>();
 
-		void failFor(String email) {
-			failing.add(email);
+		@Override
+		public void start(CampaignId campaignId) {
+			started.add(campaignId);
+		}
+	}
+
+	/** Jeton factice : préfixe fixe + adresse, vérifiable sans cryptographie. */
+	private static final class EchoTokens implements UnsubscribeTokens {
+
+		private static final String TOKEN_PREFIX = "token:";
+
+		@Override
+		public String tokenFor(EmailAddress email) {
+			return TOKEN_PREFIX + email.value();
 		}
 
 		@Override
-		public void send(EmailAddress recipient, String subject, String body) {
-			if (failing.contains(recipient.value())) {
-				throw new MailDeliveryException("injoignable", null);
-			}
-			sentTo.add(recipient.value());
+		public Optional<EmailAddress> verify(String token) {
+			return token != null && token.startsWith(TOKEN_PREFIX)
+					? EmailAddress.tryOf(token.substring(TOKEN_PREFIX.length()))
+					: Optional.empty();
 		}
 	}
 }

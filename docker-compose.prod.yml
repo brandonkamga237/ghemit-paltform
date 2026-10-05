@@ -104,6 +104,9 @@ services:
       MAIL_AUTH: "true"
       MAIL_STARTTLS: "true"
       MAIL_FROM: ${MAIL_FROM:?MAIL_FROM requis}
+      API_PUBLIC_URL: https://api.gehmit.org
+      PUBLIC_SITE_URL: https://gehmit.org
+      NEWSLETTER_TOKEN_SECRET: ${NEWSLETTER_TOKEN_SECRET:?NEWSLETTER_TOKEN_SECRET requis}
     networks:
       - gehmit-internal
       - traefik-public

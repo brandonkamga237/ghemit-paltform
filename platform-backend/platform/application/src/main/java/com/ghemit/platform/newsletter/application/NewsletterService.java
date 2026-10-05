@@ -1,37 +1,47 @@
 package com.ghemit.platform.newsletter.application;
 
+import com.ghemit.platform.newsletter.application.port.in.DraftCampaignUseCase;
 import com.ghemit.platform.newsletter.application.port.in.NewsletterQuery;
+import com.ghemit.platform.newsletter.application.port.in.PreviewNewsletterUseCase;
 import com.ghemit.platform.newsletter.application.port.in.RemoveSubscriberUseCase;
 import com.ghemit.platform.newsletter.application.port.in.SendCampaignCommand;
 import com.ghemit.platform.newsletter.application.port.in.SendCampaignUseCase;
 import com.ghemit.platform.newsletter.application.port.in.SubscribeCommand;
 import com.ghemit.platform.newsletter.application.port.in.SubscribeToNewsletterUseCase;
 import com.ghemit.platform.newsletter.application.port.in.UnsubscribeFromNewsletterUseCase;
-import com.ghemit.platform.newsletter.application.port.out.MailDeliveryException;
-import com.ghemit.platform.newsletter.application.port.out.NewsletterMailSender;
+import com.ghemit.platform.newsletter.application.port.out.CampaignDelivery;
+import com.ghemit.platform.newsletter.application.port.out.NewsletterTemplate;
+import com.ghemit.platform.newsletter.application.port.out.UnsubscribeTokens;
 import com.ghemit.platform.newsletter.domain.Campaign;
+import com.ghemit.platform.newsletter.domain.CampaignId;
 import com.ghemit.platform.newsletter.domain.CampaignRepository;
 import com.ghemit.platform.newsletter.domain.Subscriber;
 import com.ghemit.platform.newsletter.domain.SubscriberId;
 import com.ghemit.platform.newsletter.domain.SubscriberRepository;
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 import com.ghemit.platform.shared.domain.EmailAddress;
 import com.ghemit.platform.shared.domain.EntityNotFoundException;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Cycle de vie des abonnements et envoi des campagnes. */
+/** Cycle de vie des abonnements, des brouillons et de l'envoi des campagnes. */
 public class NewsletterService implements SubscribeToNewsletterUseCase,
-		UnsubscribeFromNewsletterUseCase, SendCampaignUseCase, RemoveSubscriberUseCase, NewsletterQuery {
+		UnsubscribeFromNewsletterUseCase, SendCampaignUseCase, DraftCampaignUseCase,
+		RemoveSubscriberUseCase, PreviewNewsletterUseCase, NewsletterQuery {
 
 	private final SubscriberRepository subscribers;
 	private final CampaignRepository campaigns;
-	private final NewsletterMailSender mailSender;
+	private final CampaignDelivery delivery;
+	private final NewsletterTemplate template;
+	private final UnsubscribeTokens tokens;
 
 	public NewsletterService(SubscriberRepository subscribers, CampaignRepository campaigns,
-			NewsletterMailSender mailSender) {
+			CampaignDelivery delivery, NewsletterTemplate template, UnsubscribeTokens tokens) {
 		this.subscribers = subscribers;
 		this.campaigns = campaigns;
-		this.mailSender = mailSender;
+		this.delivery = delivery;
+		this.template = template;
+		this.tokens = tokens;
 	}
 
 	@Override
@@ -60,17 +70,62 @@ public class NewsletterService implements SubscribeToNewsletterUseCase,
 
 	@Override
 	@Transactional
+	public boolean unsubscribeToken(String token) {
+		return tokens.verify(token)
+				.map(email -> {
+					unsubscribe(email.value());
+					return true;
+				})
+				.orElse(false);
+	}
+
+	@Override
+	@Transactional
 	public Campaign send(SendCampaignCommand command) {
-		int delivered = 0;
-		for (Subscriber subscriber : subscribers.findAllActive()) {
-			try {
-				mailSender.send(subscriber.email(), command.subject(), command.body());
-				delivered++;
-			} catch (MailDeliveryException e) {
-				// Un destinataire injoignable ne doit pas interrompre la campagne.
-			}
+		Campaign campaign = campaigns.save(Campaign.draft(command.subject(), command.body()));
+		campaign.markSending();
+		campaign = campaigns.save(campaign);
+		delivery.start(campaign.id());
+		return campaign;
+	}
+
+	@Override
+	@Transactional
+	public Campaign sendDraft(CampaignId id) {
+		Campaign campaign = draft(id);
+		campaign.markSending();
+		campaign = campaigns.save(campaign);
+		delivery.start(campaign.id());
+		return campaign;
+	}
+
+	@Override
+	@Transactional
+	public Campaign saveDraft(SendCampaignCommand command) {
+		return campaigns.save(Campaign.draft(command.subject(), command.body()));
+	}
+
+	@Override
+	@Transactional
+	public Campaign updateDraft(CampaignId id, SendCampaignCommand command) {
+		Campaign campaign = draft(id);
+		campaign.edit(command.subject(), command.body());
+		return campaigns.save(campaign);
+	}
+
+	@Override
+	@Transactional
+	public void deleteDraft(CampaignId id) {
+		Campaign campaign = draft(id);
+		if (!campaign.isDraft()) {
+			throw new BusinessRuleViolationException("Seul un brouillon peut être supprimé");
 		}
-		return campaigns.save(Campaign.sent(command.subject(), command.body(), delivered));
+		campaigns.delete(campaign);
+	}
+
+	@Override
+	public String renderPreview(String body) {
+		return template.render(body, "#");
 	}
 
 	@Override
@@ -89,5 +144,10 @@ public class NewsletterService implements SubscribeToNewsletterUseCase,
 	@Override
 	public List<Campaign> campaigns() {
 		return campaigns.findAllNewestFirst();
+	}
+
+	private Campaign draft(CampaignId id) {
+		return campaigns.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Campagne introuvable"));
 	}
 }

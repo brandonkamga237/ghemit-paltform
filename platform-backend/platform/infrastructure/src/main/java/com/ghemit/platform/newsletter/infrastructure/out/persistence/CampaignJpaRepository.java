@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 interface CampaignJpaRepository extends JpaRepository<CampaignJpaEntity, UUID> {
 
-	List<CampaignJpaEntity> findAllByOrderBySentAtDesc();
+	List<CampaignJpaEntity> findAllByOrderByCreatedAtDesc();
 }
