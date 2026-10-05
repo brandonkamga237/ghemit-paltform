@@ -2,17 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { fetchRemoteContent } from './lib/api'
-import { applyRemoteContent } from './data/content'
+import { loadRemoteContent } from './data/remote'
 
-async function bootstrap() {
-  const remote = await fetchRemoteContent()
-  if (remote) applyRemoteContent(remote)
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  )
-}
+// Le site s'affiche immédiatement ; le contenu administré arrive en tâche de fond.
+loadRemoteContent()
 
-void bootstrap()
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)

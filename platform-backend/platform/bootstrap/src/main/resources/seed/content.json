@@ -95,13 +95,10 @@
       "slug": "table-ronde-femmes-tech",
       "payload": {
         "slug": "table-ronde-femmes-tech",
-        "date": "29 juillet 2026",
         "category": "GLab Sisters",
         "title": "Table ronde : comprendre les défis des femmes dans la tech",
         "excerpt": "Une rencontre entre femmes leaders, étudiantes et professionnelles pour construire des solutions ensemble.",
-        "readingTime": "4 min de lecture",
         "featured": true,
-        "photoLabel": "Photo d'ouverture — table ronde",
         "body": [
           {
             "type": "p",
@@ -133,19 +130,18 @@
           "text": "Candidatures ouvertes en continu.",
           "label": "Candidater",
           "to": "/candidature/glab-sisters"
-        }
+        },
+        "status": "published",
+        "publishedAt": "2026-07-29"
       }
     },
     {
       "slug": "discussion-techsisters",
       "payload": {
         "slug": "discussion-techsisters",
-        "date": "10 août 2026",
         "category": "GLab Sisters",
         "title": "Discussion entre #TechSisters",
         "excerpt": "GLab Sisters : de la discussion à l'action collective pour renforcer la place des femmes dans la tech.",
-        "readingTime": "3 min de lecture",
-        "photoLabel": "Photo — discussion TechSisters",
         "body": [
           {
             "type": "p",
@@ -161,19 +157,18 @@
           "text": "Candidatures ouvertes en continu.",
           "label": "Candidater",
           "to": "/candidature/glab-sisters"
-        }
+        },
+        "status": "published",
+        "publishedAt": "2026-08-10"
       }
     },
     {
       "slug": "partage-ton-histoire",
       "payload": {
         "slug": "partage-ton-histoire",
-        "date": "22 mai 2026",
         "category": "Témoignages",
         "title": "Partage ton histoire dans la tech",
         "excerpt": "Un appel à témoignages pour documenter les parcours réels d'entrée dans le numérique.",
-        "readingTime": "2 min de lecture",
-        "photoLabel": "Photo — témoignage",
         "body": [
           {
             "type": "p",
@@ -183,19 +178,18 @@
             "type": "p",
             "text": "Les témoignages recueillis alimentent le blog et les séances d'orientation du programme."
           }
-        ]
+        ],
+        "status": "published",
+        "publishedAt": "2026-05-22"
       }
     },
     {
       "slug": "seminaire-orientation",
       "payload": {
         "slug": "seminaire-orientation",
-        "date": "16 avril 2026",
         "category": "Événements",
         "title": "Retour sur le séminaire d'orientation",
         "excerpt": "« De la recherche à l'innovation » : l'IA comme levier de développement, cinq intervenants.",
-        "readingTime": "5 min de lecture",
-        "photoLabel": "Photo — séminaire",
         "body": [
           {
             "type": "p",
@@ -205,7 +199,9 @@
             "type": "p",
             "text": "Les échanges ont porté sur les compétences concrètes à acquérir et sur les passerelles entre recherche, formation et emploi."
           }
-        ]
+        ],
+        "status": "published",
+        "publishedAt": "2026-04-16"
       }
     }
   ],

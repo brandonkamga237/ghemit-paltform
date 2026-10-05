@@ -1,8 +1,10 @@
 import { Link } from "react-router"
 import { ArrowRightIcon } from "lucide-react"
 import { cn } from "cn"
-import type { Article, Program } from "@/data/content"
-import { Photo } from "./photo"
+import type { ArticleSummary, Program } from "@/data/content"
+import { articleDate } from "@/data/remote"
+import { mediaUrl } from "@/lib/api"
+import { Photo, imageSrcSet } from "./photo"
 import { StatusPill } from "./status-pill"
 import { Button } from "@/components/ui/button"
 
@@ -99,21 +101,33 @@ export function ProgramRow({ program }: { program: Program }) {
 }
 
 /** Carte article de blog. */
-export function ArticleCard({ article, large = false }: { article: Article; large?: boolean }) {
+export function ArticleCard({ article, large = false }: { article: ArticleSummary; large?: boolean }) {
   return (
     <Link
       to={`/blog/${article.slug}`}
       className={cn(cardBase, "flex flex-col")}
     >
       <div className={cn("overflow-hidden", large ? "h-[280px]" : "h-[190px]")}>
-        <Photo
-          label={article.photoLabel}
-          className="h-full transition-transform duration-200 group-hover:scale-[1.02]"
-        />
+        {article.imageUrl ? (
+          <img
+            src={mediaUrl(article.imageUrl)}
+            srcSet={imageSrcSet(mediaUrl(article.imageUrl))}
+            sizes={large ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+            alt={article.imageAlt ?? article.title}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+          />
+        ) : (
+          <Photo
+            label={article.photoLabel ?? article.title}
+            className="h-full transition-transform duration-200 group-hover:scale-[1.02]"
+          />
+        )}
       </div>
       <div className="flex flex-col gap-2.5 p-5">
         <span className="font-mono text-[11.5px] tracking-[0.12em] text-ink-faint uppercase">
-          {article.date}
+          {articleDate(article)}
           {article.category ? ` · ${article.category}` : ""}
         </span>
         <span

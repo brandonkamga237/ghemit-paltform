@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { SearchIcon } from "lucide-react"
 import { cn } from "cn"
-import { articles, blogCategories } from "@/data/content"
+import { useArticleSummaries } from "@/data/remote"
 import { Container } from "@/components/site/bands"
 import { Breadcrumb } from "@/components/site/page-header"
 import { ArticleCard } from "@/components/site/cards"
@@ -9,10 +9,16 @@ import { Reveal } from "@/components/site/reveal"
 import { motion } from "motion/react"
 
 export function BlogPage() {
+  const articles = useArticleSummaries()
   const [cat, setCat] = useState("Tous")
   const [query, setQuery] = useState("")
 
-  const list = articles.filter((a) => {
+  const categories = useMemo(
+    () => ["Tous", ...new Set((articles ?? []).map((a) => a.category).filter(Boolean))],
+    [articles]
+  )
+
+  const list = (articles ?? []).filter((a) => {
     const okCat = cat === "Tous" || a.category === cat
     const okQuery =
       !query || (a.title + " " + a.excerpt).toLowerCase().includes(query.toLowerCase())
@@ -46,40 +52,55 @@ export function BlogPage() {
         </label>
       </Container>
 
-      <Container className="flex flex-wrap gap-2.5 pb-8">
-        {blogCategories().map((c) => (
-          <button
-            key={c}
-            onClick={() => setCat(c)}
-            className={cn(
-              "h-10 rounded-full px-4 text-sm transition-colors duration-150",
-              cat === c
-                ? "bg-navy font-semibold text-surface"
-                : "border border-sand-dark bg-surface hover:border-navy"
-            )}
-          >
-            {c}
-          </button>
-        ))}
-      </Container>
+      {categories.length > 1 ? (
+        <Container className="flex flex-wrap gap-2.5 pb-8">
+          {categories.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCat(c)}
+              className={cn(
+                "h-10 rounded-full px-4 text-sm transition-colors duration-150",
+                cat === c
+                  ? "bg-navy font-semibold text-surface"
+                  : "border border-sand-dark bg-surface hover:border-navy"
+              )}
+            >
+              {c}
+            </button>
+          ))}
+        </Container>
+      ) : null}
 
       <Container className="flex flex-col gap-8 pb-16">
-        {featured ? (
-          <Reveal>
-            <ArticleCard article={featured} large />
-          </Reveal>
-        ) : null}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {rest.map((a, i) => (
-            <Reveal key={a.slug} delay={i * 0.06}>
-              <ArticleCard article={a} />
-            </Reveal>
-          ))}
-        </div>
-        {list.length === 0 && (
-          <p className="py-10 text-center text-[15.5px] text-ink-muted">
-            Aucun article ne correspond à cette recherche.
-          </p>
+        {articles === null ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-[320px] animate-pulse rounded-lg border border-sand-dark bg-surface"
+              />
+            ))}
+          </div>
+        ) : (
+          <>
+            {featured ? (
+              <Reveal>
+                <ArticleCard article={featured} large />
+              </Reveal>
+            ) : null}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {rest.map((a, i) => (
+                <Reveal key={a.slug} delay={i * 0.06}>
+                  <ArticleCard article={a} />
+                </Reveal>
+              ))}
+            </div>
+            {list.length === 0 && (
+              <p className="py-10 text-center text-[15.5px] text-ink-muted">
+                Aucun article ne correspond à cette recherche.
+              </p>
+            )}
+          </>
         )}
       </Container>
     </div>

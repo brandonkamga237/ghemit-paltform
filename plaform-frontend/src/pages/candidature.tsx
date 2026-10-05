@@ -3,7 +3,7 @@ import { Navigate, useParams } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon, FileTextIcon } from "lucide-react"
 import { cn } from "cn"
-import { programs } from "@/data/content"
+import { usePrograms } from "@/data/remote"
 import { apiPost, uploadCv } from "@/lib/api"
 import { Container } from "@/components/site/bands"
 import { Breadcrumb } from "@/components/site/page-header"
@@ -43,6 +43,7 @@ const inputCls =
 
 export function CandidaturePage() {
   const { slug } = useParams()
+  const programs = usePrograms()
   const program = programs.find((p) => p.slug === slug)
   const [step, setStep] = useState(0)
   const [sent, setSent] = useState(false)

@@ -165,20 +165,32 @@ function toPayload(fields: FieldDef[], draft: Draft): Record<string, unknown> {
         const arr = (Array.isArray(raw) ? raw : []) as Block[]
         payload[f.name] = arr
           .filter((b) => {
-            if (b.type === "image") return Boolean(b.url)
+            if (b.type === "image" || b.type === "video") return Boolean(b.url)
             if (b.type === "hr") return true
             return b.text.trim() !== ""
           })
           .map((b) => {
-            if (b.type === "image") {
-              return b.text.trim()
-                ? { type: "image", url: b.url, text: b.text }
-                : { type: "image", url: b.url }
+            const text = b.text.trim()
+            if (b.type === "image" || b.type === "video") {
+              return text
+                ? { type: b.type, url: b.url, text }
+                : { type: b.type, url: b.url }
             }
             if (b.type === "hr") {
               return { type: "hr" }
             }
-            return { type: b.type, text: b.text }
+            if (b.type === "table") {
+              return b.caption?.trim()
+                ? { type: "table", text: b.text, caption: b.caption.trim() }
+                : { type: "table", text: b.text }
+            }
+            if (b.type === "callout") {
+              return { type: "callout", text, tone: b.tone ?? "info" }
+            }
+            if (b.type === "quote" && b.cite?.trim()) {
+              return { type: "quote", text, cite: b.cite.trim() }
+            }
+            return { type: b.type, text }
           })
         break
       }

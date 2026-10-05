@@ -1,4 +1,5 @@
 import { CrudPage, StatusBadge, type CrudConfig } from "@/components/admin/crud-page"
+import { Badge } from "@/components/ui/badge"
 import type { ContentItem } from "@/lib/types"
 
 const statusField = {
@@ -71,31 +72,53 @@ const formationsConfig: CrudConfig = {
 const articlesConfig: CrudConfig = {
   type: "articles",
   title: "Articles",
-  description: "Les articles du blog.",
+  description: "Les articles du blog. Un brouillon n'est jamais visible sur le site.",
   hasSlug: true,
   columns: [
     { key: "title", label: "Titre" },
     { key: "category", label: "Catégorie" },
-    { key: "date", label: "Date" },
+    { key: "publishedAt", label: "Publication" },
+    {
+      key: "status",
+      label: "Statut",
+      render: (i: ContentItem) =>
+        i.payload.status === "draft" ? (
+          <Badge variant="outline">Brouillon</Badge>
+        ) : (
+          <Badge>Publié</Badge>
+        ),
+    },
     {
       key: "featured",
       label: "À la une",
-      render: (i: ContentItem) => (i.payload.featured ? <StatusBadge value="open" /> : "—"),
+      render: (i: ContentItem) => (i.payload.featured ? <Badge variant="secondary">Une</Badge> : "—"),
     },
   ],
   fields: [
     { name: "title", label: "Titre" },
     { name: "category", label: "Catégorie" },
-    { name: "date", label: "Date", placeholder: "Ex. 29 juillet 2026" },
+    {
+      name: "status",
+      label: "Statut",
+      kind: "select",
+      options: ["published", "draft"],
+      hint: "« draft » = brouillon, invisible sur le site.",
+    },
+    {
+      name: "publishedAt",
+      label: "Date de publication",
+      placeholder: "AAAA-MM-JJ",
+      hint: "Format ISO, ex. 2026-08-10. Détermine l'ordre d'affichage.",
+    },
     { name: "excerpt", label: "Résumé", kind: "textarea" },
-    { name: "readingTime", label: "Temps de lecture", placeholder: "Ex. 4 min de lecture" },
     { name: "featured", label: "Mettre à la une", kind: "checkbox" },
     {
       name: "imageUrl",
       label: "Image de couverture",
       kind: "image",
-      hint: "Affichée en haut de l'article. Vide = visuel par défaut.",
+      hint: "Affichée en haut de l'article et sur les cartes.",
     },
+    { name: "imageAlt", label: "Texte alternatif de la couverture", placeholder: "Description courte pour l'accessibilité" },
     {
       name: "body",
       label: "Corps de l'article",

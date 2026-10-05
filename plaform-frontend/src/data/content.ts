@@ -304,183 +304,38 @@ export interface Formation {
   statusLabel: string
 }
 
-export const formations: Formation[] = [
-  {
-    name: "Fondamentaux de la data",
-    category: "Data",
-    session: "14 sept. 2026",
-    duration: "4 semaines",
-    format: "En ligne",
-    price: "Gratuit",
-    status: "open",
-    statusLabel: "Ouvert",
-  },
-  {
-    name: "Développement web",
-    category: "Développement",
-    session: "6 oct. 2026",
-    duration: "8 semaines",
-    format: "Douala",
-    price: "25 000 FCFA",
-    status: "open",
-    statusLabel: "Ouvert",
-  },
-  {
-    name: "IA appliquée aux métiers",
-    category: "IA",
-    session: "3 nov. 2026",
-    duration: "6 semaines",
-    format: "En ligne",
-    price: "Gratuit",
-    status: "soon",
-    statusLabel: "Bientôt",
-  },
-  {
-    name: "Cybersécurité, niveau 1",
-    category: "Cybersécurité",
-    session: "Juin 2026",
-    duration: "3 semaines",
-    format: "Douala",
-    price: "Gratuit",
-    status: "closed",
-    statusLabel: "Terminée",
-  },
-]
+/** Bloc éditorial d'un article (voir components/editorial/article-body.tsx). */
+export type Block =
+  | { type: "p" | "h2" | "h3" | "ul" | "ol"; text: string }
+  | { type: "quote"; text: string; cite?: string }
+  | { type: "code"; text: string }
+  | { type: "hr" }
+  | { type: "image"; url: string; text?: string; alt?: string; wide?: boolean }
+  | { type: "video"; url: string; text?: string }
+  | { type: "table"; text: string; caption?: string }
+  | { type: "callout"; text: string; tone?: "info" | "success" | "warning" }
 
-export interface Article {
+/** Article tel que listé (sans le corps, chargé uniquement sur sa page). */
+export interface ArticleSummary {
   slug: string
-  date: string
-  category: string
   title: string
   excerpt: string
-  readingTime: string
+  category: string
+  /** Date ISO (AAAA-MM-JJ). */
+  publishedAt?: string
+  /** Ancien format : date libre, conservée pour les articles existants. */
+  date?: string
+  /** Ancien format : légende du visuel par défaut, sans image de couverture. */
+  photoLabel?: string
+  readingMinutes: number
   featured?: boolean
-  photoLabel: string
-  /** URL de l'image de couverture (médiathèque). Vide = visuel par défaut. */
   imageUrl?: string
-  body: (
-    | { type: "p"; text: string }
-    | { type: "h2"; text: string }
-    | { type: "h3"; text: string }
-    | { type: "quote"; text: string }
-    | { type: "ul"; text: string }
-    | { type: "ol"; text: string }
-    | { type: "code"; text: string }
-    | { type: "image"; url: string; text?: string }
-    | { type: "hr" }
-  )[]
-  cta?: { title: string; text: string; label: string; to: string }
+  imageAlt?: string
 }
 
-export const articles: Article[] = [
-  {
-    slug: "table-ronde-femmes-tech",
-    date: "29 juillet 2026",
-    category: "GLab Sisters",
-    title: "Table ronde : comprendre les défis des femmes dans la tech",
-    excerpt:
-      "Une rencontre entre femmes leaders, étudiantes et professionnelles pour construire des solutions ensemble.",
-    readingTime: "4 min de lecture",
-    featured: true,
-    photoLabel: "Photo d'ouverture — table ronde",
-    body: [
-      {
-        type: "p",
-        text: "La rencontre est partie d'un constat simple : les difficultés rencontrées par les femmes dans le numérique se ressemblent d'un parcours à l'autre, mais restent rarement formulées à voix haute. Une matinée d'échanges a suffi pour faire apparaître trois obstacles récurrents.",
-      },
-      { type: "h2", text: "L'accès à l'information" },
-      {
-        type: "p",
-        text: "Les participantes ont décrit un même moment de blocage : celui où l'on sait que le secteur recrute, sans savoir par où entrer. Les filières existent, les formations aussi, mais l'information circule surtout dans des réseaux auxquels elles n'ont pas accès.",
-      },
-      {
-        type: "quote",
-        text: "« On ne manque pas de motivation. On manque de gens qui nous disent que c'est possible. »",
-      },
-      { type: "h2", text: "La suite" },
-      {
-        type: "p",
-        text: "GLab Sisters ouvre une communauté de pratique mensuelle et un cycle de mentorat dédié. Les candidatures sont ouvertes en continu.",
-      },
-    ],
-    cta: {
-      title: "Rejoindre GLab Sisters",
-      text: "Candidatures ouvertes en continu.",
-      label: "Candidater",
-      to: "/candidature/glab-sisters",
-    },
-  },
-  {
-    slug: "discussion-techsisters",
-    date: "10 août 2026",
-    category: "GLab Sisters",
-    title: "Discussion entre #TechSisters",
-    excerpt:
-      "GLab Sisters : de la discussion à l'action collective pour renforcer la place des femmes dans la tech.",
-    readingTime: "3 min de lecture",
-    photoLabel: "Photo — discussion TechSisters",
-    body: [
-      {
-        type: "p",
-        text: "Dans le cadre du programme GLab Sisters, Gehmit organise une table ronde réunissant des femmes leaders de communautés tech, des étudiantes, des professionnelles et des partenaires.",
-      },
-      {
-        type: "p",
-        text: "L'objectif : passer de la discussion à l'action collective, avec des pistes concrètes pour renforcer la place des femmes dans la tech au Cameroun.",
-      },
-    ],
-    cta: {
-      title: "Rejoindre GLab Sisters",
-      text: "Candidatures ouvertes en continu.",
-      label: "Candidater",
-      to: "/candidature/glab-sisters",
-    },
-  },
-  {
-    slug: "partage-ton-histoire",
-    date: "22 mai 2026",
-    category: "Témoignages",
-    title: "Partage ton histoire dans la tech",
-    excerpt:
-      "Un appel à témoignages pour documenter les parcours réels d'entrée dans le numérique.",
-    readingTime: "2 min de lecture",
-    photoLabel: "Photo — témoignage",
-    body: [
-      {
-        type: "p",
-        text: "Chaque parcours dans le numérique est différent, et c'est précisément ce qui les rend utiles. Gehmit collecte les histoires de celles et ceux qui sont entrés dans le secteur, par tous les chemins.",
-      },
-      {
-        type: "p",
-        text: "Les témoignages recueillis alimentent le blog et les séances d'orientation du programme.",
-      },
-    ],
-  },
-  {
-    slug: "seminaire-orientation",
-    date: "16 avril 2026",
-    category: "Événements",
-    title: "Retour sur le séminaire d'orientation",
-    excerpt:
-      "« De la recherche à l'innovation » : l'IA comme levier de développement, cinq intervenants.",
-    readingTime: "5 min de lecture",
-    photoLabel: "Photo — séminaire",
-    body: [
-      {
-        type: "p",
-        text: "Le séminaire « De la recherche à l'innovation » a réuni cent vingt participants autour de cinq intervenants, pour discuter du rôle de l'intelligence artificielle comme levier de développement.",
-      },
-      {
-        type: "p",
-        text: "Les échanges ont porté sur les compétences concrètes à acquérir et sur les passerelles entre recherche, formation et emploi.",
-      },
-    ],
-  },
-]
-
-/** Filtres du blog : dérivés des catégories réellement utilisées par les articles. */
-export function blogCategories(): string[] {
-  return ["Tous", ...new Set(articles.map((a) => a.category).filter(Boolean))]
+export interface Article extends ArticleSummary {
+  body: Block[]
+  cta?: { title: string; text: string; label: string; to: string }
 }
 
 export interface FaqItem {
@@ -510,8 +365,6 @@ export interface Partner {
   logoUrl?: string
 }
 
-/** Partenaires réels, fournis par l'API (aucun repli fictif). */
-export const partners: Partner[] = []
 
 export const stats = [
   { value: "200+", label: "Étudiants encadrés" },
@@ -571,31 +424,4 @@ export interface ProgramStatusUpdate {
   slug: string
   status?: ProgramStatus
   statusLabel?: string
-}
-
-/**
- * Applique le contenu dynamique renvoyé par GET /api/public/content. Le reste du
- * site (textes, programmes, FAQ, chiffres…) est statique et vit dans ce fichier.
- * Les entrées absentes ou vides sont ignorées : le contenu embarqué sert de repli.
- */
-export function applyRemoteContent(c: {
-  programs?: ProgramStatusUpdate[]
-  formations?: Formation[]
-  articles?: Article[]
-  partners?: Partner[]
-}) {
-  const replace = <T,>(arr: T[], next: T[] | undefined) => {
-    if (Array.isArray(next) && next.length > 0) arr.splice(0, arr.length, ...next)
-  }
-  for (const update of c.programs ?? []) {
-    const program = programs.find((p) => p.slug === update.slug)
-    if (program && update.status) {
-      program.status = update.status
-      if (update.statusLabel) program.statusLabel = update.statusLabel
-      program.primaryCta.disabled = update.status === "closed" || update.status === "archived"
-    }
-  }
-  replace(formations, c.formations)
-  replace(articles, c.articles)
-  replace(partners, c.partners)
 }

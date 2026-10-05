@@ -1,7 +1,8 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
-import { articles, programs, stats } from "@/data/content"
+import { stats } from "@/data/content"
+import { useArticleSummaries, usePrograms } from "@/data/remote"
 import { Photo } from "@/components/site/photo"
 import { PartnerLogos } from "@/components/site/partner-logos"
 import { Reveal } from "@/components/site/reveal"
@@ -12,6 +13,8 @@ import { Button } from "@/components/ui/button"
 const ease = [0.22, 1, 0.36, 1] as const
 
 export function HomePage() {
+  const programs = usePrograms()
+  const articles = useArticleSummaries()
   const featured = ["mentorat", "formations", "glab-sisters"]
     .map((s) => programs.find((p) => p.slug === s)!)
     .filter(Boolean)
@@ -140,11 +143,18 @@ export function HomePage() {
             />
           </Reveal>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
-            {articles.slice(0, 3).map((a, i) => (
-              <Reveal key={a.slug} delay={i * 0.08}>
-                <ArticleCard article={a} large={i === 0} />
-              </Reveal>
-            ))}
+            {articles === null ? (
+              <div
+                className="col-span-full h-[280px] animate-pulse rounded-lg border border-sand-dark bg-surface"
+                aria-busy="true"
+              />
+            ) : (
+              articles.slice(0, 3).map((a, i) => (
+                <Reveal key={a.slug} delay={i * 0.08}>
+                  <ArticleCard article={a} large={i === 0} />
+                </Reveal>
+              ))
+            )}
           </div>
         </Container>
       </section>

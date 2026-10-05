@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.ghemit.platform.content.application.port.in.PublicContentQuery;
 import com.ghemit.platform.content.application.port.in.PublicContentView;
+import com.ghemit.platform.shared.domain.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -44,5 +45,25 @@ class PublicContentControllerTest {
 				.andExpect(jsonPath("$.formations[0].name").value("Développement web"))
 				.andExpect(jsonPath("$.articles[0].slug").value("seminaire-orientation"))
 				.andExpect(jsonPath("$.partners[0].name").value("Partenaire"));
+	}
+
+	@Test
+	void sert_un_article_publie_par_son_slug() throws Exception {
+		when(publicContentQuery.publishedArticle("seminaire"))
+				.thenReturn(Map.of("title", "Séminaire", "body", List.of(Map.of("type", "p", "text", "x"))));
+
+		mockMvc.perform(get("/api/public/articles/seminaire"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.title").value("Séminaire"))
+				.andExpect(jsonPath("$.body[0].type").value("p"));
+	}
+
+	@Test
+	void un_article_absent_ou_en_brouillon_renvoie_404() throws Exception {
+		when(publicContentQuery.publishedArticle("brouillon"))
+				.thenThrow(new EntityNotFoundException("Article introuvable"));
+
+		mockMvc.perform(get("/api/public/articles/brouillon"))
+				.andExpect(status().isNotFound());
 	}
 }

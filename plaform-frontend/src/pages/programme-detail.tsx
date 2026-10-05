@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router"
 import { motion } from "motion/react"
 import { CheckIcon } from "lucide-react"
-import { programs } from "@/data/content"
+import { usePrograms } from "@/data/remote"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -12,6 +12,7 @@ const ease = [0.22, 1, 0.36, 1] as const
 
 export function ProgrammeDetailPage() {
   const { slug } = useParams()
+  const programs = usePrograms()
   const program = programs.find((p) => p.slug === slug)
 
   if (!program || !program.detail) {

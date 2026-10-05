@@ -1,10 +1,11 @@
-import { programs } from "@/data/content"
+import { usePrograms } from "@/data/remote"
 import { PageHeader } from "@/components/site/page-header"
 import { ProgramRow } from "@/components/site/cards"
 import { Container } from "@/components/site/bands"
 import { Reveal } from "@/components/site/reveal"
 
 export function ProgrammesPage() {
+  const programs = usePrograms()
   return (
     <div className="flex flex-col">
       <Container>

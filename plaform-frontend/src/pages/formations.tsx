@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { cn } from "cn"
-import { formations } from "@/data/content"
+import { useFormations } from "@/data/remote"
 import { PageHeader } from "@/components/site/page-header"
 import { Container } from "@/components/site/bands"
 import { Reveal } from "@/components/site/reveal"
@@ -13,8 +13,9 @@ const filters = ["Toutes", "Data", "Développement", "IA", "En ligne", "Douala"]
 
 export function FormationsPage() {
   const [filter, setFilter] = useState("Toutes")
+  const formations = useFormations()
 
-  const rows = formations.filter((f) => {
+  const rows = (formations ?? []).filter((f) => {
     if (filter === "Toutes") return true
     if (filter === "En ligne" || filter === "Douala") return f.format === filter
     return f.category === filter
@@ -119,7 +120,7 @@ export function FormationsPage() {
             </table>
           </div>
         </Reveal>
-        {rows.length === 0 && (
+        {rows.length === 0 && formations !== null && (
           <p className="py-10 text-center text-[15.5px] text-ink-muted">
             Aucune session programmée pour le moment.
           </p>

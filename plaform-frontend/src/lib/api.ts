@@ -1,4 +1,4 @@
-import type { Article, Formation, Partner, ProgramStatusUpdate } from "@/data/content"
+import type { Article } from "@/data/content"
 
 export const API_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8080"
@@ -6,24 +6,14 @@ export const API_URL: string =
 /** Préfixe les URLs relatives de la médiathèque par l'origine de l'API. */
 export const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
 
-export interface RemoteContent {
-  programs?: ProgramStatusUpdate[]
-  formations?: Formation[]
-  articles?: Article[]
-  partners?: Partner[]
-}
-
-export async function fetchRemoteContent(timeoutMs = 900): Promise<RemoteContent | null> {
-  const ctrl = new AbortController()
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs)
+/** Article complet par slug (corps compris) ; null si absent, brouillon ou API injoignable. */
+export async function fetchArticle(slug: string): Promise<Article | null> {
   try {
-    const res = await fetch(`${API_URL}/api/public/content`, { signal: ctrl.signal })
+    const res = await fetch(`${API_URL}/api/public/articles/${encodeURIComponent(slug)}`)
     if (!res.ok) return null
-    return (await res.json()) as RemoteContent
+    return (await res.json()) as Article
   } catch {
     return null
-  } finally {
-    clearTimeout(timer)
   }
 }
 

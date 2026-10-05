@@ -1,9 +1,10 @@
-import { partners } from "@/data/content"
+import { usePartners } from "@/data/remote"
 import { mediaUrl } from "@/lib/api"
 import { Container } from "@/components/site/bands"
 
 /** Bandeau des partenaires (administrés en back office). Masqué s'il n'y en a aucun. */
 export function PartnerLogos({ title }: { title: string }) {
+  const partners = usePartners()
   if (partners.length === 0) return null
   return (
     <section className="border-t border-sand bg-surface">

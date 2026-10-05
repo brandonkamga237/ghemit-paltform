@@ -2,15 +2,17 @@ package com.ghemit.platform.content.application;
 
 import com.ghemit.platform.content.application.port.in.PublicContentQuery;
 import com.ghemit.platform.content.application.port.in.PublicContentView;
+import com.ghemit.platform.content.domain.Article;
 import com.ghemit.platform.content.domain.ContentItem;
 import com.ghemit.platform.content.domain.ContentItemRepository;
 import com.ghemit.platform.content.domain.ContentType;
 import com.ghemit.platform.content.domain.Payload;
+import com.ghemit.platform.shared.domain.EntityNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Assemble le contenu dynamique du site public. */
+/** Assemble le contenu dynamique du site public. Les brouillons n'y figurent jamais. */
 public class PublicContentService implements PublicContentQuery {
 
 	private final ContentItemRepository repository;
@@ -26,8 +28,21 @@ public class PublicContentService implements PublicContentQuery {
 						.map(PublicContentService::programStatus)
 						.toList(),
 				payloads(ContentType.FORMATION),
-				payloads(ContentType.ARTICLE),
+				repository.findByType(ContentType.ARTICLE).stream()
+						.filter(item -> Article.isPublished(item.payload()))
+						.sorted(Article.NEWEST_FIRST)
+						.map(item -> Article.summary(item.payload()))
+						.toList(),
 				payloads(ContentType.PARTNER));
+	}
+
+	@Override
+	public Map<String, Object> publishedArticle(String slug) {
+		return repository.findByTypeAndSlug(ContentType.ARTICLE, slug)
+				.map(ContentItem::payload)
+				.filter(Article::isPublished)
+				.map(Article::full)
+				.orElseThrow(() -> new EntityNotFoundException("Article introuvable"));
 	}
 
 	/** Seul le statut d'un programme est administrable : le reste de la fiche vit dans le code du site. */

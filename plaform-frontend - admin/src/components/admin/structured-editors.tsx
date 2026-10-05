@@ -9,11 +9,14 @@ import {
   LinkIcon,
   ListIcon,
   ListOrderedIcon,
+  MegaphoneIcon,
   MinusIcon,
   PlusIcon,
   QuoteIcon,
+  TableIcon,
   Trash2Icon,
   TypeIcon,
+  VideoIcon,
 } from "lucide-react"
 import { ImageField } from "@/components/admin/media-picker"
 import { Button } from "@/components/ui/button"
@@ -32,11 +35,19 @@ import {
 // ─── Éditeur de blocs professionnel (style Medium) ─────────────────────────────
 
 export interface Block {
-  type: "p" | "h2" | "h3" | "quote" | "image" | "hr" | "ul" | "ol" | "code"
-  /** Texte du bloc ; pour « image », c'est la légende (facultative). */
+  type:
+    | "p" | "h2" | "h3" | "quote" | "image" | "hr"
+    | "ul" | "ol" | "code" | "video" | "table" | "callout"
+  /** Texte du bloc ; pour « image »/« vidéo », c'est la légende (facultative). */
   text: string
-  /** Pour « image » : URL du média choisi. */
+  /** Pour « image » : URL du média choisi. Pour « video » : URL YouTube ou fichier. */
   url?: string
+  /** Pour « table » : légende sous le tableau. */
+  caption?: string
+  /** Pour « callout » : info | success | warning. */
+  tone?: "info" | "success" | "warning"
+  /** Pour « quote » : source de la citation. */
+  cite?: string
 }
 
 const BLOCK_TYPES: { value: Block["type"]; label: string; icon?: typeof TypeIcon }[] = [
@@ -44,14 +55,17 @@ const BLOCK_TYPES: { value: Block["type"]; label: string; icon?: typeof TypeIcon
   { value: "h2", label: "Titre", icon: TypeIcon },
   { value: "h3", label: "Sous-titre", icon: TypeIcon },
   { value: "quote", label: "Citation", icon: QuoteIcon },
+  { value: "callout", label: "Encadré", icon: MegaphoneIcon },
   { value: "ul", label: "Liste à puces", icon: ListIcon },
   { value: "ol", label: "Liste numérotée", icon: ListOrderedIcon },
   { value: "code", label: "Bloc de code", icon: Code2Icon },
+  { value: "table", label: "Tableau", icon: TableIcon },
   { value: "hr", label: "Séparateur", icon: MinusIcon },
   { value: "image", label: "Image", icon: ImageIcon },
+  { value: "video", label: "Vidéo", icon: VideoIcon },
 ]
 
-const FORMATTABLE_TYPES: Block["type"][] = ["p", "h2", "h3", "quote"]
+const FORMATTABLE_TYPES: Block["type"][] = ["p", "h2", "h3", "quote", "callout"]
 
 function blockPlaceholder(type: Block["type"]): string {
   switch (type) {
@@ -61,12 +75,16 @@ function blockPlaceholder(type: Block["type"]): string {
       return "Sous-titre…"
     case "quote":
       return "« Une citation marquante… »"
+    case "callout":
+      return "Information ou conseil à mettre en avant…"
     case "ul":
       return "Un élément par ligne"
     case "ol":
       return "Un élément par ligne"
     case "code":
       return "console.log('exemple');"
+    case "table":
+      return "Colonne 1 | Colonne 2\nValeur A | Valeur B"
     default:
       return "Écrivez votre paragraphe…"
   }
@@ -83,6 +101,9 @@ export function BlocksField({
     type: b.type,
     text: b.text ?? "",
     url: b.url,
+    caption: b.caption,
+    tone: b.tone,
+    cite: b.cite,
   })) as Block[]
 
   const [active, setActive] = useState<number | null>(null)
@@ -110,12 +131,16 @@ export function BlocksField({
   const add = useCallback(
     (type: Block["type"]) => {
       const block: Block =
-        type === "image" ? { type, text: "", url: "" } : { type, text: "" }
+        type === "image" || type === "video"
+          ? { type, text: "", url: "" }
+          : type === "callout"
+            ? { type, text: "", tone: "info" }
+            : { type, text: "" }
       const idx = blocks.length
       onChange([...blocks, block])
       setActive(idx)
       setTimeout(() => {
-        if (type === "image" || type === "hr") return
+        if (type === "image" || type === "hr" || type === "video") return
         refs.current[idx]?.focus()
       }, 0)
     },
@@ -305,6 +330,20 @@ export function BlocksField({
                     placeholder="Légende (facultative)"
                   />
                 </div>
+              ) : block.type === "video" ? (
+                <div className="flex flex-col gap-3">
+                  <LabeledInput
+                    label="URL de la vidéo (YouTube ou médiathèque)"
+                    value={block.url ?? ""}
+                    onChange={(v) => update(i, { url: v })}
+                    placeholder="https://www.youtube.com/watch?v=…"
+                  />
+                  <Input
+                    value={block.text}
+                    onChange={(e) => update(i, { text: e.target.value })}
+                    placeholder="Légende (facultative)"
+                  />
+                </div>
               ) : block.type === "hr" ? (
                 <div className="flex items-center gap-4 py-3">
                   <hr className="flex-1 border-t border-sand" />
@@ -343,6 +382,44 @@ export function BlocksField({
                     }
                   `}
                 />
+              )}
+
+              {block.type === "quote" && (
+                <Input
+                  value={block.cite ?? ""}
+                  onChange={(e) => update(i, { cite: e.target.value })}
+                  placeholder="Source de la citation (facultative)"
+                />
+              )}
+
+              {block.type === "callout" && (
+                <Select
+                  value={block.tone ?? "info"}
+                  onValueChange={(v) => update(i, { tone: v as Block["tone"] })}
+                >
+                  <SelectTrigger className="h-8 w-[180px]" size="sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="info">Information</SelectItem>
+                    <SelectItem value="success">Succès / conseil</SelectItem>
+                    <SelectItem value="warning">Attention</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+
+              {block.type === "table" && (
+                <div className="flex flex-col gap-2">
+                  <Input
+                    value={block.caption ?? ""}
+                    onChange={(e) => update(i, { caption: e.target.value })}
+                    placeholder="Légende du tableau (facultative)"
+                  />
+                  <span className="text-[12px] text-ink-faint">
+                    Une ligne = une ligne du tableau, cellules séparées par « | ».
+                    La première ligne sert d'en-tête.
+                  </span>
+                </div>
               )}
 
               {(block.type === "ul" || block.type === "ol") && (

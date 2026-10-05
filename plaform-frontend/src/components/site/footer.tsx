@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router"
-import { contact, programs } from "@/data/content"
+import { contact } from "@/data/content"
+import { usePrograms } from "@/data/remote"
 import { apiPost } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +12,7 @@ export function Footer() {
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
+  const programs = usePrograms()
 
   return (
     <footer className="bg-navy">

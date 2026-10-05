@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
 import { ChevronDownIcon, MenuIcon, XIcon } from "lucide-react"
 import { cn } from "cn"
-import { programs } from "@/data/content"
+import { usePrograms } from "@/data/remote"
 import { Button } from "@/components/ui/button"
 import logoUrl from "@/assets/logo-gehmit.webp"
 
@@ -30,6 +30,7 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
+  const programs = usePrograms()
 
   // Fermer les menus à chaque navigation (ajustement pendant le rendu).
   const [prevPath, setPrevPath] = useState(location.pathname)
