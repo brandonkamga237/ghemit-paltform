@@ -4,6 +4,7 @@ import { Link } from "react-router"
 import { motion } from "motion/react"
 import { cn } from "cn"
 import { Container } from "@/components/site/bands"
+import { Photo } from "@/components/site/photo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -37,20 +38,26 @@ export function DonatePage() {
   return (
     <div className="flex flex-col">
       <div className="grid lg:grid-cols-2">
-        {/* Panneau or */}
+        {/* Panneau impact — photo de fond sous voile doré */}
         <motion.section
-          className="flex flex-col justify-center gap-6 bg-gold-tint px-6 py-16 sm:px-11"
+          className="relative flex flex-col justify-center gap-6 overflow-hidden bg-gold-tint px-6 py-16 sm:px-11"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, ease }}
         >
-          <span className="font-mono text-xs tracking-[0.16em] text-soon-text uppercase">
+          <Photo
+            photo="paei-2024-promotion"
+            alt=""
+            className="absolute inset-0 h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gold-tint via-gold-tint/95 to-gold-tint/60" />
+          <span className="relative font-mono text-xs tracking-[0.16em] text-soon-text uppercase">
             Soutenir Gehmit
           </span>
-          <h1 className="font-heading text-4xl leading-[1.1] font-semibold tracking-[-0.02em] text-balance sm:text-[44px]">
+          <h1 className="relative font-heading text-4xl leading-[1.1] font-semibold tracking-[-0.02em] text-balance sm:text-[44px]">
             Un don finance un accompagnement.
           </h1>
-          <div className="flex flex-col gap-3.5 pt-1.5">
+          <div className="relative flex flex-col gap-3.5 pt-1.5">
             {equivalences.map((e) => (
               <div key={e.amount} className="flex items-baseline gap-3.5">
                 <span className="tnum min-w-[120px] font-heading text-[26px] font-semibold text-navy">

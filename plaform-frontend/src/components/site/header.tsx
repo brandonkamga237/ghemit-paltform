@@ -121,7 +121,10 @@ export function Header() {
               Faire un don
             </Button>
             <button
-              className="inline-flex size-11 items-center justify-center rounded-md text-navy lg:hidden"
+              className={cn(
+                "inline-flex size-11 items-center justify-center rounded-md transition-colors lg:hidden",
+                mobileOpen ? "text-surface" : "text-navy"
+              )}
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
             >
@@ -169,7 +172,7 @@ export function Header() {
         </AnimatePresence>
       </header>
 
-      {/* Menu mobile plein écran */}
+      {/* Menu mobile plein écran — index numéroté sur navy */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -177,7 +180,7 @@ export function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-30 flex flex-col bg-cream pt-[88px] lg:hidden"
+            className="fixed inset-0 z-30 flex flex-col bg-navy pt-[88px] lg:hidden"
           >
             <nav className="flex flex-col overflow-y-auto px-6 py-4">
               {navItems.map((item, i) => (
@@ -192,20 +195,25 @@ export function Header() {
                     end={item.to === "/"}
                     className={({ isActive }) =>
                       cn(
-                        "flex items-center justify-between border-b border-sand py-4 font-heading text-2xl font-semibold",
-                        isActive ? "text-gehmit" : "text-navy"
+                        "group flex items-baseline gap-4 border-b border-white/10 py-[15px]",
+                        isActive ? "text-gold" : "text-surface"
                       )
                     }
                   >
-                    {item.label}
+                    <span className="tnum w-7 font-mono text-[11.5px] tracking-[0.1em] text-surface/40">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-heading text-[26px] font-semibold">
+                      {item.label}
+                    </span>
                   </NavLink>
                   {item.dropdown ? (
-                    <div className="grid grid-cols-2 gap-x-4 border-b border-sand py-3">
+                    <div className="grid grid-cols-2 gap-x-4 border-b border-white/10 pt-1 pb-3 pl-11">
                       {programs.map((p) => (
                         <Link
                           key={p.slug}
                           to={p.slug === "formations" ? "/formations" : `/programmes/${p.slug}`}
-                          className="py-2 text-[15px] font-medium text-ink-muted"
+                          className="py-2 text-[14.5px] font-medium text-surface/65"
                         >
                           {p.name}
                         </Link>
@@ -215,7 +223,13 @@ export function Header() {
                 </motion.div>
               ))}
             </nav>
-            <div className="mt-auto p-5">
+            <div className="mt-auto flex flex-col gap-4 p-5 pb-6">
+              <a
+                href="mailto:info.gehmit@gmail.com"
+                className="font-mono text-[12.5px] tracking-[0.06em] text-surface/50"
+              >
+                info.gehmit@gmail.com
+              </a>
               <Button
                 render={<Link to="/don" />}
                 className="h-12 w-full rounded-md bg-gold text-base font-semibold text-navy hover:bg-gold-hover"

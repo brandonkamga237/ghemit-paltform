@@ -4,6 +4,7 @@ import { motion } from "motion/react"
 import { MessageCircleIcon } from "lucide-react"
 import { contact, faq, whatsappUrl } from "@/data/content"
 import { apiPost } from "@/lib/api"
+import { Photo } from "@/components/site/photo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -137,13 +138,21 @@ export function ContactPage() {
         )}
       </motion.section>
 
-      {/* Panneau navy */}
+      {/* Panneau navy — photo de bandeau + coordonnées */}
       <motion.aside
         className="flex flex-col gap-9 bg-navy px-6 py-16 sm:px-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.5, ease }}
       >
+        <div className="relative -mx-6 -mt-16 mb-2 h-44 overflow-hidden sm:-mx-10">
+          <Photo
+            photo="seminaire-echange"
+            alt="Échanges entre participants lors d'un événement Gehmit"
+            className="h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/30 to-navy/5" />
+        </div>
         <div className="flex flex-col gap-3">
           <span className="font-mono text-[11px] tracking-[0.12em] text-gold uppercase">
             Coordonnées
