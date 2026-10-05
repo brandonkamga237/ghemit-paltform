@@ -35,7 +35,7 @@ export function HomePage() {
     <div className="flex flex-col">
       {/* Héros — panneau vert, diptyque photo qui chevauche la bande suivante */}
       <section className="bg-gehmit">
-        <Container className="grid items-center gap-10 pt-16 pb-24 lg:grid-cols-2 lg:gap-14 lg:pt-[76px] lg:pb-[60px]">
+        <Container className="grid items-center gap-10 pt-16 pb-16 lg:grid-cols-2 lg:gap-14 lg:pt-[76px] lg:pb-[60px]">
           <motion.div
             className="flex flex-col gap-6"
             initial={{ opacity: 0 }}
@@ -87,7 +87,7 @@ export function HomePage() {
             </motion.div>
           </motion.div>
           <motion.div
-            className="relative z-10 lg:-mb-[200px] lg:self-end"
+            className="relative z-10 hidden lg:-mb-[200px] lg:block lg:self-end"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6, ease }}
