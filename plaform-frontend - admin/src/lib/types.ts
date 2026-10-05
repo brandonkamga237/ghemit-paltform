@@ -62,6 +62,8 @@ export interface Candidature {
   form: Record<string, unknown>
   readFlag: boolean
   status: CandidatureStatus
+  /** Transitions autorisées depuis le statut courant (calculées par l'API). */
+  allowedStatuses?: CandidatureStatus[]
   note?: string
   createdAt: string
 }

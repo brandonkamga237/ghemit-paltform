@@ -1,5 +1,6 @@
 package com.ghemit.platform.inbox.domain;
 
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,7 +46,12 @@ public final class Candidature {
 	}
 
 	public void changeStatus(CandidatureStatus status) {
-		this.status = Objects.requireNonNull(status, "Le statut est obligatoire");
+		Objects.requireNonNull(status, "Le statut est obligatoire");
+		if (status != this.status && !this.status.canTransitionTo(status)) {
+			throw new BusinessRuleViolationException(
+					"Transition de statut impossible : " + this.status.code() + " → " + status.code());
+		}
+		this.status = status;
 	}
 
 	/** Note interne de l'équipe ; {@code null} l'effface. */

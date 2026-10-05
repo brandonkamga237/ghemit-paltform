@@ -20,6 +20,13 @@ import {
   STATUS_ORDER,
   useDebounced,
 } from "@/lib/inbox"
+
+/** Statuts proposés : le courant + les transitions autorisées par le workflow. */
+function allowedOptions(c: Candidature): CandidatureStatus[] {
+  const current = (c.status as CandidatureStatus) ?? "new"
+  const allowed = c.allowedStatuses ?? STATUS_ORDER
+  return [current, ...allowed.filter((s) => s !== current)]
+}
 import { Pagination } from "@/components/admin/pagination"
 import { toast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
@@ -395,7 +402,7 @@ export function CandidaturesPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {STATUS_ORDER.map((s) => (
+                          {allowedOptions(c).map((s) => (
                             <SelectItem key={s} value={s}>
                               {STATUS_META[s].label}
                             </SelectItem>
@@ -480,7 +487,7 @@ function CandidatureDialog({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {STATUS_ORDER.map((s) => (
+                {allowedOptions(c).map((s) => (
                   <SelectItem key={s} value={s}>
                     {STATUS_META[s].label}
                   </SelectItem>

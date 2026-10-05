@@ -49,4 +49,35 @@ class CandidatureTest {
 		assertThat(CandidatureStatus.fromStoredCode("in_progress"))
 				.isEqualTo(CandidatureStatus.IN_PROGRESS);
 	}
+
+	@Test
+	void le_traitement_avance_sans_retour_en_arriere() {
+		Candidature candidature = candidature();
+
+		candidature.changeStatus(CandidatureStatus.IN_PROGRESS);
+		candidature.changeStatus(CandidatureStatus.ACCEPTED);
+		candidature.changeStatus(CandidatureStatus.ARCHIVED);
+
+		assertThat(candidature.status()).isEqualTo(CandidatureStatus.ARCHIVED);
+	}
+
+	@Test
+	void les_transitions_interdites_sont_refusees() {
+		Candidature candidature = candidature();
+		candidature.changeStatus(CandidatureStatus.ACCEPTED);
+
+		assertThatThrownBy(() -> candidature.changeStatus(CandidatureStatus.IN_PROGRESS))
+				.isInstanceOf(BusinessRuleViolationException.class);
+	}
+
+	@Test
+	void un_dossier_non_retenu_ou_archive_peut_etre_rouvert() {
+		Candidature candidature = candidature();
+		candidature.changeStatus(CandidatureStatus.IN_PROGRESS);
+		candidature.changeStatus(CandidatureStatus.REJECTED);
+
+		candidature.changeStatus(CandidatureStatus.IN_PROGRESS);
+
+		assertThat(candidature.status()).isEqualTo(CandidatureStatus.IN_PROGRESS);
+	}
 }
