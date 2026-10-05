@@ -54,7 +54,8 @@ public class CandidatureService
 	public CandidatureSummary summary() {
 		Map<String, Long> byProgram = repository.countByProgram();
 		long total = byProgram.values().stream().mapToLong(Long::longValue).sum();
-		return new CandidatureSummary(total, repository.countUnread(), byProgram, repository.countByStatus());
+		return new CandidatureSummary(total, repository.countUnread(), byProgram,
+				repository.countByStatus(), repository.countNewByProgram());
 	}
 
 	@Override

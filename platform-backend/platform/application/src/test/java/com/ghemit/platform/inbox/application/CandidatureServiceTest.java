@@ -119,6 +119,12 @@ class CandidatureServiceTest {
 		}
 
 		@Override
+		public Map<String, Long> countNewByProgram() {
+			return store.values().stream().filter(c -> "new".equals(c.status().code()))
+					.collect(Collectors.groupingBy(c -> c.program().value(), Collectors.counting()));
+		}
+
+		@Override
 		public Map<LocalDate, Long> countByDay(LocalDate since) {
 			return store.values().stream()
 					.map(c -> c.createdAt().atZone(ZoneId.systemDefault()).toLocalDate())

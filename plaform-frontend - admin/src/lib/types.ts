@@ -82,6 +82,7 @@ export interface CandidaturesSummary {
   unread: number
   byProgram: Record<string, number>
   byStatus: Record<string, number>
+  newByProgram: Record<string, number>
 }
 
 export interface MessagesSummary {

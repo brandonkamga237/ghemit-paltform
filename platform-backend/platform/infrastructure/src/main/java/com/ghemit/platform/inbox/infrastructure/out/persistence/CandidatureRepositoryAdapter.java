@@ -54,6 +54,11 @@ public class CandidatureRepositoryAdapter implements CandidatureRepository {
 	}
 
 	@Override
+	public Map<String, Long> countNewByProgram() {
+		return toMap(jpaRepository.countNewGroupedByProgram());
+	}
+
+	@Override
 	public Map<LocalDate, Long> countByDay(LocalDate since) {
 		return toDayMap(jpaRepository.countDailySince(since));
 	}

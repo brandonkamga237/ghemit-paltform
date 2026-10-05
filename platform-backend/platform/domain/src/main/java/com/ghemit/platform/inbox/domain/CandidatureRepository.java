@@ -23,6 +23,9 @@ public interface CandidatureRepository {
 	/** Nombre de candidatures par code de statut. */
 	Map<String, Long> countByStatus();
 
+	/** Nouvelles candidatures (statut « new ») par code de programme. */
+	Map<String, Long> countNewByProgram();
+
 	/** Dépôts par jour depuis {@code since} inclus (jours absents non listés). */
 	Map<LocalDate, Long> countByDay(LocalDate since);
 
