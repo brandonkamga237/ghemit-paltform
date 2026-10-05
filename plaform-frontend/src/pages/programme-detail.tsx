@@ -2,7 +2,6 @@ import { Link, Navigate, useParams } from "react-router"
 import { motion } from "motion/react"
 import { CheckIcon } from "lucide-react"
 import { programs } from "@/data/content"
-import { mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -73,15 +72,12 @@ export function ProgrammeDetailPage() {
           </motion.div>
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
-          {d.imageUrl ? (
-            <img
-              src={mediaUrl(d.imageUrl)}
-              alt={d.heroTitle}
-              className="h-full w-full rounded-lg object-cover"
-            />
-          ) : (
-            <Photo label={d.photoLabel} className="h-full" />
-          )}
+          <Photo
+            photo={program.photo}
+            alt={program.photoAlt}
+            priority
+            sizes="(min-width: 1024px) 55vw, 100vw"
+          />
         </div>
       </section>
 
@@ -193,31 +189,18 @@ export function ProgrammeDetailPage() {
               <span className="font-mono text-[11px] tracking-[0.12em] text-ink-faint uppercase">
                 Programmes liés
               </span>
-              {d.related.map((r) => {
-                const rp = programs.find((p) => p.slug === r)!
-                return (
+              {programs
+                .filter((p) => d.related.includes(p.slug))
+                .map((rp) => (
                   <Link
-                    key={r}
-                    to={r === "formations" ? "/formations" : `/programmes/${r}`}
+                    key={rp.slug}
+                    to={rp.slug === "formations" ? "/formations" : `/programmes/${rp.slug}`}
                     className="text-base font-semibold text-gehmit transition-colors hover:text-gehmit-deep"
                   >
                     {rp.name} →
                   </Link>
-                )
-              })}
+                ))}
             </Reveal>
-          </div>
-        </Container>
-      </section>
-
-      {/* Galerie */}
-      <section className="border-t border-sand bg-cream">
-        <Container className="flex flex-col gap-6 py-12">
-          <h2 className="font-heading text-[26px] font-semibold">En images</h2>
-          <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
-            {[1, 2, 3, 4].map((n) => (
-              <Photo key={n} className="h-[180px] rounded-lg" />
-            ))}
           </div>
         </Container>
       </section>

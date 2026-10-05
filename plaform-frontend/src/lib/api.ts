@@ -1,12 +1,4 @@
-import type {
-  Achievement,
-  Article,
-  ContactInfo,
-  FaqItem,
-  Formation,
-  Partner,
-  Program,
-} from "@/data/content"
+import type { Article, Formation, Partner, ProgramStatusUpdate } from "@/data/content"
 
 export const API_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8080"
@@ -15,18 +7,10 @@ export const API_URL: string =
 export const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
 
 export interface RemoteContent {
-  programs?: Program[]
+  programs?: ProgramStatusUpdate[]
   formations?: Formation[]
-  calendarRows?: { name: string; months: string[]; tone: "gehmit" | "soon" }[]
   articles?: Article[]
-  blogCategories?: string[]
-  faq?: FaqItem[]
-  partners?: (Partner | string)[]
-  stats?: { value: string; label: string; gold?: boolean }[]
-  achievements?: Achievement[]
-  contact?: Partial<ContactInfo>
-  pageTexts?: Record<string, string>
-  pageImages?: Record<string, string>
+  partners?: Partner[]
 }
 
 export async function fetchRemoteContent(timeoutMs = 900): Promise<RemoteContent | null> {

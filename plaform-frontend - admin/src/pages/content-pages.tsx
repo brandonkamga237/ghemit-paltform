@@ -8,35 +8,34 @@ const statusField = {
   options: ["open", "soon", "closed", "archived"],
 }
 
+/** Noms des programmes : la fiche complète est statique dans le site public. */
+const PROGRAM_NAMES: Record<string, string> = {
+  paei: "PAEI",
+  mentorat: "Mentorat",
+  formations: "Formations",
+  stage: "Stage",
+  "glab-sisters": "GLab Sisters",
+}
+
 const programsConfig: CrudConfig = {
   type: "programs",
   title: "Programmes",
-  description: "Les programmes affichés sur /programmes et la page d'accueil.",
-  hasSlug: true,
+  description:
+    "Ouverture des candidatures. Les textes des fiches programmes sont gérés dans le code du site.",
+  fixedItems: true,
   columns: [
-    { key: "name", label: "Nom" },
-    { key: "slug", label: "Slug", render: (i) => String(i.payload.slug ?? i.slug ?? "—") },
+    { key: "name", label: "Programme", render: (i) => PROGRAM_NAMES[i.slug ?? ""] ?? i.slug ?? "—" },
     { key: "status", label: "Statut", render: (i) => <StatusBadge value={i.payload.status} /> },
-    { key: "statusLabel", label: "Libellé" },
+    { key: "statusLabel", label: "Libellé affiché" },
   ],
+  itemLabel: (i) => PROGRAM_NAMES[i.slug ?? ""] ?? i.slug ?? i.id,
   fields: [
-    { name: "name", label: "Nom" },
     statusField,
-    { name: "statusLabel", label: "Libellé du statut" },
-    { name: "cardDescription", label: "Description (carte)", kind: "textarea" },
-    { name: "cardLink", label: "Libellé du lien (carte)" },
-    { name: "description", label: "Description longue", kind: "textarea" },
-    { name: "meta", label: "Métadonnées", kind: "tags", hint: "Ex. 6 mois, Gratuit, Douala" },
     {
-      name: "primaryCta",
-      label: "Bouton principal",
-      kind: "linkCta",
-    },
-    { name: "secondaryCta", label: "Bouton secondaire", kind: "linkCta" },
-    {
-      name: "detail",
-      label: "Page détail",
-      kind: "programDetail",
+      name: "statusLabel",
+      label: "Libellé affiché",
+      placeholder: "Ex. Candidatures ouvertes, Clôture le 30 sept.",
+      hint: "« closed » ou « archived » désactive le bouton Candidater.",
     },
   ],
 }
@@ -69,31 +68,6 @@ const formationsConfig: CrudConfig = {
   ],
 }
 
-const calendarConfig: CrudConfig = {
-  type: "calendar-rows",
-  title: "Calendrier des sessions",
-  description: "Le tableau des sessions affiché sur /formations (4 colonnes de mois).",
-  columns: [
-    { key: "name", label: "Formation" },
-    {
-      key: "months",
-      label: "Sessions",
-      render: (i) => (Array.isArray(i.payload.months) ? i.payload.months.filter(Boolean).join(" · ") : "—"),
-    },
-  ],
-  fields: [
-    { name: "name", label: "Formation" },
-    {
-      name: "months",
-      label: "Sessions (4 colonnes)",
-      kind: "tags",
-      keepEmpty: true,
-      hint: "4 valeurs séparées par des virgules ; laisser vide pour une case vide",
-    },
-    { name: "tone", label: "Ton", kind: "select", options: ["gehmit", "soon"] },
-  ],
-}
-
 const articlesConfig: CrudConfig = {
   type: "articles",
   title: "Articles",
@@ -122,27 +96,12 @@ const articlesConfig: CrudConfig = {
       kind: "image",
       hint: "Affichée en haut de l'article. Vide = visuel par défaut.",
     },
-    { name: "photoLabel", label: "Libellé de la photo", hint: "Texte affiché si aucune image n'est choisie" },
     {
       name: "body",
       label: "Corps de l'article",
       kind: "blocks",
     },
     { name: "cta", label: "Encart CTA", kind: "articleCta" },
-  ],
-}
-
-const faqConfig: CrudConfig = {
-  type: "faq",
-  title: "FAQ",
-  description: "Les questions affichées sur /contact.",
-  columns: [
-    { key: "q", label: "Question", render: (i) => String(i.payload.q ?? "—") },
-  ],
-  itemLabel: (i) => String(i.payload.q ?? i.id),
-  fields: [
-    { name: "q", label: "Question" },
-    { name: "a", label: "Réponse", kind: "textarea" },
   ],
 }
 
@@ -176,59 +135,15 @@ const partnersConfig: CrudConfig = {
   ],
 }
 
-const statsConfig: CrudConfig = {
-  type: "stats",
-  title: "Statistiques",
-  description: "Les chiffres clés de la page d'accueil.",
-  columns: [
-    { key: "value", label: "Valeur" },
-    { key: "label", label: "Libellé" },
-  ],
-  fields: [
-    { name: "value", label: "Valeur", placeholder: "Ex. 200+" },
-    { name: "label", label: "Libellé", placeholder: "Ex. Étudiants encadrés" },
-    { name: "gold", label: "Mettre en avant (or)", kind: "checkbox" },
-  ],
-}
-
-const achievementsConfig: CrudConfig = {
-  type: "achievements",
-  title: "Réalisations",
-  description: "La chronologie de la page /notre-impact.",
-  columns: [
-    { key: "date", label: "Date" },
-    { key: "title", label: "Titre" },
-    { key: "figure", label: "Chiffre" },
-  ],
-  fields: [
-    { name: "date", label: "Date", placeholder: "Ex. Sept. 2025" },
-    { name: "title", label: "Titre" },
-    { name: "text", label: "Description", kind: "textarea" },
-    { name: "figure", label: "Chiffre", placeholder: "Ex. 120 participants" },
-  ],
-}
-
 export function ProgramsPage() {
   return <CrudPage config={programsConfig} />
 }
 export function FormationsPage() {
   return <CrudPage config={formationsConfig} />
 }
-export function CalendarPage() {
-  return <CrudPage config={calendarConfig} />
-}
 export function ArticlesPage() {
   return <CrudPage config={articlesConfig} />
 }
-export function FaqPage() {
-  return <CrudPage config={faqConfig} />
-}
 export function PartnersPage() {
   return <CrudPage config={partnersConfig} />
-}
-export function StatsPage() {
-  return <CrudPage config={statsConfig} />
-}
-export function AchievementsPage() {
-  return <CrudPage config={achievementsConfig} />
 }

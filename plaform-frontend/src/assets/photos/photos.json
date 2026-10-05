@@ -1,0 +1,17 @@
+{
+  "seminaire-public": { "width": 1600, "height": 1200 },
+  "seminaire-salle": { "width": 1600, "height": 1200 },
+  "seminaire-presentation": { "width": 1600, "height": 1200 },
+  "seminaire-intervenant": { "width": 1600, "height": 1200 },
+  "seminaire-micro": { "width": 1600, "height": 1600 },
+  "seminaire-remise": { "width": 1600, "height": 1600 },
+  "seminaire-laureats": { "width": 1600, "height": 1600 },
+  "seminaire-echange": { "width": 1600, "height": 1200 },
+  "paei-2026-atelier": { "width": 1600, "height": 900 },
+  "paei-2026-entretien": { "width": 900, "height": 1600 },
+  "paei-2026-salle": { "width": 900, "height": 1600 },
+  "paei-2024-groupe": { "width": 1080, "height": 810 },
+  "paei-2024-promotion": { "width": 1080, "height": 810 },
+  "glab-table-ronde": { "width": 1600, "height": 900 },
+  "glab-echanges": { "width": 1600, "height": 1200 }
+}

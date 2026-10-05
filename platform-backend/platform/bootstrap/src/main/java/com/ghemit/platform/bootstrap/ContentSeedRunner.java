@@ -8,10 +8,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-/**
- * Amorçage du contenu au démarrage. L'insertion initiale est désactivable par
- * {@code app.content.seed}, mais les réglages requis sont toujours vérifiés.
- */
+/** Amorçage du contenu au démarrage, désactivable par {@code app.content.seed}. */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -30,6 +27,5 @@ class ContentSeedRunner implements ApplicationRunner {
 				log.info("Contenu initial inséré : {} éléments", inserted);
 			}
 		}
-		seedContent.ensureRequiredSettings();
 	}
 }

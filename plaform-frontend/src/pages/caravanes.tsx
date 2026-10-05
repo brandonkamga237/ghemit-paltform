@@ -2,8 +2,7 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { cn } from "cn"
-import { pageImage, pg } from "@/data/content"
-import { apiPost, mediaUrl } from "@/lib/api"
+import { apiPost } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -31,7 +30,6 @@ const apartes = [
 ]
 
 export function CaravanesPage() {
-  const visitImage = pageImage("caravanes.visit")
   const [tab, setTab] = useState<"jeune" | "entreprise">("jeune")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
@@ -98,7 +96,7 @@ export function CaravanesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease }}
           >
-            {pg("caravanes.hero.title")}
+            Les caravanes : un après-midi dans une entreprise tech.
           </motion.h1>
           <motion.p
             className="max-w-[480px] text-lg leading-[1.65] text-surface/80"
@@ -106,7 +104,7 @@ export function CaravanesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5, ease }}
           >
-            {pg("caravanes.hero.lede")}
+            Chaque mois, un groupe de jeunes visite une entreprise de la sous-région : métiers, équipes, coulisses — et les premières rencontres qui comptent.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -123,8 +121,8 @@ export function CaravanesPage() {
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
           <Photo
-            src={visitImage ? mediaUrl(visitImage) : undefined}
-            label="Photo — groupe en visite dans une entreprise"
+            photo="paei-2024-groupe"
+            alt="Groupe de jeunes de la promotion PAEI 2024"
             dark
             className="h-full"
           />

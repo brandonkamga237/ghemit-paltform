@@ -7,13 +7,8 @@ import { ImageField } from "@/components/admin/media-picker"
 import {
   BlocksField,
   ArticleCtaField,
-  LinkCtaField,
-  SectionsField,
-  TextPairListField,
   type ArticleCta,
   type Block,
-  type LinkCta,
-  type SectionBlock,
 } from "@/components/admin/structured-editors"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -62,14 +57,9 @@ export type FieldKind =
   | "checkbox"
   | "select"
   | "tags"
-  | "json"
   | "image"
   | "blocks"
   | "articleCta"
-  | "linkCta"
-  | "pairList"
-  | "sections"
-  | "programDetail"
 
 export interface FieldDef {
   name: string
@@ -79,12 +69,6 @@ export interface FieldDef {
   placeholder?: string
   hint?: string
   required?: boolean
-  /** Pour kind="tags" : conserve les entrées vides (positions significatives) */
-  keepEmpty?: boolean
-  /** Pour kind="pairList" : noms des deux propriétés, ex. ["label","value"] */
-  pairKeys?: [string, string]
-  /** Pour kind="pairList" : libellés affichés des deux colonnes */
-  pairLabels?: [string, string]
 }
 
 export interface ColumnDef {
@@ -102,6 +86,8 @@ export interface CrudConfig {
   columns: ColumnDef[]
   fields: FieldDef[]
   itemLabel?: (item: ContentItem) => string
+  /** Liste fixe définie par le site : ni création, ni suppression, ni ordre. */
+  fixedItems?: boolean
 }
 
 type Draft = Record<string, unknown>
@@ -120,27 +106,17 @@ function toDraft(fields: FieldDef[], payload: Record<string, unknown>): Draft {
       case "tags":
         draft[f.name] = Array.isArray(v) ? v.join(", ") : ""
         break
-      case "json":
-        draft[f.name] = v === undefined || v === null ? "" : JSON.stringify(v, null, 2)
-        break
       case "image":
         draft[f.name] = v === undefined || v === null ? "" : String(v)
         break
       case "articleCta":
-      case "linkCta":
         draft[f.name] =
           v && typeof v === "object" && !Array.isArray(v)
             ? structuredClone(v)
             : null
         break
       case "blocks":
-      case "pairList":
-      case "sections":
         draft[f.name] = Array.isArray(v) ? structuredClone(v) : []
-        break
-      case "programDetail":
-        draft[f.name] =
-          v && typeof v === "object" && !Array.isArray(v) ? structuredClone(v) : ({} as Draft)
         break
       default:
         draft[f.name] = v === undefined || v === null ? "" : String(v)
@@ -164,12 +140,7 @@ function toPayload(fields: FieldDef[], draft: Draft): Record<string, unknown> {
         const parts = String(raw ?? "")
           .split(",")
           .map((s) => s.trim())
-        payload[f.name] = f.keepEmpty ? parts : parts.filter(Boolean)
-        break
-      }
-      case "json": {
-        const s = String(raw ?? "").trim()
-        payload[f.name] = s === "" ? undefined : JSON.parse(s)
+        payload[f.name] = parts.filter(Boolean)
         break
       }
       case "image": {
@@ -177,8 +148,7 @@ function toPayload(fields: FieldDef[], draft: Draft): Record<string, unknown> {
         payload[f.name] = s === "" ? undefined : s
         break
       }
-      case "articleCta":
-      case "linkCta": {
+      case "articleCta": {
         if (!raw) {
           payload[f.name] = undefined
           break
@@ -212,78 +182,11 @@ function toPayload(fields: FieldDef[], draft: Draft): Record<string, unknown> {
           })
         break
       }
-      case "pairList": {
-        const arr = (Array.isArray(raw) ? raw : []) as Record<string, string>[]
-        const [k1, k2] = f.pairKeys ?? ["label", "value"]
-        payload[f.name] = arr.filter((it) => (it[k1] ?? "").trim() !== "" || (it[k2] ?? "").trim() !== "")
-        break
-      }
-      case "sections": {
-        const arr = (Array.isArray(raw) ? raw : []) as SectionBlock[]
-        payload[f.name] = arr
-          .filter((s) => s.title.trim() !== "")
-          .map((s) => ({
-            title: s.title,
-            ...(s.body?.trim() ? { body: s.body } : {}),
-            ...(s.list && s.list.some((l) => l.trim())
-              ? { list: s.list.filter((l) => l.trim() !== "") }
-              : {}),
-          }))
-        break
-      }
-      case "programDetail": {
-        const d = (raw ?? {}) as Record<string, unknown>
-        const clean = (o: Record<string, unknown>) =>
-          Object.fromEntries(Object.entries(o).filter(([, v]) => v !== "" && v !== undefined))
-        const detail: Record<string, unknown> = {
-          heroTitle: d.heroTitle ?? "",
-          heroText: d.heroText ?? "",
-          sideTitle: d.sideTitle ?? "",
-          sideText: d.sideText ?? "",
-          sidePrimary: d.sidePrimary ?? "",
-          sideSecondary: d.sideSecondary ?? "",
-          photoLabel: d.photoLabel ?? "",
-          imageUrl: d.imageUrl ?? "",
-          facts: cleanListOfPairs(d.facts),
-          related: cleanList(d.related),
-          steps: cleanListOfPairs(d.steps),
-          sections: Array.isArray(d.sections) ? d.sections : [],
-        }
-        if (detail.heroTitle === "") {
-          payload[f.name] = undefined
-          break
-        }
-        // Retire les champs vides mais conserve les listes (même vides, elles
-        // structurent la page).
-        const out = clean(detail)
-        for (const k of ["facts", "related", "steps", "sections"]) {
-          if (Array.isArray(detail[k]) && (detail[k] as unknown[]).length > 0) {
-            out[k] = detail[k]
-          } else {
-            delete out[k]
-          }
-        }
-        payload[f.name] = Object.keys(out).length > 0 ? out : undefined
-        break
-      }
       default:
         payload[f.name] = String(raw ?? "")
     }
   }
   return payload
-}
-
-function cleanListOfPairs(v: unknown): Record<string, string>[] {
-  if (!Array.isArray(v)) return []
-  return v.filter(
-    (it) => it && typeof it === "object" && Object.values(it).some((x) => String(x ?? "").trim() !== "")
-  )
-}
-
-function cleanList(v: unknown): string[] {
-  if (Array.isArray(v)) return v.map(String).filter((s) => s.trim() !== "")
-  if (typeof v === "string") return v.split(",").map((s) => s.trim()).filter(Boolean)
-  return []
 }
 
 export function CrudPage({ config }: { config: CrudConfig }) {
@@ -334,13 +237,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   }
 
   const save = async () => {
-    let payload: Record<string, unknown>
-    try {
-      payload = toPayload(config.fields, draft)
-    } catch {
-      setFormError("Un champ JSON est invalide — vérifiez la syntaxe.")
-      return
-    }
+    const payload = toPayload(config.fields, draft)
     if (config.hasSlug) payload.slug = slug
     setSaving(true)
     setFormError(null)
@@ -397,10 +294,12 @@ export function CrudPage({ config }: { config: CrudConfig }) {
             <p className="text-[15px] text-ink-muted">{config.description}</p>
           )}
         </div>
-        <Button onClick={openCreate} className="gap-2">
-          <PlusIcon className="size-4" />
-          Nouveau
-        </Button>
+        {!config.fixedItems && (
+          <Button onClick={openCreate} className="gap-2">
+            <PlusIcon className="size-4" />
+            Nouveau
+          </Button>
+        )}
       </div>
 
       {loadError ? (
@@ -444,14 +343,16 @@ export function CrudPage({ config }: { config: CrudConfig }) {
                       >
                         <PencilIcon className="size-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setDeleting(item)}
-                        aria-label="Supprimer"
-                      >
-                        <Trash2Icon className="size-4 text-destructive" />
-                      </Button>
+                      {!config.fixedItems && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setDeleting(item)}
+                          aria-label="Supprimer"
+                        >
+                          <Trash2Icon className="size-4 text-destructive" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -473,6 +374,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-2">
+            {!config.fixedItems && (
             <div className="grid gap-4 sm:grid-cols-2">
               {config.hasSlug && (
                 <FieldWrap label="Slug" hint="Identifiant unique (URL)">
@@ -491,6 +393,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
                 />
               </FieldWrap>
             </div>
+            )}
             {config.fields.map((f) => (
               <FieldInput key={f.name} field={f} draft={draft} set={set} />
             ))}
@@ -570,18 +473,6 @@ function FieldInput({
           />
         </FieldWrap>
       )
-    case "json":
-      return (
-        <FieldWrap label={field.label} hint={field.hint ?? "JSON"}>
-          <Textarea
-            value={String(value ?? "")}
-            onChange={(e) => set(field.name, e.target.value)}
-            placeholder='{"cle": "valeur"}'
-            className="min-h-[120px] font-mono text-[13px]"
-            spellCheck={false}
-          />
-        </FieldWrap>
-      )
     case "checkbox":
       return (
         <div className="flex items-center gap-2.5 pt-1">
@@ -645,38 +536,6 @@ function FieldInput({
           onChange={(cta) => set(field.name, cta)}
         />
       )
-    case "linkCta":
-      return (
-        <LinkCtaField
-          label={field.label}
-          value={(value as LinkCta) ?? null}
-          onChange={(cta) => set(field.name, cta)}
-        />
-      )
-    case "pairList":
-      return (
-        <TextPairListField
-          label={field.label}
-          keyNames={field.pairKeys ?? ["label", "value"]}
-          keyLabels={field.pairLabels ?? ["Clé", "Valeur"]}
-          value={(value as Record<string, string>[]) ?? []}
-          onChange={(items) => set(field.name, items)}
-        />
-      )
-    case "sections":
-      return (
-        <SectionsField
-          value={(value as SectionBlock[]) ?? []}
-          onChange={(sections) => set(field.name, sections)}
-        />
-      )
-    case "programDetail":
-      return (
-        <ProgramDetailField
-          value={(value as Record<string, unknown>) ?? {}}
-          onChange={(detail) => set(field.name, detail)}
-        />
-      )
     default:
       return (
         <FieldWrap
@@ -691,89 +550,6 @@ function FieldInput({
         </FieldWrap>
       )
   }
-}
-
-/** Édition structurée de la page détail d'un programme (zéro JSON). */
-function ProgramDetailField({
-  value,
-  onChange,
-}: {
-  value: Record<string, unknown>
-  onChange: (v: Record<string, unknown>) => void
-}) {
-  const set = (k: string, v: unknown) => onChange({ ...value, [k]: v })
-  const text = (k: string) => String(value[k] ?? "")
-  const strList = (k: string) => (Array.isArray(value[k]) ? (value[k] as string[]).join(", ") : "")
-  return (
-    <div className="flex flex-col gap-4 rounded-lg border-2 border-primary/20 bg-muted/30 p-4">
-      <span className="font-heading text-lg font-semibold">Page détail du programme</span>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FieldWrap label="Titre du héros">
-          <Input value={text("heroTitle")} onChange={(e) => set("heroTitle", e.target.value)} />
-        </FieldWrap>
-        <FieldWrap label="Texte du héros">
-          <Input value={text("heroText")} onChange={(e) => set("heroText", e.target.value)} />
-        </FieldWrap>
-      </div>
-
-      <TextPairListField
-        label="Chiffres clés (bandeau de faits)"
-        keyNames={["label", "value"]}
-        keyLabels={["Libellé", "Valeur"]}
-        value={(value.facts as Record<string, string>[]) ?? []}
-        onChange={(items) => set("facts", items)}
-      />
-
-      <SectionsField
-        value={(value.sections as SectionBlock[]) ?? []}
-        onChange={(sections) => set("sections", sections)}
-      />
-
-      <TextPairListField
-        label="Étapes du parcours"
-        keyNames={["title", "text"]}
-        keyLabels={["Titre", "Texte"]}
-        value={(value.steps as Record<string, string>[]) ?? []}
-        onChange={(items) => set("steps", items)}
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FieldWrap label="Barre latérale — titre">
-          <Input value={text("sideTitle")} onChange={(e) => set("sideTitle", e.target.value)} />
-        </FieldWrap>
-        <FieldWrap label="Barre latérale — texte">
-          <Input value={text("sideText")} onChange={(e) => set("sideText", e.target.value)} />
-        </FieldWrap>
-        <FieldWrap label="Barre latérale — bouton principal">
-          <Input value={text("sidePrimary")} onChange={(e) => set("sidePrimary", e.target.value)} placeholder="Ex. Candidater" />
-        </FieldWrap>
-        <FieldWrap label="Barre latérale — bouton secondaire" hint="Facultatif">
-          <Input value={text("sideSecondary")} onChange={(e) => set("sideSecondary", e.target.value)} />
-        </FieldWrap>
-      </div>
-
-      <FieldWrap label="Programmes liés" hint="Slugs séparés par des virgules, ex. mentorat, formations">
-        <Input
-          value={strList("related")}
-          onChange={(e) =>
-            set("related", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))
-          }
-        />
-      </FieldWrap>
-
-      <FieldWrap label="Libellé de la photo de couverture" hint="Texte affiché si aucune image n'est choisie">
-        <Input value={text("photoLabel")} onChange={(e) => set("photoLabel", e.target.value)} placeholder="Ex. Photo — session PAEI" />
-      </FieldWrap>
-
-      <ImageField
-        label="Image de couverture"
-        hint="Affichée dans le héros de la page détail. Vide = visuel par défaut."
-        value={text("imageUrl")}
-        onChange={(url) => set("imageUrl", url)}
-      />
-    </div>
-  )
 }
 
 export function StatusBadge({ value }: { value: unknown }) {

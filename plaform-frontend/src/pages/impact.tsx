@@ -1,19 +1,10 @@
-import { achievements, pageImage } from "@/data/content"
-import { mediaUrl } from "@/lib/api"
+import { achievements, stats } from "@/data/content"
 import { PageHeader } from "@/components/site/page-header"
 import { Container, CtaBand, StatBand } from "@/components/site/bands"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 
 export function ImpactPage() {
-  const portraitImage = pageImage("impact.portrait")
-  const impactStats = [
-    { value: "200+", label: "Étudiants encadrés" },
-    { value: "20+", label: "Professionnels reconvertis" },
-    { value: "100+", label: "Stages et emplois attribués" },
-    { value: "50+", label: "Formations et séminaires" },
-  ]
-
   return (
     <div className="flex flex-col">
       <Container>
@@ -24,7 +15,7 @@ export function ImpactPage() {
         />
       </Container>
 
-      <StatBand stats={impactStats} tone="gehmit" />
+      <StatBand stats={stats} tone="gehmit" />
 
       {/* Réalisations */}
       <section className="bg-surface">
@@ -58,8 +49,8 @@ export function ImpactPage() {
       <section className="grid border-t border-sand bg-cream lg:grid-cols-2">
         <div className="min-h-[280px] lg:min-h-[360px]">
           <Photo
-            src={portraitImage ? mediaUrl(portraitImage) : undefined}
-            label="Portrait — bénéficiaire"
+            photo="seminaire-micro"
+            alt="Un participant prend la parole lors du séminaire Gehmit"
             className="h-full"
           />
         </div>

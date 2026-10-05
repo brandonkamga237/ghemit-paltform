@@ -47,7 +47,7 @@ export function BlogPage() {
       </Container>
 
       <Container className="flex flex-wrap gap-2.5 pb-8">
-        {blogCategories.map((c) => (
+        {blogCategories().map((c) => (
           <button
             key={c}
             onClick={() => setCat(c)}

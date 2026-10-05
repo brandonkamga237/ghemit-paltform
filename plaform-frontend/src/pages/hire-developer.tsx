@@ -2,8 +2,7 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { cn } from "cn"
-import { pageImage, pg } from "@/data/content"
-import { apiPost, mediaUrl } from "@/lib/api"
+import { apiPost } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -55,7 +54,6 @@ const steps = [
 ]
 
 export function HireDeveloperPage() {
-  const interviewImage = pageImage("hiredeveloper.interview")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)
@@ -131,7 +129,7 @@ export function HireDeveloperPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease }}
           >
-            {pg("hiredeveloper.hero.title")}
+            Un développeur qualifié, sans cabinet de recrutement.
           </motion.h1>
           <motion.p
             className="max-w-[480px] text-lg leading-[1.65] text-surface/80"
@@ -139,7 +137,7 @@ export function HireDeveloperPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5, ease }}
           >
-            {pg("hiredeveloper.hero.lede")}
+            Décrivez votre besoin : nous mettons en relation votre entreprise avec les jeunes talents du vivier Junior Builders, sans commission.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -156,8 +154,8 @@ export function HireDeveloperPage() {
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
           <Photo
-            src={interviewImage ? mediaUrl(interviewImage) : undefined}
-            label="Photo — entretien entreprise / jeune développeur"
+            photo="paei-2026-entretien"
+            alt="Entretien individuel pendant le programme PAEI 2026"
             dark
             className="h-full"
           />

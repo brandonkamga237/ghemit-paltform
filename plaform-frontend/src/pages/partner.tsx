@@ -3,9 +3,10 @@ import { Link } from "react-router"
 import { motion } from "motion/react"
 import { CheckCircle2Icon } from "lucide-react"
 import { cn } from "cn"
-import { contact, pageImage, partners } from "@/data/content"
-import { apiPost, mediaUrl } from "@/lib/api"
+import { contact } from "@/data/content"
+import { apiPost } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
+import { PartnerLogos } from "@/components/site/partner-logos"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
 import { Button } from "@/components/ui/button"
@@ -73,7 +74,6 @@ export function PartnerPage() {
   const [sending, setSending] = useState(false)
   const [error, setError] = useState(false)
   const [email, setEmail] = useState("")
-  const visitImage = pageImage("partner.visit")
 
   const toggle = (t: string) =>
     setPicked((p) => (p.includes(t) ? p.filter((x) => x !== t) : [...p, t]))
@@ -123,8 +123,8 @@ export function PartnerPage() {
         </motion.div>
         <div className="min-h-[280px] lg:min-h-[400px]">
           <Photo
-            src={visitImage ? mediaUrl(visitImage) : undefined}
-            label="Photo — signature de convention ou visite d'entreprise"
+            photo="seminaire-remise"
+            alt="Remise de distinction à un partenaire de Gehmit"
             dark
             className="h-full"
           />
@@ -183,31 +183,7 @@ export function PartnerPage() {
       </section>
 
       {/* Partenaires actuels */}
-      <section className="border-t border-sand bg-surface">
-        <Container className="flex flex-col gap-6 py-12">
-          <span className="mono-label">Ils nous accompagnent déjà</span>
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
-            {partners.map((p) => (
-              <div
-                key={p.name}
-                title={p.description ?? p.name}
-                className="flex h-[72px] items-center justify-center overflow-hidden rounded-lg border border-sand bg-cream"
-              >
-                {p.logoUrl ? (
-                  <img
-                    src={mediaUrl(p.logoUrl)}
-                    alt={p.name}
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                  />
-                ) : (
-                  <span className="font-mono text-[11px] text-ink-faint">{p.name}</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+      <PartnerLogos title="Ils nous accompagnent déjà" />
 
       {/* Formulaire */}
       <section ref={formRef} className="border-t border-sand bg-cream">

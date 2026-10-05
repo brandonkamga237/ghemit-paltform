@@ -16,7 +16,9 @@ export function ProgramCard({ program }: { program: Program }) {
     <Link to={to} className={cn(cardBase, "flex flex-col")}>
       <div className="h-[220px] overflow-hidden">
         <Photo
-          label={`Photo — ${program.name.toLowerCase()}`}
+          photo={program.photo}
+          alt={program.photoAlt}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="h-full transition-transform duration-200 group-hover:scale-[1.02]"
         />
       </div>
@@ -46,7 +48,13 @@ export function ProgramRow({ program }: { program: Program }) {
         closed && "opacity-[0.72]"
       )}
     >
-      <Photo label={`Photo — ${program.name.toLowerCase()}`} className="min-h-[220px] md:min-h-[260px]" />
+      <div className="h-[220px] md:h-full md:min-h-[260px]">
+        <Photo
+          photo={program.photo}
+          alt={program.photoAlt}
+          sizes="(min-width: 1024px) 440px, (min-width: 768px) 380px, 100vw"
+        />
+      </div>
       <div className="flex flex-col justify-center gap-4 p-7 md:px-9">
         <div className="flex flex-wrap items-center gap-3">
           <Link to={to} className="font-heading text-[28px] font-semibold transition-colors hover:text-gehmit">

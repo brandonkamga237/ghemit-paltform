@@ -1,8 +1,7 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
-import { pageImage, pg, techpathUrl } from "@/data/content"
-import { mediaUrl } from "@/lib/api"
+import { techpathUrl } from "@/data/content"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -26,7 +25,6 @@ const steps = [
 ]
 
 export function TechPathPage() {
-  const productImage = pageImage("techpath.product")
   return (
     <div className="flex flex-col">
       {/* Héros navy — bannière compacte (page secondaire) */}
@@ -46,7 +44,7 @@ export function TechPathPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease }}
           >
-            {pg("techpath.hero.title")}
+            Un coach d'orientation, disponible à toute heure.
           </motion.h1>
           <motion.p
             className="max-w-[460px] text-lg leading-[1.65] text-surface/80"
@@ -54,7 +52,7 @@ export function TechPathPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5, ease }}
           >
-            {pg("techpath.hero.lede")}
+            Quelques questions sur votre profil, une recommandation de métier, d'école et de programme Gehmit.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -71,8 +69,8 @@ export function TechPathPage() {
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
           <Photo
-            src={productImage ? mediaUrl(productImage) : undefined}
-            label="Capture produit — interface du coach"
+            photo="seminaire-intervenant"
+            alt="Intervenant présentant un outil numérique au séminaire Gehmit"
             dark
             className="h-full"
           />

@@ -1,9 +1,6 @@
 import { NavLink, Outlet } from "react-router"
 import {
-  BarChart3Icon,
   CalendarDaysIcon,
-  FileQuestionIcon,
-  FileTextIcon,
   FolderOpenIcon,
   GraduationCapIcon,
   HandshakeIcon,
@@ -12,8 +9,7 @@ import {
   LogOutIcon,
   MailIcon,
   MessageSquareIcon,
-  Settings2Icon,
-  TrophyIcon,
+  NewspaperIcon,
   UsersIcon,
 } from "lucide-react"
 import { useAuth } from "@/lib/auth"
@@ -37,22 +33,17 @@ import { Button } from "@/components/ui/button"
 import logoUrl from "@/assets/logo-gehmit.webp"
 
 const contentLinks = [
+  { to: "/articles", label: "Articles", icon: NewspaperIcon },
+  { to: "/formations", label: "Formations", icon: CalendarDaysIcon },
   { to: "/programmes", label: "Programmes", icon: GraduationCapIcon },
-  { to: "/formations", label: "Formations", icon: FileTextIcon },
-  { to: "/calendrier", label: "Calendrier", icon: CalendarDaysIcon },
-  { to: "/articles", label: "Articles", icon: FileTextIcon },
-  { to: "/faq", label: "FAQ", icon: FileQuestionIcon },
   { to: "/partenaires", label: "Partenaires", icon: HandshakeIcon },
-  { to: "/statistiques", label: "Statistiques", icon: BarChart3Icon },
-  { to: "/realisations", label: "Réalisations", icon: TrophyIcon },
-  { to: "/reglages", label: "Réglages", icon: Settings2Icon },
+  { to: "/medias", label: "Médiathèque", icon: FolderOpenIcon },
 ]
 
 const siteLinks = [
-  { to: "/medias", label: "Médiathèque", icon: FolderOpenIcon },
-  { to: "/newsletter", label: "Newsletter", icon: MailIcon },
   { to: "/candidatures", label: "Candidatures", icon: InboxIcon },
   { to: "/messages", label: "Messages", icon: MessageSquareIcon },
+  { to: "/newsletter", label: "Newsletter", icon: MailIcon },
 ]
 
 export function AdminLayout() {
@@ -114,7 +105,7 @@ export function AdminLayout() {
           </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>Site</SidebarGroupLabel>
+            <SidebarGroupLabel>Relations</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {siteLinks.map((l) => (

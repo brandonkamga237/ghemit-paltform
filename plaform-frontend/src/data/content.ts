@@ -1,3 +1,5 @@
+import type { PhotoName } from "@/data/photos"
+
 export type ProgramStatus = "open" | "soon" | "closed" | "archived"
 
 export interface Program {
@@ -8,6 +10,9 @@ export interface Program {
   status: ProgramStatus
   statusLabel: string
   description: string
+  /** Photo de la fiche (embarquée dans le build). */
+  photo: PhotoName
+  photoAlt: string
   meta: string[]
   primaryCta: { label: string; to: string; disabled?: boolean }
   secondaryCta?: { label: string; to: string }
@@ -22,9 +27,6 @@ export interface Program {
     sidePrimary: string
     sideSecondary?: string
     related: string[]
-    photoLabel: string
-    /** URL de l'image du héros (médiathèque). Vide = visuel par défaut. */
-    imageUrl?: string
   }
 }
 
@@ -39,6 +41,8 @@ export const programs: Program[] = [
     statusLabel: "Candidatures ouvertes",
     description:
       "Programme d'appui à l'employabilité et à l'insertion : préparation au marché du travail, projet concret, mise en relation avec les entreprises partenaires.",
+    photo: "paei-2024-promotion",
+    photoAlt: "Promotion du programme PAEI",
     meta: ["6 mois", "Gratuit", "Douala", "Clôture le 30 sept."],
     primaryCta: { label: "Candidater", to: "/candidature/paei" },
     secondaryCta: { label: "En savoir plus", to: "/programmes/paei" },
@@ -86,7 +90,6 @@ export const programs: Program[] = [
         "Réponse par e-mail sous dix jours ouvrés. Aucun compte à créer.",
       sidePrimary: "Candidater",
       related: ["mentorat", "formations", "stage"],
-      photoLabel: "Photo — session PAEI",
     },
   },
   {
@@ -99,6 +102,8 @@ export const programs: Program[] = [
     statusLabel: "Candidatures ouvertes",
     description:
       "Trois mois avec un professionnel de plus de dix ans d'expérience, une à deux séances par semaine, dans le domaine que vous visez.",
+    photo: "seminaire-echange",
+    photoAlt: "Échange entre un professionnel et un jeune lors d'une rencontre Gehmit",
     meta: ["3 mois", "Bénévole", "À distance"],
     primaryCta: { label: "Candidater", to: "/candidature/mentorat" },
     secondaryCta: { label: "Devenir mentor", to: "/contact" },
@@ -147,7 +152,6 @@ export const programs: Program[] = [
       sidePrimary: "Candidater",
       sideSecondary: "Devenir mentor",
       related: ["formations", "paei", "glab-sisters"],
-      photoLabel: "Photo — séance de mentorat",
     },
   },
   {
@@ -159,6 +163,8 @@ export const programs: Program[] = [
     statusLabel: "Prochaine session 14 sept.",
     description:
       "Data, développement web et IA appliquée. Sessions courtes, en ligne ou à Douala, avec calendrier et tarifs publiés.",
+    photo: "seminaire-intervenant",
+    photoAlt: "Formateur présentant un outil numérique",
     meta: ["2 à 8 semaines", "Gratuit à 25 000 FCFA", "4 sessions"],
     primaryCta: { label: "Voir le catalogue", to: "/formations" },
   },
@@ -172,6 +178,8 @@ export const programs: Program[] = [
     statusLabel: "Candidatures closes",
     description:
       "Placement en entreprise partenaire à l'issue d'un programme de formation ou de mentorat.",
+    photo: "paei-2026-salle",
+    photoAlt: "Participants en salle de travail",
     meta: ["3 à 6 mois", "Réouverture en janvier 2027"],
     primaryCta: { label: "Candidater", to: "/candidature/stage", disabled: true },
     secondaryCta: { label: "M'avertir à l'ouverture", to: "/contact" },
@@ -219,7 +227,6 @@ export const programs: Program[] = [
         "Les candidatures sont closes. Inscrivez-vous pour être averti à l'ouverture.",
       sidePrimary: "M'avertir à l'ouverture",
       related: ["paei", "mentorat", "formations"],
-      photoLabel: "Photo — stage en entreprise",
     },
   },
   {
@@ -232,6 +239,8 @@ export const programs: Program[] = [
     statusLabel: "Candidatures ouvertes",
     description:
       "Formations, mentorat, ateliers de leadership et communauté de pratique pour les jeunes filles et les femmes dans le numérique.",
+    photo: "glab-table-ronde",
+    photoAlt: "Table ronde GLab Sisters sur les femmes dans la tech",
     meta: ["Continu", "Gratuit", "Douala et en ligne"],
     primaryCta: { label: "Candidater", to: "/candidature/glab-sisters" },
     secondaryCta: { label: "Devenir partenaire", to: "/partenaire" },
@@ -280,7 +289,6 @@ export const programs: Program[] = [
       sidePrimary: "Candidater",
       sideSecondary: "Devenir partenaire",
       related: ["mentorat", "formations", "paei"],
-      photoLabel: "Photo — atelier GLab Sisters",
     },
   },
 ]
@@ -336,24 +344,6 @@ export const formations: Formation[] = [
     price: "Gratuit",
     status: "closed",
     statusLabel: "Terminée",
-  },
-]
-
-export const calendarRows = [
-  {
-    name: "Data",
-    months: ["14 sept. → 9 oct.", "continu", "", ""],
-    tone: "gehmit" as const,
-  },
-  {
-    name: "Développement web",
-    months: ["", "6 oct. → 1 déc.", "continu", "continu"],
-    tone: "gehmit" as const,
-  },
-  {
-    name: "IA appliquée",
-    months: ["", "", "3 nov. → 15 déc.", "continu"],
-    tone: "soon" as const,
   },
 ]
 
@@ -488,13 +478,10 @@ export const articles: Article[] = [
   },
 ]
 
-export const blogCategories = [
-  "Tous",
-  "GLab Sisters",
-  "Événements",
-  "Orientation",
-  "Témoignages",
-]
+/** Filtres du blog : dérivés des catégories réellement utilisées par les articles. */
+export function blogCategories(): string[] {
+  return ["Tous", ...new Set(articles.map((a) => a.category).filter(Boolean))]
+}
 
 export interface FaqItem {
   q: string
@@ -523,9 +510,8 @@ export interface Partner {
   logoUrl?: string
 }
 
-export const partners: Partner[] = Array.from({ length: 6 }, (_, i) => ({
-  name: `Partenaire ${i + 1}`,
-}))
+/** Partenaires réels, fournis par l'API (aucun repli fictif). */
+export const partners: Partner[] = []
 
 export const stats = [
   { value: "200+", label: "Étudiants encadrés" },
@@ -580,110 +566,36 @@ export const techpathUrl = "https://techpath.gehmit.org"
 /** Lien WhatsApp direct (wa.me). */
 export const whatsappUrl = "https://wa.me/237671130266"
 
-/**
- * Textes de pages modifiables depuis le back office (réglage « Textes des pages »).
- * Chaque clé remplace le texte codé en dur ; en l'absence de valeur, le repli
- * statique ci-dessous est utilisé.
- */
-export const pageTexts: Record<string, string> = {}
-
-export const pageTextDefaults: Record<string, string> = {
-  "home.hero.title": "Votre place dans le numérique existe.",
-  "home.hero.lede": "Nous vous aidons à la trouver.",
-  "about.hero.title": "Réduire la part de hasard dans une carrière tech.",
-  "about.hero.lede":
-    "Gehmit est une organisation à but non lucratif. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique, et nous facilitons leur insertion.",
-  "techpath.hero.title": "Un coach d'orientation, disponible à toute heure.",
-  "techpath.hero.lede":
-    "Quelques questions sur votre profil, une recommandation de métier, d'école et de programme Gehmit.",
-  "contact.hero.title": "Nous écrire",
-  "contact.hero.lede": "Réponse sous 48 heures ouvrées.",
-  "juniorbuilders.hero.title":
-    "Junior Builders : votre code parle, nous vous mettons en relation.",
-  "juniorbuilders.hero.lede":
-    "Rejoignez le vivier de jeunes talents du numérique. Missions, projets et embauches auprès des entreprises partenaires de Gehmit.",
-  "hiredeveloper.hero.title": "Un développeur qualifié, sans cabinet de recrutement.",
-  "hiredeveloper.hero.lede":
-    "Décrivez votre besoin : nous mettons en relation votre entreprise avec les jeunes talents du vivier Junior Builders, sans commission.",
-  "caravanes.hero.title": "Les caravanes : un après-midi dans une entreprise tech.",
-  "caravanes.hero.lede":
-    "Chaque mois, un groupe de jeunes visite une entreprise de la sous-région : métiers, équipes, coulisses — et les premières rencontres qui comptent.",
-  "challenge.hero.title": "La Rencontre Challenge : résolvez, présentez, rencontrez.",
-  "challenge.hero.lede":
-    "Une journée, un défi réel posé par une entreprise, et un jury de professionnels — de quoi se faire repérer autrement que sur CV.",
-}
-
-/** Retourne le texte modifié en back office s'il existe, sinon le texte par défaut. */
-export function pg(key: keyof typeof pageTextDefaults & string): string {
-  const v = pageTexts[key]
-  return v && v.trim() ? v : pageTextDefaults[key]
+/** Statut d'un programme, seule partie de sa fiche administrable. */
+export interface ProgramStatusUpdate {
+  slug: string
+  status?: ProgramStatus
+  statusLabel?: string
 }
 
 /**
- * Images d'emplacements fixes des pages (réglage « Images des pages » en back
- * office). Clés stables, ex. "home.hero" ; vide = le visuel par défaut (Photo).
- */
-export const pageImages: Record<string, string> = {}
-
-/** Retourne l'URL de l'image choisie en back office pour l'emplacement, sinon undefined. */
-export function pageImage(key: keyof typeof pageImageLabels & string): string | undefined {
-  const v = pageImages[key]
-  return v && v.trim() ? v : undefined
-}
-
-/** Emplacements d'images proposés au back office — même liste que dans l'admin. */
-export const pageImageLabels: Record<string, string> = {
-  "home.hero": "Accueil — photo du héros",
-  "home.techpath": "Accueil — photo TechPath",
-  "about.panorama": "À propos — photo panoramique",
-  "techpath.product": "Solutions (TechPath) — visuel produit",
-  "juniorbuilders.session": "Junior Builders — session de travail",
-  "hiredeveloper.interview": "Louer un développeur — entretien",
-  "caravanes.visit": "Caravanes — visite d'entreprise",
-  "challenge.jury": "Rencontre Challenge — jury",
-  "impact.portrait": "Notre impact — portrait bénéficiaire",
-  "partner.visit": "Partenaires — signature de convention",
-}
-
-/**
- * Remplace le contenu embarqué par celui renvoyé par l'API (GET /api/public/content).
- * Les tableaux/objets exportés sont mutés avant le premier rendu — les imports
- * existants dans les pages restent valides. Les entrées absentes ou vides sont
- * ignorées (le contenu statique sert de repli).
+ * Applique le contenu dynamique renvoyé par GET /api/public/content. Le reste du
+ * site (textes, programmes, FAQ, chiffres…) est statique et vit dans ce fichier.
+ * Les entrées absentes ou vides sont ignorées : le contenu embarqué sert de repli.
  */
 export function applyRemoteContent(c: {
-  programs?: Program[]
+  programs?: ProgramStatusUpdate[]
   formations?: Formation[]
-  calendarRows?: { name: string; months: string[]; tone: "gehmit" | "soon" }[]
   articles?: Article[]
-  blogCategories?: string[]
-  faq?: FaqItem[]
-  partners?: (Partner | string)[]
-  stats?: { value: string; label: string; gold?: boolean }[]
-  achievements?: Achievement[]
-  contact?: Partial<ContactInfo>
-  pageTexts?: Record<string, string>
-  pageImages?: Record<string, string>
+  partners?: Partner[]
 }) {
   const replace = <T,>(arr: T[], next: T[] | undefined) => {
     if (Array.isArray(next) && next.length > 0) arr.splice(0, arr.length, ...next)
   }
-  replace(programs, c.programs)
-  replace(formations, c.formations)
-  replace(calendarRows, c.calendarRows)
-  replace(articles, c.articles)
-  replace(blogCategories, c.blogCategories)
-  replace(faq, c.faq)
-  if (Array.isArray(c.partners) && c.partners.length > 0) {
-    partners.splice(
-      0,
-      partners.length,
-      ...c.partners.map((p) => (typeof p === "string" ? { name: p } : p))
-    )
+  for (const update of c.programs ?? []) {
+    const program = programs.find((p) => p.slug === update.slug)
+    if (program && update.status) {
+      program.status = update.status
+      if (update.statusLabel) program.statusLabel = update.statusLabel
+      program.primaryCta.disabled = update.status === "closed" || update.status === "archived"
+    }
   }
-  replace(stats, c.stats)
-  replace(achievements, c.achievements)
-  if (c.contact) Object.assign(contact, c.contact)
-  if (c.pageTexts) Object.assign(pageTexts, c.pageTexts)
-  if (c.pageImages) Object.assign(pageImages, c.pageImages)
+  replace(formations, c.formations)
+  replace(articles, c.articles)
+  replace(partners, c.partners)
 }

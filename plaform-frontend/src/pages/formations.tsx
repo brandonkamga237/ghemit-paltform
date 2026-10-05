@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { cn } from "cn"
-import { calendarRows, formations } from "@/data/content"
+import { formations } from "@/data/content"
 import { PageHeader } from "@/components/site/page-header"
 import { Container } from "@/components/site/bands"
 import { Reveal } from "@/components/site/reveal"
@@ -10,7 +10,6 @@ import { StatusPill } from "@/components/site/status-pill"
 import { Button } from "@/components/ui/button"
 
 const filters = ["Toutes", "Data", "Développement", "IA", "En ligne", "Douala"]
-const months = ["Septembre", "Octobre", "Novembre", "Décembre"]
 
 export function FormationsPage() {
   const [filter, setFilter] = useState("Toutes")
@@ -126,66 +125,6 @@ export function FormationsPage() {
           </p>
         )}
       </Container>
-
-      {/* Calendrier */}
-      <section className="border-t border-sand bg-surface">
-        <Container className="flex flex-col gap-6 py-12">
-          <Reveal className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="font-heading text-[28px] font-semibold">Calendrier des sessions</h2>
-            <span className="font-mono text-[13px] text-ink-faint">
-              Septembre – décembre 2026
-            </span>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <div className="grid grid-cols-[110px_repeat(4,1fr)] gap-0.5 overflow-hidden rounded-lg border border-sand bg-sand max-lg:min-w-[640px] lg:grid-cols-[120px_repeat(4,1fr)]">
-              <span className="bg-cream px-4 py-3.5 font-mono text-[11px] tracking-[0.1em] text-ink-faint uppercase">
-                Formation
-              </span>
-              {months.map((m) => (
-                <span key={m} className="bg-cream px-4 py-3.5 text-[14.5px] font-semibold">
-                  {m}
-                </span>
-              ))}
-              {calendarRows.map((row) => (
-                <CalendarRow key={row.name} {...row} />
-              ))}
-            </div>
-          </Reveal>
-        </Container>
-      </section>
     </div>
-  )
-}
-
-function CalendarRow({
-  name,
-  months: cells,
-  tone,
-}: {
-  name: string
-  months: string[]
-  tone: "gehmit" | "soon"
-}) {
-  const color = tone === "gehmit" ? "bg-gehmit" : "bg-soon-border"
-  return (
-    <>
-      <span className="bg-surface px-4 py-[18px] text-[15px] font-semibold">{name}</span>
-      {cells.map((cell, i) => (
-        <span key={i} className="flex items-center bg-surface px-2.5 py-3">
-          {cell === "continu" ? (
-            <span className={cn("h-[34px] flex-1 rounded", color, "opacity-35")} />
-          ) : cell ? (
-            <span
-              className={cn(
-                "flex h-[34px] flex-1 items-center rounded px-3 text-[13px] font-semibold whitespace-nowrap text-surface",
-                color
-              )}
-            >
-              {cell}
-            </span>
-          ) : null}
-        </span>
-      ))}
-    </>
   )
 }

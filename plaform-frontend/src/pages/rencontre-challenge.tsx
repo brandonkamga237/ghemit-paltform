@@ -2,8 +2,7 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { cn } from "cn"
-import { pageImage, pg } from "@/data/content"
-import { apiPost, mediaUrl } from "@/lib/api"
+import { apiPost } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -40,7 +39,6 @@ const formats = [
 ]
 
 export function RencontreChallengePage() {
-  const juryImage = pageImage("challenge.jury")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)
@@ -100,7 +98,7 @@ export function RencontreChallengePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease }}
           >
-            {pg("challenge.hero.title")}
+            La Rencontre Challenge : résolvez, présentez, rencontrez.
           </motion.h1>
           <motion.p
             className="max-w-[480px] text-lg leading-[1.65] text-surface/80"
@@ -108,7 +106,7 @@ export function RencontreChallengePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5, ease }}
           >
-            {pg("challenge.hero.lede")}
+            Une journée, un défi réel posé par une entreprise, et un jury de professionnels — de quoi se faire repérer autrement que sur CV.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -125,8 +123,8 @@ export function RencontreChallengePage() {
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
           <Photo
-            src={juryImage ? mediaUrl(juryImage) : undefined}
-            label="Photo — équipe présentant sa solution au jury"
+            photo="seminaire-laureats"
+            alt="Lauréats récompensés lors du séminaire Gehmit"
             dark
             className="h-full"
           />

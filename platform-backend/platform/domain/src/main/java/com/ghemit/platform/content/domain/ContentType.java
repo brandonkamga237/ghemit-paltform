@@ -6,12 +6,9 @@ import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 public enum ContentType {
 	PROGRAM("programs"),
 	FORMATION("formations"),
-	CALENDAR_ROW("calendar-rows"),
 	ARTICLE("articles"),
-	FAQ("faq"),
 	PARTNER("partners"),
-	STAT("stats"),
-	ACHIEVEMENT("achievements"),
+	// Stockage interne (ex. dossiers de la médiathèque), pas un écran d'administration.
 	SETTING("settings");
 
 	private final String path;

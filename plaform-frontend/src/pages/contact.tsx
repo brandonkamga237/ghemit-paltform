@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { motion } from "motion/react"
 import { MessageCircleIcon } from "lucide-react"
-import { contact, faq, pg, whatsappUrl } from "@/data/content"
+import { contact, faq, whatsappUrl } from "@/data/content"
 import { apiPost } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -50,10 +50,10 @@ export function ContactPage() {
       >
         <div className="flex flex-col gap-3.5">
           <h1 className="font-heading text-4xl leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[44px]">
-            {pg("contact.hero.title")}
+            Nous écrire
           </h1>
           <p className="text-lg leading-relaxed text-ink-muted">
-            {pg("contact.hero.lede")}
+            Réponse sous 48 heures ouvrées.
           </p>
         </div>
 

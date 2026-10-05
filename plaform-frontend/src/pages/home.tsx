@@ -1,9 +1,9 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
-import { articles, pageImage, partners, pg, programs, stats } from "@/data/content"
-import { mediaUrl } from "@/lib/api"
+import { articles, programs, stats } from "@/data/content"
 import { Photo } from "@/components/site/photo"
+import { PartnerLogos } from "@/components/site/partner-logos"
 import { Reveal } from "@/components/site/reveal"
 import { ArticleCard, ProgramCard } from "@/components/site/cards"
 import { Container, SectionHeading, StatBand } from "@/components/site/bands"
@@ -15,8 +15,6 @@ export function HomePage() {
   const featured = ["mentorat", "formations", "glab-sisters"]
     .map((s) => programs.find((p) => p.slug === s)!)
     .filter(Boolean)
-  const heroImage = pageImage("home.hero")
-  const techpathImage = pageImage("home.techpath")
 
   return (
     <div className="flex flex-col">
@@ -41,7 +39,7 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18, duration: 0.55, ease }}
             >
-              {pg("home.hero.title")}
+              Votre place dans le numérique existe.
             </motion.h1>
             <motion.p
               className="text-[19px] leading-relaxed text-surface/90"
@@ -49,7 +47,7 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.28, duration: 0.55, ease }}
             >
-              {pg("home.hero.lede")}
+              Nous vous aidons à la trouver.
             </motion.p>
             <motion.div
               className="pt-2"
@@ -74,10 +72,11 @@ export function HomePage() {
           >
             <Photo
               dark
-              src={heroImage ? mediaUrl(heroImage) : undefined}
-              label={"Photo portrait — 1000 × 1200\nchevauche la bande suivante"}
+              photo="seminaire-public"
+              priority
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              alt="Participants au séminaire Gehmit « De la recherche à l'innovation »"
               className="h-[300px] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.10),0_1px_3px_rgba(0,0,0,0.06)] sm:h-[380px] lg:h-[560px]"
-              captionClassName="whitespace-pre-line"
             />
           </motion.div>
         </Container>
@@ -106,8 +105,8 @@ export function HomePage() {
       <section className="grid bg-surface lg:grid-cols-2">
         <div className="min-h-[280px] lg:min-h-[340px]">
           <Photo
-            src={techpathImage ? mediaUrl(techpathImage) : undefined}
-            label="Photo — coach TechPath en usage"
+            photo="seminaire-presentation"
+            alt="Présentation sur écran lors du séminaire Gehmit"
             className="h-full"
           />
         </div>
@@ -151,29 +150,7 @@ export function HomePage() {
       </section>
 
       {/* Partenaires */}
-      <section className="border-t border-sand bg-surface">
-        <Container className="flex flex-col gap-6 py-12">
-          <span className="mono-label">Ils nous accompagnent</span>
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
-            {partners.map((p, i) => (
-              <Reveal key={p.name} delay={i * 0.04}>
-                <div className="flex h-[72px] items-center justify-center overflow-hidden rounded-lg border border-sand bg-cream">
-                  {p.logoUrl ? (
-                    <img
-                      src={mediaUrl(p.logoUrl)}
-                      alt={p.name}
-                      className="h-full w-full object-contain"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className="font-mono text-[11px] text-ink-faint">{p.name}</span>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </Container>
-      </section>
+      <PartnerLogos title="Ils nous accompagnent" />
     </div>
   )
 }

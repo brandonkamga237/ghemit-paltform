@@ -6,16 +6,12 @@ import com.ghemit.platform.content.domain.ContentItem;
 import com.ghemit.platform.content.domain.ContentItemRepository;
 import com.ghemit.platform.content.domain.ContentType;
 import com.ghemit.platform.content.domain.Payload;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Assemble le contenu du site public à partir des contenus et des réglages. */
+/** Assemble le contenu dynamique du site public. */
 public class PublicContentService implements PublicContentQuery {
-
-	static final String BLOG_CATEGORIES_SLUG = "blog-categories";
-	static final String CONTACT_SLUG = "contact";
-	static final String PAGE_TEXTS_SLUG = "page-texts";
-	static final String PAGE_IMAGES_SLUG = "page-images";
 
 	private final ContentItemRepository repository;
 
@@ -26,18 +22,22 @@ public class PublicContentService implements PublicContentQuery {
 	@Override
 	public PublicContentView publicContent() {
 		return new PublicContentView(
-				payloads(ContentType.PROGRAM),
+				repository.findByType(ContentType.PROGRAM).stream()
+						.map(PublicContentService::programStatus)
+						.toList(),
 				payloads(ContentType.FORMATION),
-				payloads(ContentType.CALENDAR_ROW),
 				payloads(ContentType.ARTICLE),
-				setting(BLOG_CATEGORIES_SLUG).stringList("items"),
-				payloads(ContentType.FAQ),
-				payloads(ContentType.PARTNER),
-				payloads(ContentType.STAT),
-				payloads(ContentType.ACHIEVEMENT),
-				setting(CONTACT_SLUG).asMap(),
-				nestedMap(setting(PAGE_TEXTS_SLUG), "texts"),
-				nestedMap(setting(PAGE_IMAGES_SLUG), "images"));
+				payloads(ContentType.PARTNER));
+	}
+
+	/** Seul le statut d'un programme est administrable : le reste de la fiche vit dans le code du site. */
+	private static Map<String, Object> programStatus(ContentItem item) {
+		Payload payload = item.payload();
+		Map<String, Object> status = new LinkedHashMap<>();
+		status.put("slug", item.slug());
+		status.put("status", payload.getOrDefault("status", ""));
+		status.put("statusLabel", payload.getOrDefault("statusLabel", ""));
+		return status;
 	}
 
 	private List<Map<String, Object>> payloads(ContentType type) {
@@ -45,18 +45,5 @@ public class PublicContentService implements PublicContentQuery {
 				.map(ContentItem::payload)
 				.map(Payload::asMap)
 				.toList();
-	}
-
-	private Payload setting(String slug) {
-		return repository.findByTypeAndSlug(ContentType.SETTING, slug)
-				.map(ContentItem::payload)
-				.orElseGet(Payload::empty);
-	}
-
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> nestedMap(Payload payload, String key) {
-		return payload.get(key) instanceof Map<?, ?> nested
-				? (Map<String, Object>) nested
-				: Map.of();
 	}
 }

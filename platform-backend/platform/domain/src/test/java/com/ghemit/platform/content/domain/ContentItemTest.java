@@ -43,7 +43,7 @@ class ContentItemTest {
 
 	@Test
 	void resout_un_type_de_contenu_depuis_son_chemin_d_api() {
-		assertThat(ContentType.fromPath("calendar-rows")).isEqualTo(ContentType.CALENDAR_ROW);
+		assertThat(ContentType.fromPath("articles")).isEqualTo(ContentType.ARTICLE);
 		assertThatThrownBy(() -> ContentType.fromPath("inconnu"))
 				.isInstanceOf(BusinessRuleViolationException.class);
 	}

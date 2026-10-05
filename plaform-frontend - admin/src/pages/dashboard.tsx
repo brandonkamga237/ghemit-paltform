@@ -84,7 +84,6 @@ export function DashboardPage() {
     .slice(0, 5)
 
   const stats = [
-    { label: "Programmes", value: data?.content.programs?.length, to: "/programmes" },
     { label: "Formations", value: data?.content.formations?.length, to: "/formations" },
     { label: "Articles", value: data?.content.articles?.length, to: "/articles" },
     { label: "Abonnés newsletter", value: activeSubs.length || undefined, to: "/newsletter" },
@@ -94,7 +93,7 @@ export function DashboardPage() {
   const quickActions = [
     { label: "Rédiger un article", to: "/articles", icon: NewspaperIcon },
     { label: "Téléverser un média", to: "/medias", icon: UploadIcon },
-    { label: "Modifier les textes du site", to: "/reglages", icon: FileTextIcon },
+    { label: "Ouvrir / fermer un programme", to: "/programmes", icon: FileTextIcon },
     { label: "Voir la newsletter", to: "/newsletter", icon: UsersIcon },
   ]
 

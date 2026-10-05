@@ -1,7 +1,5 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
-import { pageImage, pg } from "@/data/content"
-import { mediaUrl } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container, CtaBand } from "@/components/site/bands"
@@ -24,7 +22,6 @@ const missions = [
 ]
 
 export function AboutPage() {
-  const panoramaImage = pageImage("about.panorama")
   return (
     <div className="flex flex-col">
       {/* En-tête éditorial */}
@@ -40,7 +37,7 @@ export function AboutPage() {
               trail={[{ label: "Accueil", to: "/" }, { label: "À propos" }]}
             />
             <h1 className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.02em] text-balance sm:text-4xl">
-              {pg("about.hero.title")}
+              Réduire la part de hasard dans une carrière tech.
             </h1>
           </motion.div>
           <motion.p
@@ -49,15 +46,16 @@ export function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            {pg("about.hero.lede")}
+            Gehmit est une organisation à but non lucratif. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique, et nous facilitons leur insertion.
           </motion.p>
         </Container>
       </section>
 
       {/* Photo panoramique */}
       <Photo
-        src={panoramaImage ? mediaUrl(panoramaImage) : undefined}
-        label="Photo panoramique — équipe ou événement, 2400 × 900"
+        photo="seminaire-salle"
+        sizes="100vw"
+        alt="Salle comble pendant le séminaire Gehmit de septembre 2025"
         className="h-[180px] sm:h-[260px]"
       />
 

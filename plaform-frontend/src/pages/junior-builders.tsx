@@ -2,8 +2,7 @@ import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon, FileTextIcon } from "lucide-react"
 import { cn } from "cn"
-import { pageImage, pg } from "@/data/content"
-import { apiPost, mediaUrl, uploadCv } from "@/lib/api"
+import { apiPost, uploadCv } from "@/lib/api"
 import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
@@ -58,7 +57,6 @@ const infos = [
 ]
 
 export function JuniorBuildersPage() {
-  const sessionImage = pageImage("juniorbuilders.session")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)
@@ -132,7 +130,7 @@ export function JuniorBuildersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.5, ease }}
           >
-            {pg("juniorbuilders.hero.title")}
+            Junior Builders : votre code parle, nous vous mettons en relation.
           </motion.h1>
           <motion.p
             className="max-w-[480px] text-lg leading-[1.65] text-surface/80"
@@ -140,7 +138,7 @@ export function JuniorBuildersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.5, ease }}
           >
-            {pg("juniorbuilders.hero.lede")}
+            Rejoignez le vivier de jeunes talents du numérique. Missions, projets et embauches auprès des entreprises partenaires de Gehmit.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -157,8 +155,8 @@ export function JuniorBuildersPage() {
         </motion.div>
         <div className="min-h-[200px] lg:min-h-[260px]">
           <Photo
-            src={sessionImage ? mediaUrl(sessionImage) : undefined}
-            label="Photo — jeunes développeurs en session de travail"
+            photo="paei-2026-atelier"
+            alt="Atelier de travail du programme PAEI 2026"
             dark
             className="h-full"
           />

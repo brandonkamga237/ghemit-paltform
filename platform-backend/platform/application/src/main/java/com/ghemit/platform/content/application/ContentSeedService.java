@@ -5,12 +5,11 @@ import com.ghemit.platform.content.application.port.out.ContentSeedSource;
 import com.ghemit.platform.content.domain.ContentItem;
 import com.ghemit.platform.content.domain.ContentItemRepository;
 import com.ghemit.platform.content.domain.ContentType;
-import com.ghemit.platform.content.domain.Payload;
 import java.util.List;
 import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Amorçage du contenu éditorial et des réglages requis par le back office. */
+/** Amorçage du contenu dynamique (base vide uniquement). */
 public class ContentSeedService implements SeedContentUseCase {
 
 	private final ContentItemRepository repository;
@@ -37,18 +36,5 @@ public class ContentSeedService implements SeedContentUseCase {
 			}
 		}
 		return inserted;
-	}
-
-	@Override
-	@Transactional
-	public void ensureRequiredSettings() {
-		if (repository.findByTypeAndSlug(ContentType.SETTING, PublicContentService.PAGE_TEXTS_SLUG).isEmpty()) {
-			repository.save(ContentItem.create(ContentType.SETTING, PublicContentService.PAGE_TEXTS_SLUG, 0,
-					Payload.of(Map.of("texts", Map.of()))));
-		}
-		if (repository.findByTypeAndSlug(ContentType.SETTING, PublicContentService.PAGE_IMAGES_SLUG).isEmpty()) {
-			repository.save(ContentItem.create(ContentType.SETTING, PublicContentService.PAGE_IMAGES_SLUG, 0,
-					Payload.of(Map.of("images", Map.of()))));
-		}
 	}
 }
