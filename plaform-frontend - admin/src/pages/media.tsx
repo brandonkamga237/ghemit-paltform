@@ -3,6 +3,8 @@ import {
   CopyIcon,
   FolderIcon,
   FolderPlusIcon,
+  ImageIcon,
+  SearchIcon,
   Trash2Icon,
   UploadIcon,
 } from "lucide-react"
@@ -45,6 +47,9 @@ export function MediaPage() {
   const [folderDialog, setFolderDialog] = useState(false)
   const [newFolder, setNewFolder] = useState("")
   const [deletingFolder, setDeletingFolder] = useState<string | null>(null)
+  const [q, setQ] = useState("")
+  const [preview, setPreview] = useState<MediaFile | null>(null)
+  const [dragging, setDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const refresh = useCallback(async () => {
@@ -65,9 +70,12 @@ export function MediaPage() {
     void refresh()
   }, [refresh])
 
-  const visible = media.filter((m) =>
-    folder === ALL ? true : folder === ROOT ? !m.folder : m.folder === folder
-  )
+  const query = q.trim().toLowerCase()
+  const visible = media
+    .filter((m) =>
+      folder === ALL ? true : folder === ROOT ? !m.folder : m.folder === folder
+    )
+    .filter((m) => !query || m.filename.toLowerCase().includes(query))
 
   const upload = async (file: File) => {
     setUploading(true)
@@ -139,6 +147,10 @@ export function MediaPage() {
     }
   }
 
+  const uploadMany = async (files: FileList | File[]) => {
+    for (const f of Array.from(files)) await upload(f)
+  }
+
   const copy = (url: string) => {
     void navigator.clipboard
       .writeText(`${API_URL}${url}`)
@@ -146,7 +158,29 @@ export function MediaPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div
+      className="relative flex flex-col gap-6"
+      onDragOver={(e) => {
+        e.preventDefault()
+        setDragging(true)
+      }}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragging(false)
+      }}
+      onDrop={(e) => {
+        e.preventDefault()
+        setDragging(false)
+        if (e.dataTransfer.files.length) void uploadMany(e.dataTransfer.files)
+      }}
+    >
+      {dragging && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-navy/40">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-surface bg-navy px-10 py-8 text-surface shadow-2xl">
+            <UploadIcon className="size-8" />
+            <span className="text-[16px] font-semibold">Déposez les fichiers pour les téléverser</span>
+          </div>
+        </div>
+      )}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
@@ -182,7 +216,7 @@ export function MediaPage() {
         />
       </div>
 
-      {/* Dossiers */}
+      {/* Dossiers + recherche */}
       <div className="flex flex-wrap items-center gap-2">
         <FolderChip active={folder === ALL} onClick={() => setFolder(ALL)} label="Tous" />
         <FolderChip active={folder === ROOT} onClick={() => setFolder(ROOT)} label="Racine" />
@@ -199,6 +233,15 @@ export function MediaPage() {
             </button>
           </span>
         ))}
+        <div className="relative ml-auto min-w-[200px] flex-1 sm:max-w-[260px]">
+          <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Rechercher un fichier…"
+            className="pl-9"
+          />
+        </div>
       </div>
 
       {error && (
@@ -208,14 +251,23 @@ export function MediaPage() {
       )}
 
       {visible.length === 0 && !error ? (
-        <div className="rounded-lg border border-dashed px-5 py-16 text-center text-ink-muted">
-          Aucun fichier ici. Téléversez une image pour commencer.
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed px-5 py-16 text-center">
+          <ImageIcon className="size-8 text-ink-faint" />
+          <p className="text-[14px] text-ink-muted">
+            {query
+              ? `Aucun fichier ne correspond à « ${q} ».`
+              : "Aucun fichier ici. Téléversez ou déposez une image pour commencer."}
+          </p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {visible.map((m) => (
-            <Card key={m.id} className="overflow-hidden">
-              <div className="flex h-36 items-center justify-center bg-muted">
+            <Card key={m.id} className="group overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setPreview(m)}
+                className="flex h-36 w-full items-center justify-center bg-muted transition-opacity group-hover:opacity-90"
+              >
                 {m.contentType?.startsWith("image/") ? (
                   <img
                     src={`${API_URL}${m.url}`}
@@ -227,7 +279,7 @@ export function MediaPage() {
                     {m.contentType ?? "fichier"}
                   </span>
                 )}
-              </div>
+              </button>
               <CardContent className="flex flex-col gap-2 p-4">
                 <span className="truncate text-[14px] font-medium" title={m.filename}>
                   {m.filename}
@@ -260,6 +312,37 @@ export function MediaPage() {
           ))}
         </div>
       )}
+
+      {/* Aperçu */}
+      <Dialog open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="truncate pr-6">{preview?.filename}</DialogTitle>
+            <DialogDescription>
+              {(preview?.size ?? 0) > 0 &&
+                `${Math.round((preview!.size / 1024) * 10) / 10} Ko · ${preview?.contentType ?? "fichier"}${preview?.folder ? ` · ${preview.folder}` : ""}`}
+            </DialogDescription>
+          </DialogHeader>
+          {preview?.contentType?.startsWith("image/") ? (
+            <img
+              src={`${API_URL}${preview.url}`}
+              alt={preview.filename}
+              className="max-h-[60vh] w-full rounded-md object-contain bg-muted"
+            />
+          ) : (
+            <div className="flex h-40 items-center justify-center rounded-md bg-muted text-muted-foreground">
+              Aperçu indisponible — {preview?.contentType}
+            </div>
+          )}
+          <DialogFooter>
+            {preview && (
+              <Button variant="outline" className="gap-1.5" onClick={() => copy(preview.url)}>
+                <CopyIcon className="size-4" />Copier l'URL
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Création de dossier */}
       <Dialog open={folderDialog} onOpenChange={setFolderDialog}>

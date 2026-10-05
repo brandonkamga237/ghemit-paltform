@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
-import { SearchIcon } from "lucide-react"
+import {
+  ArchiveIcon,
+  CheckSquareIcon,
+  MailOpenIcon,
+  SearchIcon,
+  SquareIcon,
+  XIcon,
+} from "lucide-react"
 import { cn } from "cn"
 import { api, openCv } from "@/lib/api"
 import type {
@@ -43,11 +50,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -84,6 +91,8 @@ export function CandidaturesPage() {
   const debouncedQ = useDebounced(q)
 
   const [open, setOpen] = useState<Candidature | null>(null)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [bulkBusy, setBulkBusy] = useState(false)
 
   const refreshSummary = useCallback(async () => {
     try {
@@ -127,6 +136,7 @@ export function CandidaturesPage() {
   // Tout changement de filtre ramène à la première page
   useEffect(() => {
     setPageNo(0)
+    setSelected(new Set())
   }, [group, program, status, debouncedQ, size])
 
   const update = async (id: string, patch: Record<string, unknown>) => {
@@ -177,6 +187,33 @@ export function CandidaturesPage() {
       const updated = await update(c.id, { readFlag: true })
       if (updated) setOpen(updated)
     }
+  }
+
+  const toggleSelect = (id: string) =>
+    setSelected((s) => {
+      const next = new Set(s)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+
+  const items = page?.content ?? []
+  const allSelected = items.length > 0 && selected.size === items.length
+
+  const bulk = async (patch: Record<string, unknown>, label: string) => {
+    setBulkBusy(true)
+    const results = await Promise.allSettled(
+      [...selected].map((id) => api.patch(`/api/admin/candidatures/${id}`, patch))
+    )
+    const failed = results.filter((r) => r.status === "rejected").length
+    toast.add({
+      title: failed > 0 ? `${label} — ${selected.size - failed} sur ${selected.size}` : label,
+      description: failed > 0 ? `${failed} élément(s) en erreur.` : undefined,
+    })
+    setSelected(new Set())
+    setBulkBusy(false)
+    void refresh()
+    void refreshSummary()
   }
 
   const groupsInUse = ORIGIN_GROUPS.filter((g) =>
@@ -345,7 +382,23 @@ export function CandidaturesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[30px] pl-6" />
+                <TableHead className="w-[36px] pl-4" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelected(allSelected ? new Set() : new Set(items.map((c) => c.id)))
+                    }
+                    aria-label={allSelected ? "Tout désélectionner" : "Tout sélectionner"}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {allSelected ? (
+                      <CheckSquareIcon className="size-4 text-primary" />
+                    ) : (
+                      <SquareIcon className="size-4" />
+                    )}
+                  </button>
+                </TableHead>
+                <TableHead className="w-[20px]" />
                 <TableHead>Date</TableHead>
                 <TableHead>Origine</TableHead>
                 <TableHead>Candidat</TableHead>
@@ -355,24 +408,42 @@ export function CandidaturesPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
                     Chargement…
                   </TableCell>
                 </TableRow>
-              ) : (page?.content.length ?? 0) === 0 ? (
+              ) : (items.length ?? 0) === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
                     Aucune candidature ne correspond aux filtres.
                   </TableCell>
                 </TableRow>
               ) : (
-                page?.content.map((c) => (
+                items.map((c) => (
                   <TableRow
                     key={c.id}
                     onClick={() => void openDetail(c)}
-                    className={cn("cursor-pointer", !c.readFlag && "bg-primary/[0.03]")}
+                    className={cn(
+                      "cursor-pointer",
+                      !c.readFlag && "bg-primary/[0.03]",
+                      selected.has(c.id) && "bg-primary/[0.08]"
+                    )}
                   >
-                    <TableCell className="pl-6">
+                    <TableCell className="pl-4" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        type="button"
+                        onClick={() => toggleSelect(c.id)}
+                        aria-label="Sélectionner"
+                        className="text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {selected.has(c.id) ? (
+                          <CheckSquareIcon className="size-4 text-primary" />
+                        ) : (
+                          <SquareIcon className="size-4" />
+                        )}
+                      </button>
+                    </TableCell>
+                    <TableCell>
                       {!c.readFlag && (
                         <span className="block size-2 rounded-full bg-gehmit" title="Non lue" />
                       )}
@@ -428,7 +499,43 @@ export function CandidaturesPage() {
         onSize={setSize}
       />
 
-      <CandidatureDialog
+      {/* Barre d'actions groupées */}
+      {selected.size > 0 && (
+        <div className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-xl border bg-navy px-4 py-2.5 text-surface shadow-xl">
+          <span className="mr-2 text-[13.5px] font-semibold tabular-nums">
+            {selected.size} sélectionnée{selected.size > 1 ? "s" : ""}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={bulkBusy}
+            onClick={() => void bulk({ readFlag: true }, "Marquées comme lues")}
+            className="gap-1.5 text-surface hover:bg-surface/15 hover:text-surface"
+          >
+            <MailOpenIcon className="size-4" />Marquer lues
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={bulkBusy}
+            onClick={() => void bulk({ status: "archived" }, "Archivées")}
+            className="gap-1.5 text-surface hover:bg-surface/15 hover:text-surface"
+          >
+            <ArchiveIcon className="size-4" />Archiver
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSelected(new Set())}
+            aria-label="Annuler la sélection"
+            className="text-surface hover:bg-surface/15 hover:text-surface"
+          >
+            <XIcon className="size-4" />
+          </Button>
+        </div>
+      )}
+
+      <CandidatureDrawer
         candidature={open}
         onClose={() => setOpen(null)}
         onUpdate={update}
@@ -438,7 +545,7 @@ export function CandidaturesPage() {
   )
 }
 
-function CandidatureDialog({
+function CandidatureDrawer({
   candidature: c,
   onClose,
   onUpdate,
@@ -462,18 +569,18 @@ function CandidatureDialog({
   const email = candidateEmail(c)
 
   return (
-    <Dialog open={!!c} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex flex-wrap items-center gap-2">
+    <Sheet open={!!c} onOpenChange={(o) => !o && onClose()}>
+      <SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-xl">
+        <SheetHeader className="border-b pb-4">
+          <SheetTitle className="flex flex-wrap items-center gap-2 text-lg">
             {programLabel(c.program)}
-            <span className="text-[13px] font-normal text-muted-foreground">
-              {fmtDateTime(c.createdAt)}
-            </span>
-          </DialogTitle>
-        </DialogHeader>
+          </SheetTitle>
+          <span className="text-[13px] text-muted-foreground">
+            Reçue le {fmtDateTime(c.createdAt)} · {candidateName(c)}
+          </span>
+        </SheetHeader>
 
-        <div className="flex flex-col gap-5 py-1">
+        <div className="flex flex-col gap-5 px-4 py-4">
           {/* Statut + actions */}
           <div className="flex flex-wrap items-center gap-3">
             <Select
@@ -570,7 +677,7 @@ function CandidatureDialog({
             </Button>
           </div>
         </div>
-      </DialogContent>
+      </SheetContent>
 
       {/* Confirmation de suppression */}
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
@@ -595,6 +702,6 @@ function CandidatureDialog({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Dialog>
+    </Sheet>
   )
 }

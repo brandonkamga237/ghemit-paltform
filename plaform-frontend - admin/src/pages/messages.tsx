@@ -1,27 +1,25 @@
 import { useCallback, useEffect, useState } from "react"
-import { EyeIcon, SearchIcon } from "lucide-react"
+import {
+  ArrowLeftIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  InboxIcon,
+  MailOpenIcon,
+  MailIcon,
+  ReplyIcon,
+  SearchIcon,
+  Trash2Icon,
+} from "lucide-react"
+import { cn } from "cn"
 import { api } from "@/lib/api"
 import type { ContactMessage, MessagesSummary, Page } from "@/lib/types"
-import { fmtDate, fmtDateTime, useDebounced } from "@/lib/inbox"
+import { fmtDateTime, useDebounced } from "@/lib/inbox"
 import { Pagination } from "@/components/admin/pagination"
 import { toast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,13 +30,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
+const READ_TABS = [
+  { value: "all", label: "Tous" },
+  { value: "unread", label: "Non lus" },
+  { value: "read", label: "Lus" },
+]
+
+const timeAgo = (iso: string) => {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000
+  if (s < 3600) return `il y a ${Math.max(1, Math.floor(s / 60))} min`
+  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`
+  if (s < 86400 * 30) return `il y a ${Math.floor(s / 86400)} j`
+  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+}
 
 export function MessagesPage() {
   const [page, setPage] = useState<Page<ContactMessage> | null>(null)
@@ -51,7 +56,7 @@ export function MessagesPage() {
   )
   const [q, setQ] = useState("")
   const [pageNo, setPageNo] = useState(0)
-  const [size, setSize] = useState(20)
+  const [size, setSize] = useState(15)
   const debouncedQ = useDebounced(q)
 
   const [open, setOpen] = useState<ContactMessage | null>(null)
@@ -94,6 +99,7 @@ export function MessagesPage() {
         p ? { ...p, content: p.content.map((m) => (m.id === id ? updated : m)) } : p
       )
       setOpen((o) => (o?.id === id ? updated : o))
+      void api.get<MessagesSummary>("/api/admin/messages/summary").then(setSummary).catch(() => {})
       return updated
     } catch (e) {
       toast.add({
@@ -107,15 +113,6 @@ export function MessagesPage() {
   const remove = async (id: string) => {
     try {
       await api.del(`/api/admin/messages/${id}`)
-      setPage((p) =>
-        p
-          ? {
-              ...p,
-              content: p.content.filter((m) => m.id !== id),
-              totalElements: p.totalElements - 1,
-            }
-          : p
-      )
       setOpen(null)
       toast.add({ title: "Message supprimé" })
       void refresh()
@@ -127,7 +124,7 @@ export function MessagesPage() {
     }
   }
 
-  const openDetail = async (m: ContactMessage) => {
+  const select = async (m: ContactMessage) => {
     setOpen(m)
     if (!m.readFlag) {
       const updated = await update(m.id, { readFlag: true })
@@ -135,42 +132,49 @@ export function MessagesPage() {
     }
   }
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
-          Messages de contact
-        </h1>
-        <p className="text-[15px] text-ink-muted">
-          Messages reçus via le formulaire de contact et les demandes de
-          partenariat.
-        </p>
-      </div>
+  const items = page?.content ?? []
+  const openIdx = open ? items.findIndex((m) => m.id === open.id) : -1
 
+  return (
+    <div className="flex h-[calc(100vh-8.5rem)] min-h-[540px] flex-col gap-4">
+      {/* Barre d'outils */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative min-w-[220px] flex-1 sm:max-w-[300px]">
+        <div className="flex rounded-lg border p-0.5">
+          {READ_TABS.map((t) => (
+            <button
+              key={t.value}
+              type="button"
+              onClick={() => setRead(t.value)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-md px-3 py-1 text-[12.5px] font-medium transition-colors",
+                read === t.value
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {t.label}
+              {t.value === "unread" && summary && summary.unread > 0 && (
+                <span className={cn(
+                  "rounded-full px-1.5 text-[11px] font-semibold tabular-nums",
+                  read === "unread" ? "bg-primary-foreground/20" : "bg-gehmit/15 text-gehmit"
+                )}>
+                  {summary.unread}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+        <div className="relative min-w-[200px] flex-1 sm:max-w-[300px]">
           <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Rechercher nom, e-mail, objet, message…"
+            placeholder="Rechercher nom, e-mail, objet…"
             className="pl-9"
           />
         </div>
-        <Select value={read} onValueChange={(v) => setRead(v ?? "all")}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous</SelectItem>
-            <SelectItem value="unread">Non lus</SelectItem>
-            <SelectItem value="read">Lus</SelectItem>
-          </SelectContent>
-        </Select>
         <span className="ml-auto text-[13px] text-muted-foreground">
-          {summary
-            ? `${summary.unread} non lu${summary.unread > 1 ? "s" : ""} / ${summary.total}`
-            : "…"}
+          {page ? `${page.totalElements} message${page.totalElements > 1 ? "s" : ""}` : "…"}
         </span>
       </div>
 
@@ -180,147 +184,209 @@ export function MessagesPage() {
         </div>
       )}
 
-      <Card>
-        <CardContent className="px-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[30px] pl-6" />
-                <TableHead>Date</TableHead>
-                <TableHead>Expéditeur</TableHead>
-                <TableHead>Objet</TableHead>
-                <TableHead>Aperçu</TableHead>
-                <TableHead className="w-[60px] pr-6" />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                    Chargement…
-                  </TableCell>
-                </TableRow>
-              ) : (page?.content.length ?? 0) === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                    Aucun message ne correspond aux filtres.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                page?.content.map((m) => (
-                  <TableRow key={m.id} className={m.readFlag ? "" : "bg-primary/[0.03]"}>
-                    <TableCell className="pl-6">
+      {/* Boîte à deux panneaux */}
+      <Card className="flex min-h-0 flex-1 overflow-hidden">
+        {/* Liste */}
+        <div className={cn(
+          "flex min-h-0 w-full flex-col border-r lg:w-[360px] lg:shrink-0",
+          open && "hidden lg:flex"
+        )}>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {loading ? (
+              [0, 1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex flex-col gap-2 border-b px-4 py-3.5">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+              ))
+            ) : items.length === 0 ? (
+              <div className="flex h-full flex-col items-center justify-center gap-2 px-6 py-16 text-center">
+                <InboxIcon className="size-8 text-ink-faint" />
+                <p className="text-[14px] text-muted-foreground">
+                  Aucun message ne correspond aux filtres.
+                </p>
+              </div>
+            ) : (
+              items.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => void select(m)}
+                  className={cn(
+                    "flex w-full flex-col gap-0.5 border-b px-4 py-3 text-left transition-colors",
+                    open?.id === m.id ? "bg-primary/[0.07]" : "hover:bg-muted/60",
+                    !m.readFlag && "bg-primary/[0.03]"
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className={cn(
+                      "flex min-w-0 items-center gap-2 truncate text-[14px]",
+                      !m.readFlag ? "font-semibold" : "font-medium text-ink-muted"
+                    )}>
                       {!m.readFlag && (
-                        <span className="block size-2 rounded-full bg-gehmit" title="Non lu" />
+                        <span className="size-2 shrink-0 rounded-full bg-gehmit" />
                       )}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">{fmtDate(m.createdAt)}</TableCell>
-                    <TableCell>
+                      {m.name || m.email}
+                    </span>
+                    <span className="shrink-0 text-[11.5px] text-ink-faint">
+                      {timeAgo(m.createdAt)}
+                    </span>
+                  </div>
+                  <span className={cn(
+                    "truncate text-[13px]",
+                    !m.readFlag ? "font-medium" : "text-muted-foreground"
+                  )}>
+                    {m.subject || "(sans objet)"}
+                  </span>
+                  <span className="truncate text-[12.5px] text-ink-faint">
+                    {m.message}
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+          <div className="border-t px-2 py-1.5">
+            <Pagination
+              page={page}
+              pageNo={pageNo}
+              size={size}
+              onPage={setPageNo}
+              onSize={setSize}
+            />
+          </div>
+        </div>
+
+        {/* Lecture */}
+        <div className={cn("flex min-h-0 flex-1 flex-col", !open && "hidden lg:flex")}>
+          {open ? (
+            <>
+              <div className="flex flex-wrap items-center gap-2 border-b px-4 py-2.5">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden"
+                  onClick={() => setOpen(null)}
+                  aria-label="Retour à la liste"
+                >
+                  <ArrowLeftIcon className="size-4" />
+                </Button>
+                <div className="flex min-w-0 flex-1 items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    render={
+                      <a
+                        href={`mailto:${open.email}?subject=Re: ${open.subject ?? "Votre message"}`}
+                      />
+                    }
+                    className="gap-1.5"
+                  >
+                    <ReplyIcon className="size-3.5" />
+                    Répondre
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1.5"
+                    onClick={() => void update(open.id, { readFlag: !open.readFlag })}
+                  >
+                    {open.readFlag ? (
+                      <><MailIcon className="size-3.5" />Marquer non lu</>
+                    ) : (
+                      <><MailOpenIcon className="size-3.5" />Marquer lu</>
+                    )}
+                  </Button>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={openIdx <= 0}
+                    onClick={() => openIdx > 0 && void select(items[openIdx - 1])}
+                    aria-label="Message précédent"
+                  >
+                    <ChevronLeftIcon className="size-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={openIdx < 0 || openIdx >= items.length - 1}
+                    onClick={() => openIdx >= 0 && openIdx < items.length - 1 && void select(items[openIdx + 1])}
+                    aria-label="Message suivant"
+                  >
+                    <ChevronRightIcon className="size-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setConfirmDelete(true)}
+                    aria-label="Supprimer"
+                  >
+                    <Trash2Icon className="size-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+                <div className="mx-auto flex max-w-2xl flex-col gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <h2 className="font-heading text-[22px] font-semibold">
+                      {open.subject || "(sans objet)"}
+                    </h2>
+                    <div className="flex flex-wrap items-center gap-2 text-[13.5px] text-muted-foreground">
+                      <span className="flex size-8 items-center justify-center rounded-full bg-navy/10 font-semibold text-navy">
+                        {(open.name || open.email).charAt(0).toUpperCase()}
+                      </span>
                       <div className="flex flex-col">
-                        <span className={m.readFlag ? "" : "font-semibold"}>
-                          {m.name || "—"}
+                        <span className="font-medium text-foreground">
+                          {open.name || "Anonyme"}
+                          <span className="ml-1.5 font-normal text-muted-foreground">
+                            &lt;{open.email}&gt;
+                          </span>
                         </span>
-                        <span className="text-[13px] text-muted-foreground">{m.email}</span>
+                        <span>{fmtDateTime(open.createdAt)}</span>
                       </div>
-                    </TableCell>
-                    <TableCell>{m.subject || "—"}</TableCell>
-                    <TableCell className="max-w-[260px] truncate text-[13px] text-muted-foreground">
-                      {m.message}
-                    </TableCell>
-                    <TableCell className="pr-6">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => void openDetail(m)}
-                        aria-label="Ouvrir"
-                      >
-                        <EyeIcon className="size-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      <Pagination
-        page={page}
-        pageNo={pageNo}
-        size={size}
-        onPage={setPageNo}
-        onSize={setSize}
-      />
-
-      {/* Détail message */}
-      <Dialog open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{open?.subject || "Message"}</DialogTitle>
-          </DialogHeader>
-          {open && (
-            <div className="flex flex-col gap-4">
-              <div className="text-[14px] text-muted-foreground">
-                {open.name || "Anonyme"} — {open.email} — {fmtDateTime(open.createdAt)}
+                    </div>
+                  </div>
+                  <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
+                    {open.message}
+                  </p>
+                </div>
               </div>
-              <p className="whitespace-pre-wrap rounded-md bg-muted p-4 text-[15px] leading-relaxed">
-                {open.message}
+            </>
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
+              <MailOpenIcon className="size-8 text-ink-faint" />
+              <p className="text-[14px] text-muted-foreground">
+                Sélectionnez un message pour le lire.
               </p>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  render={
-                    <a
-                      href={`mailto:${open.email}?subject=Re: ${open.subject ?? "Votre message"}`}
-                    />
-                  }
-                >
-                  Répondre par e-mail
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => void update(open.id, { readFlag: !open.readFlag })}
-                >
-                  {open.readFlag ? "Marquer non lu" : "Marquer lu"}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="ml-auto text-destructive"
-                  onClick={() => setConfirmDelete(true)}
-                >
-                  Supprimer
-                </Button>
-              </div>
             </div>
           )}
-        </DialogContent>
+        </div>
+      </Card>
 
-        <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Supprimer ce message ?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Le message de {open?.name || open?.email} sera définitivement supprimé.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Annuler</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  setConfirmDelete(false)
-                  if (open) void remove(open.id)
-                }}
-              >
-                Supprimer
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </Dialog>
+      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce message ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Le message de {open?.name || open?.email} sera définitivement
+              supprimé.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setConfirmDelete(false)
+                if (open) void remove(open.id)
+              }}
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react"
-import { PencilIcon, PlusIcon, Trash2Icon } from "lucide-react"
+import { PencilIcon, PlusIcon, SearchIcon, Trash2Icon } from "lucide-react"
 import { api } from "@/lib/api"
 import type { ContentItem } from "@/lib/types"
 import { toast } from "@/components/ui/toast"
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
@@ -205,6 +206,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   const [items, setItems] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [q, setQ] = useState("")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<ContentItem | null>(null)
   const [deleting, setDeleting] = useState<ContentItem | null>(null)
@@ -295,6 +297,13 @@ export function CrudPage({ config }: { config: CrudConfig }) {
     item.slug ??
     item.id
 
+  const query = q.trim().toLowerCase()
+  const visible = query
+    ? items.filter((i) =>
+        `${JSON.stringify(i.payload)} ${i.slug ?? ""}`.toLowerCase().includes(query)
+      )
+    : items
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -314,15 +323,40 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         )}
       </div>
 
+      {!loadError && items.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative min-w-[220px] flex-1 sm:max-w-[300px]">
+            <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder={`Rechercher parmi ${items.length} élément${items.length > 1 ? "s" : ""}…`}
+              className="pl-9"
+            />
+          </div>
+          <span className="ml-auto text-[13px] text-muted-foreground">
+            {visible.length} affiché{visible.length > 1 ? "s" : ""} / {items.length}
+          </span>
+        </div>
+      )}
+
       {loadError ? (
         <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
           Impossible de charger les données : {loadError}
         </div>
       ) : loading ? (
-        <div className="py-16 text-center text-ink-muted">Chargement…</div>
+        <div className="flex flex-col gap-2">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-14 w-full" />
+          ))}
+        </div>
       ) : items.length === 0 ? (
         <div className="rounded-lg border border-dashed px-5 py-16 text-center text-ink-muted">
           Aucun élément. Cliquez sur « Nouveau » pour commencer.
+        </div>
+      ) : visible.length === 0 ? (
+        <div className="rounded-lg border border-dashed px-5 py-12 text-center text-ink-muted">
+          Aucun élément ne correspond à « {q} ».
         </div>
       ) : (
         <div className="overflow-x-auto rounded-lg border">
@@ -332,12 +366,17 @@ export function CrudPage({ config }: { config: CrudConfig }) {
                 {config.columns.map((c) => (
                   <TableHead key={c.key}>{c.label}</TableHead>
                 ))}
+                <TableHead className="w-[110px] whitespace-nowrap">Modifié</TableHead>
                 <TableHead className="w-[100px] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {items.map((item) => (
-                <TableRow key={item.id}>
+              {visible.map((item) => (
+                <TableRow
+                  key={item.id}
+                  className="cursor-pointer"
+                  onClick={() => openEdit(item)}
+                >
                   {config.columns.map((c) => (
                     <TableCell key={c.key}>
                       {c.render
@@ -345,7 +384,13 @@ export function CrudPage({ config }: { config: CrudConfig }) {
                         : String(item.payload[c.key] ?? item.slug ?? "—")}
                     </TableCell>
                   ))}
-                  <TableCell className="text-right">
+                  <TableCell className="text-[12.5px] whitespace-nowrap text-ink-faint">
+                    {new Date(item.updatedAt).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </TableCell>
+                  <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-end gap-1">
                       <Button
                         variant="ghost"
