@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 class NewsletterDeliveryRunnerTest {
 
 	private final Map<SubscriberId, Subscriber> subscribers = new LinkedHashMap<>();
-	private Campaign campaign = Campaign.draft("Objet", "Corps");
+	private Campaign campaign = Campaign.draft("Objet", "Corps", java.util.Set.of());
 
 	private final List<String> delivered = new ArrayList<>();
 	private final List<String> failing = new ArrayList<>();

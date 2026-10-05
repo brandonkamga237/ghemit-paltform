@@ -85,7 +85,8 @@ public class NewsletterService implements SubscribeToNewsletterUseCase,
 	@Override
 	@Transactional
 	public Campaign send(SendCampaignCommand command) {
-		Campaign campaign = campaigns.save(Campaign.draft(command.subject(), command.body()));
+		Campaign campaign = campaigns.save(
+				Campaign.draft(command.subject(), command.body(), audienceOf(command)));
 		campaign.markSending();
 		campaign = campaigns.save(campaign);
 		delivery.start(campaign.id());
@@ -105,15 +106,21 @@ public class NewsletterService implements SubscribeToNewsletterUseCase,
 	@Override
 	@Transactional
 	public Campaign saveDraft(SendCampaignCommand command) {
-		return campaigns.save(Campaign.draft(command.subject(), command.body()));
+		return campaigns.save(Campaign.draft(command.subject(), command.body(), audienceOf(command)));
 	}
 
 	@Override
 	@Transactional
 	public Campaign updateDraft(CampaignId id, SendCampaignCommand command) {
 		Campaign campaign = draft(id);
-		campaign.edit(command.subject(), command.body());
+		campaign.edit(command.subject(), command.body(), audienceOf(command));
 		return campaigns.save(campaign);
+	}
+
+	/** Origines ciblées ; nul/vide = tous les abonnés actifs. */
+	private static java.util.Set<String> audienceOf(SendCampaignCommand command) {
+		return command.audience() == null ? java.util.Set.of()
+				: java.util.Set.copyOf(command.audience());
 	}
 
 	@Override

@@ -35,6 +35,8 @@ export interface Campaign {
   body: string
   status: CampaignStatus
   recipientCount: number
+  /** Origines ciblées ; vide = tous les abonnés actifs. */
+  audience: string[]
   createdAt: string
   sentAt: string | null
 }

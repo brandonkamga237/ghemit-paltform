@@ -80,7 +80,7 @@ class NewsletterServiceTest {
 
 	@Test
 	void l_envoi_direct_cree_la_campagne_puis_la_marque_en_cours() {
-		Campaign campaign = service.send(new SendCampaignCommand("Sujet", "Corps"));
+		Campaign campaign = service.send(new SendCampaignCommand("Sujet", "Corps", null));
 
 		assertThat(campaign.status()).isEqualTo(Campaign.Status.SENDING);
 		assertThat(delivery.started).containsExactly(campaign.id());
@@ -88,10 +88,10 @@ class NewsletterServiceTest {
 
 	@Test
 	void le_cycle_brouillon_modification_envoi() {
-		Campaign draft = service.saveDraft(new SendCampaignCommand("Sujet", "Corps"));
+		Campaign draft = service.saveDraft(new SendCampaignCommand("Sujet", "Corps", null));
 		assertThat(draft.status()).isEqualTo(Campaign.Status.DRAFT);
 
-		service.updateDraft(draft.id(), new SendCampaignCommand("Sujet 2", "Corps 2"));
+		service.updateDraft(draft.id(), new SendCampaignCommand("Sujet 2", "Corps 2", null));
 		assertThat(campaigns.findById(draft.id()).orElseThrow().subject()).isEqualTo("Sujet 2");
 
 		Campaign sent = service.sendDraft(draft.id());
@@ -101,10 +101,10 @@ class NewsletterServiceTest {
 
 	@Test
 	void un_brouillon_envoye_ne_peut_plus_etre_modifie_ni_supprime() {
-		Campaign draft = service.saveDraft(new SendCampaignCommand("Sujet", "Corps"));
+		Campaign draft = service.saveDraft(new SendCampaignCommand("Sujet", "Corps", null));
 		service.sendDraft(draft.id());
 
-		assertThatThrownBy(() -> service.updateDraft(draft.id(), new SendCampaignCommand("a", "b")))
+		assertThatThrownBy(() -> service.updateDraft(draft.id(), new SendCampaignCommand("a", "b", null)))
 				.isInstanceOf(BusinessRuleViolationException.class);
 		assertThatThrownBy(() -> service.deleteDraft(draft.id()))
 				.isInstanceOf(BusinessRuleViolationException.class);

@@ -39,8 +39,16 @@ final class NewsletterMapper {
 				entity.getBody(),
 				Campaign.statusOrSent(entity.getStatus()),
 				entity.getRecipientCount(),
+				parseAudience(entity.getAudience()),
 				entity.getCreatedAt(),
 				entity.getSentAt());
+	}
+
+	private static java.util.Set<String> parseAudience(String raw) {
+		if (raw == null || raw.isBlank()) {
+			return java.util.Set.of();
+		}
+		return java.util.Set.of(raw.split(","));
 	}
 
 	static CampaignJpaEntity toEntity(Campaign campaign) {
@@ -50,6 +58,7 @@ final class NewsletterMapper {
 		entity.setBody(campaign.body());
 		entity.setStatus(campaign.status().name());
 		entity.setRecipientCount(campaign.recipientCount());
+		entity.setAudience(String.join(",", campaign.audience()));
 		entity.setCreatedAt(campaign.createdAt());
 		entity.setSentAt(campaign.sentAt());
 		return entity;

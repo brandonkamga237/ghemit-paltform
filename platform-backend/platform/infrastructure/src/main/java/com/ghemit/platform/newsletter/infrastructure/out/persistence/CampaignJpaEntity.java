@@ -31,6 +31,10 @@ public class CampaignJpaEntity {
 	@Column(nullable = false)
 	private int recipientCount;
 
+	/** Origines ciblées, séparées par des virgules ; vide = tous les actifs. */
+	@Column
+	private String audience = "";
+
 	@Column(nullable = false)
 	private Instant createdAt = Instant.now();
 

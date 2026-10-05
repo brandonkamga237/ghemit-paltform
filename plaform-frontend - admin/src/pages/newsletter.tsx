@@ -1,5 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { EyeIcon, PencilIcon, SaveIcon, SearchIcon, SendIcon, Trash2Icon } from "lucide-react"
+import {
+  BoldIcon,
+  EyeIcon,
+  Heading2Icon,
+  ItalicIcon,
+  Link2Icon,
+  ListIcon,
+  MinusIcon,
+  MousePointerClickIcon,
+  PencilIcon,
+  SaveIcon,
+  SearchIcon,
+  SendIcon,
+  Trash2Icon,
+  TypeIcon,
+} from "lucide-react"
 import { api } from "@/lib/api"
 import type { Campaign, CampaignStatus, Subscriber } from "@/lib/types"
 import { toast } from "@/components/ui/toast"
@@ -26,6 +41,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const STATUS_LABELS: Record<CampaignStatus, { label: string; variant: "default" | "secondary" | "outline" | "destructive" }> = {
   draft: { label: "Brouillon", variant: "secondary" },
@@ -86,11 +109,53 @@ export function NewsletterPage() {
   const canCompose = subject.trim() !== "" && body.trim() !== ""
   const [subQuery, setSubQuery] = useState("")
   const [tab, setTab] = useState("compose")
+  const [audienceMode, setAudienceMode] = useState<"all" | "segment">("all")
+  const [audience, setAudience] = useState<Set<string>>(new Set())
+  const bodyRef = useRef<HTMLTextAreaElement>(null)
   const draftCount = campaigns.filter((c) => c.status === "draft").length
   const visibleSubs = subscribers.filter((s) => {
     const v = subQuery.trim().toLowerCase()
     return !v || `${s.name ?? ""} ${s.email} ${s.source ?? ""}`.toLowerCase().includes(v)
   })
+
+  /* Origines d'inscription → segments ciblables avec compteur d'actifs. */
+  const segments = (() => {
+    const map = new Map<string, number>()
+    for (const s of subscribers) {
+      if (!s.active) continue
+      const src = s.source || "newsletter"
+      map.set(src, (map.get(src) ?? 0) + 1)
+    }
+    return [...map.entries()].sort((a, b) => b[1] - a[1])
+  })()
+  const targetCount =
+    audienceMode === "all"
+      ? activeCount
+      : segments.reduce((a, [src, n]) => a + (audience.has(src) ? n : 0), 0)
+  const audiencePayload = audienceMode === "all" ? null : [...audience]
+
+  /* Éditeur : entoure la sélection ou insère au curseur. */
+  const insertAt = (before: string, after = "", placeholder = "") => {
+    const ta = bodyRef.current
+    if (!ta) {
+      setBody((b) => b + before + placeholder + after)
+      return
+    }
+    const { selectionStart: s, selectionEnd: e, value } = ta
+    const sel = value.slice(s, e) || placeholder
+    const next = value.slice(0, s) + before + sel + after + value.slice(e)
+    setBody(next)
+    requestAnimationFrame(() => {
+      ta.focus()
+      const pos = s + before.length + sel.length + after.length
+      ta.setSelectionRange(pos, pos)
+    })
+  }
+
+  const sourceLabel = (src: string) =>
+    src.startsWith("candidature:")
+      ? `Candidature · ${src.slice("candidature:".length)}`
+      : { contact: "Formulaire de contact", newsletter: "Newsletter", site: "Site" }[src] ?? src
 
   const openPreview = async () => {
     setPreviewLoading(true)
@@ -108,15 +173,17 @@ export function NewsletterPage() {
     setSubject("")
     setBody("")
     setEditingId(null)
+    setAudienceMode("all")
+    setAudience(new Set())
   }
 
   const saveDraft = async () => {
     setSavingDraft(true)
     try {
       if (editingId) {
-        await api.put(`/api/admin/newsletter/campaigns/${editingId}`, { subject, body })
+        await api.put(`/api/admin/newsletter/campaigns/${editingId}`, { subject, body, audience: audiencePayload })
       } else {
-        await api.post("/api/admin/newsletter/campaigns", { subject, body })
+        await api.post("/api/admin/newsletter/campaigns", { subject, body, audience: audiencePayload })
       }
       toast.add({ title: "Brouillon enregistré" })
       resetCompose()
@@ -132,11 +199,13 @@ export function NewsletterPage() {
     setSending(true)
     try {
       if (editingId) {
+        // Sauvegarde d'abord pour embarquer l'audience choisie.
+        await api.put(`/api/admin/newsletter/campaigns/${editingId}`, { subject, body, audience: audiencePayload })
         await api.post(`/api/admin/newsletter/campaigns/${editingId}/send`)
       } else {
-        await api.post("/api/admin/newsletter/send", { subject, body })
+        await api.post("/api/admin/newsletter/send", { subject, body, audience: audiencePayload })
       }
-      toast.add({ title: "Envoi lancé", description: `${activeCount} destinataire(s) — envoi en arrière-plan.` })
+      toast.add({ title: "Envoi lancé", description: `${targetCount} destinataire(s) — envoi en arrière-plan.` })
       resetCompose()
       await refresh()
     } catch (e) {
@@ -217,11 +286,69 @@ export function NewsletterPage() {
             <CardHeader>
               <CardTitle>{editingId ? "Modifier le brouillon" : "Composer une campagne"}</CardTitle>
               <CardDescription>
-                Mise en forme : **gras**, *italique*, [lien](https://…), lignes « - » pour les listes.
-                Le rendu est celui du gabarit Gehmit (en-tête et pied de page inclus).
+                Gabarit Gehmit : logo, signature et coordonnées ajoutés automatiquement.
+                Variables de fusion : {"{{prenom}}"}, {"{{nom}}"}, {"{{email}}"}.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
+              {/* Audience */}
+              <div className="flex flex-col gap-2.5 rounded-lg border p-4">
+                <Label className="text-[14px]">Destinataires</Label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAudienceMode("all")}
+                    className={`rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                      audienceMode === "all"
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "hover:border-primary/60"
+                    }`}
+                  >
+                    Tous les abonnés actifs ({activeCount})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAudienceMode("segment")}
+                    className={`rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                      audienceMode === "segment"
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "hover:border-primary/60"
+                    }`}
+                  >
+                    Cibler par origine
+                  </button>
+                </div>
+                {audienceMode === "segment" && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {segments.map(([src, n]) => (
+                      <label
+                        key={src}
+                        className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-1.5 text-[13px] transition-colors ${
+                          audience.has(src) ? "border-primary bg-primary/5" : "hover:border-primary/50"
+                        }`}
+                      >
+                        <Checkbox
+                          checked={audience.has(src)}
+                          onCheckedChange={(v) =>
+                            setAudience((a) => {
+                              const next = new Set(a)
+                              if (v === true) next.add(src)
+                              else next.delete(src)
+                              return next
+                            })
+                          }
+                        />
+                        {sourceLabel(src)}
+                        <span className="text-ink-faint tabular-nums">{n}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+                <span className="text-[12.5px] text-ink-faint">
+                  {targetCount} destinataire{targetCount > 1 ? "s" : ""} recevra{targetCount > 1 ? "ont" : ""} cette campagne.
+                </span>
+              </div>
+
               <div className="flex flex-col gap-1.5">
                 <Label>Objet</Label>
                 <Input
@@ -231,12 +358,50 @@ export function NewsletterPage() {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <Label>Message</Label>
+                <div className="flex flex-wrap items-center gap-1 rounded-t-lg border border-b-0 bg-muted/40 px-2 py-1.5">
+                  <ToolButton title="Gras" onClick={() => insertAt("**", "**", "gras")}>
+                    <BoldIcon className="size-4" />
+                  </ToolButton>
+                  <ToolButton title="Italique" onClick={() => insertAt("*", "*", "italique")}>
+                    <ItalicIcon className="size-4" />
+                  </ToolButton>
+                  <ToolButton title="Titre de section" onClick={() => insertAt("\n## ", "", "Titre")}>
+                    <Heading2Icon className="size-4" />
+                  </ToolButton>
+                  <ToolButton title="Lien" onClick={() => insertAt("[", "](https://)", "texte")}>
+                    <Link2Icon className="size-4" />
+                  </ToolButton>
+                  <ToolButton title="Liste" onClick={() => insertAt("\n- ", "\n- ", "élément")}>
+                    <ListIcon className="size-4" />
+                  </ToolButton>
+                  <ToolButton title="Bouton" onClick={() => insertAt("\n[[", "]](https://)", "Découvrir")}>
+                    <MousePointerClickIcon className="size-4" />
+                  </ToolButton>
+                  <ToolButton title="Séparateur" onClick={() => insertAt("\n---\n")}>
+                    <MinusIcon className="size-4" />
+                  </ToolButton>
+                  <span className="mx-1 h-5 w-px bg-border" />
+                  <Select
+                    value=""
+                    onValueChange={(v) => v && insertAt(`{{${v}}}`)}
+                  >
+                    <SelectTrigger className="h-7 w-auto gap-1.5 border-0 bg-transparent text-[12.5px] shadow-none">
+                      <TypeIcon className="size-3.5" />
+                      <SelectValue placeholder="Variable" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="prenom">{"{{prenom}}"} — prénom</SelectItem>
+                      <SelectItem value="nom">{"{{nom}}"} — nom complet</SelectItem>
+                      <SelectItem value="email">{"{{email}}"} — e-mail</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Textarea
+                  ref={bodyRef}
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  placeholder={"Bonjour,\n\nVoici les nouvelles de Gehmit…\n\n- Premier point\n- Deuxième point"}
-                  className="min-h-[200px]"
+                  placeholder={"Bonjour {{prenom}},\n\n## Titre de section\n\nVoici les nouvelles de Gehmit…\n\n- Premier point\n- Deuxième point\n\n[[Découvrir]](https://gehmit.org)"}
+                  className="min-h-[220px] rounded-t-none border-t-0 font-mono text-[13.5px]"
                 />
               </div>
               <div className="flex flex-wrap gap-2">
@@ -260,11 +425,11 @@ export function NewsletterPage() {
                 </Button>
                 <Button
                   className="gap-2"
-                  disabled={sending || !canCompose || activeCount === 0}
+                  disabled={sending || !canCompose || targetCount === 0}
                   onClick={sendNow}
                 >
                   <SendIcon className="size-4" />
-                  {sending ? "Envoi…" : `Envoyer à ${activeCount} abonné(s)`}
+                  {sending ? "Envoi…" : `Envoyer à ${targetCount} destinataire${targetCount > 1 ? "s" : ""}`}
                 </Button>
                 {editingId && (
                   <Button variant="ghost" onClick={resetCompose}>
@@ -307,6 +472,10 @@ export function NewsletterPage() {
                         {c.status === "draft"
                           ? `Créée le ${new Date(c.createdAt).toLocaleString("fr-FR")}`
                           : `${c.sentAt ? new Date(c.sentAt).toLocaleString("fr-FR") : "—"} — ${c.recipientCount} destinataire(s)`}
+                        {" · "}
+                        {c.audience.length === 0
+                          ? "tous les abonnés"
+                          : `${c.audience.length} origine${c.audience.length > 1 ? "s" : ""}`}
                       </span>
                     </div>
                     {c.status === "draft" && (
@@ -319,6 +488,8 @@ export function NewsletterPage() {
                             setEditingId(c.id)
                             setSubject(c.subject)
                             setBody(c.body)
+                            setAudienceMode(c.audience.length ? "segment" : "all")
+                            setAudience(new Set(c.audience))
                             setTab("compose")
                           }}
                         >
@@ -446,5 +617,26 @@ export function NewsletterPage() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+function ToolButton({
+  title,
+  onClick,
+  children,
+}: {
+  title: string
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+    >
+      {children}
+    </button>
   )
 }

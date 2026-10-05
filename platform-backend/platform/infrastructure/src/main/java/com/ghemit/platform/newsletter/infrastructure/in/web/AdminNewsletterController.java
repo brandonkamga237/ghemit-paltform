@@ -64,7 +64,7 @@ public class AdminNewsletterController {
 	@PostMapping("/campaigns")
 	public CampaignResponse createDraft(@Valid @RequestBody SendRequest request) {
 		return CampaignResponse.from(
-				drafts.saveDraft(new SendCampaignCommand(request.subject(), request.body())));
+				drafts.saveDraft(new SendCampaignCommand(request.subject(), request.body(), request.audience())));
 	}
 
 	/** Modifie un brouillon (uniquement tant qu'il n'est pas envoyé). */
@@ -72,7 +72,7 @@ public class AdminNewsletterController {
 	public CampaignResponse updateDraft(@PathVariable UUID id,
 			@Valid @RequestBody SendRequest request) {
 		return CampaignResponse.from(
-				drafts.updateDraft(CampaignId.of(id), new SendCampaignCommand(request.subject(), request.body())));
+				drafts.updateDraft(CampaignId.of(id), new SendCampaignCommand(request.subject(), request.body(), request.audience())));
 	}
 
 	@DeleteMapping("/campaigns/{id}")
@@ -91,7 +91,7 @@ public class AdminNewsletterController {
 	@PostMapping("/send")
 	public CampaignResponse send(@Valid @RequestBody SendRequest request) {
 		return CampaignResponse.from(
-				sendCampaign.send(new SendCampaignCommand(request.subject(), request.body())));
+				sendCampaign.send(new SendCampaignCommand(request.subject(), request.body(), request.audience())));
 	}
 
 	/** HTML tel qu'il partira aux abonnés (lien de désinscription factice). */

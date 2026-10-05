@@ -1,4 +1,6 @@
 package com.ghemit.platform.newsletter.application.port.in;
 
-public record SendCampaignCommand(String subject, String body) {
+import java.util.List;
+
+public record SendCampaignCommand(String subject, String body, List<String> audience) {
 }

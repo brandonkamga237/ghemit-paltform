@@ -44,9 +44,13 @@ public class NewsletterDeliveryRunner {
 		try {
 			int delivered = 0;
 			for (Subscriber subscriber : subscribers.findAllActive()) {
+				if (!campaign.targets(subscriber)) {
+					continue;
+				}
 				try {
 					mailSender.send(subscriber.email(), campaign.subject(),
-							template.render(campaign.body(), unsubscribeUrl(subscriber)));
+							template.render(personalize(campaign.body(), subscriber),
+									unsubscribeUrl(subscriber)));
 					delivered++;
 				} catch (MailDeliveryException e) {
 					// Destinataire injoignable : on continue avec les autres.
@@ -57,6 +61,24 @@ public class NewsletterDeliveryRunner {
 			campaign.markFailed();
 		}
 		campaigns.save(campaign);
+	}
+
+	/**
+	 * Variables de fusion : {{prenom}} (premier mot du nom), {{nom}} et
+	 * {{email}}. Remplacées avant le rendu HTML — l'échappement du gabarit
+	 * protège le résultat.
+	 */
+	private static String personalize(String body, Subscriber subscriber) {
+		String fullName = subscriber.name().orElse("").trim();
+		String firstName = fullName.contains(" ")
+				? fullName.substring(0, fullName.indexOf(' ')).trim()
+				: fullName;
+		return body
+				.replace("{{prenom}}", firstName)
+				.replace("{{Prenom}}", firstName)
+				.replace("{{nom}}", fullName)
+				.replace("{{Nom}}", fullName)
+				.replace("{{email}}", subscriber.email().value());
 	}
 
 	private String unsubscribeUrl(Subscriber subscriber) {
