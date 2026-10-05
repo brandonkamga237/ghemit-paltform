@@ -1,17 +1,24 @@
 package com.ghemit.platform.media.infrastructure.in.web;
 
+import com.ghemit.platform.media.application.port.in.DownloadMediaQuery;
 import com.ghemit.platform.media.application.port.in.ManageMediaUseCase;
+import com.ghemit.platform.media.application.port.in.MediaDownload;
 import com.ghemit.platform.media.application.port.in.MediaLibraryQuery;
 import com.ghemit.platform.media.application.port.in.UploadMediaCommand;
+import com.ghemit.platform.media.application.port.out.StoredObject;
 import com.ghemit.platform.media.domain.MediaFileId;
 import com.ghemit.platform.media.domain.MediaFolder;
+import com.ghemit.platform.media.domain.ObjectKey;
 import com.ghemit.platform.shared.application.BinaryContent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +39,7 @@ public class AdminMediaController {
 
 	private final MediaLibraryQuery libraryQuery;
 	private final ManageMediaUseCase manageMedia;
+	private final DownloadMediaQuery downloadMedia;
 
 	@GetMapping
 	public List<MediaFileResponse> list(@RequestParam(value = "folder", required = false) String folder) {
@@ -70,5 +78,20 @@ public class AdminMediaController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable UUID id) {
 		manageMedia.delete(MediaFileId.of(id));
+	}
+
+	/** Téléchargement d'un CV de candidature (réservé à l'administration). */
+	@GetMapping("/cv/{*key}")
+	public ResponseEntity<byte[]> cv(@PathVariable("key") String rawKey) throws IOException {
+		ObjectKey key = ObjectKey.of("cv/" + (rawKey.startsWith("/") ? rawKey.substring(1) : rawKey));
+		MediaDownload download = downloadMedia.download(key);
+		try (StoredObject object = download.object()) {
+			byte[] payload = object.stream().readAllBytes();
+			return ResponseEntity.ok()
+					.contentType(MediaType.parseMediaType(download.contentType()))
+					.contentLength(payload.length)
+					.header(HttpHeaders.CACHE_CONTROL, "private, no-store")
+					.body(payload);
+		}
 	}
 }

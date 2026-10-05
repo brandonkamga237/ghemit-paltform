@@ -44,3 +44,16 @@ export const api = {
     request<T>(path, { method: "PATCH", body: JSON.stringify(body ?? {}) }),
   del: (path: string) => request<void>(path, { method: "DELETE" }),
 }
+
+/** Ouvre un CV de candidature : téléchargement authentifié, jamais via une URL publique. */
+export async function openCv(cvUrl: string) {
+  const key = cvUrl.replace(/^.*\/cv\//, "")
+  const token = await getAccessToken()
+  const res = await fetch(`${API_URL}/api/admin/media/cv/${key}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  if (!res.ok) throw new Error(`CV introuvable (${res.status})`)
+  const url = URL.createObjectURL(await res.blob())
+  window.open(url, "_blank", "noopener")
+  setTimeout(() => URL.revokeObjectURL(url), 60_000)
+}

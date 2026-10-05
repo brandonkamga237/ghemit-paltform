@@ -54,11 +54,6 @@ public class AdminCandidatureController {
 		return query.summary();
 	}
 
-	@PatchMapping("/{id}/read")
-	public CandidatureResponse markRead(@PathVariable UUID id) {
-		return CandidatureResponse.from(manageCandidatures.markAsRead(CandidatureId.of(id)));
-	}
-
 	@PatchMapping("/{id}")
 	public CandidatureResponse update(@PathVariable UUID id, @RequestBody Map<String, Object> patch) {
 		Boolean read = patch.get("readFlag") instanceof Boolean value ? value : null;

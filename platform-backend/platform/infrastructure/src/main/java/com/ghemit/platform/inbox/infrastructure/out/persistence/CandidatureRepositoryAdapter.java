@@ -7,7 +7,9 @@ import com.ghemit.platform.inbox.domain.CandidatureRepository;
 import com.ghemit.platform.shared.domain.Page;
 import com.ghemit.platform.shared.domain.PageRequest;
 import com.ghemit.platform.shared.infrastructure.out.persistence.Pageables;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -41,7 +43,23 @@ public class CandidatureRepositoryAdapter implements CandidatureRepository {
 	}
 
 	@Override
-	public List<Candidature> findAll() {
-		return jpaRepository.findAll().stream().map(InboxMapper::toDomain).toList();
+	public Map<String, Long> countByProgram() {
+		return toMap(jpaRepository.countGroupedByProgram());
+	}
+
+	@Override
+	public Map<String, Long> countByStatus() {
+		return toMap(jpaRepository.countGroupedByStatus());
+	}
+
+	@Override
+	public long countUnread() {
+		return jpaRepository.countByReadFlagFalse();
+	}
+
+	private static Map<String, Long> toMap(List<Object[]> rows) {
+		Map<String, Long> counts = new LinkedHashMap<>();
+		rows.forEach(row -> counts.put(String.valueOf(row[0]), (Long) row[1]));
+		return counts;
 	}
 }

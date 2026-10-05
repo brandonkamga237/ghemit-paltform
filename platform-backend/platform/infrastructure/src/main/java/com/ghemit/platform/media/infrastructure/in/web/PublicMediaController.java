@@ -44,7 +44,12 @@ public class PublicMediaController {
 			@RequestParam(value = "w", required = false) Integer width) {
 		// {*key} peut capturer un « / » initial selon le moteur de patterns
 		String key = rawKey.startsWith("/") ? rawKey.substring(1) : rawKey;
-		MediaDownload download = downloadMedia.download(ObjectKey.of(key));
+		ObjectKey objectKey = ObjectKey.of(key);
+		// Les CV contiennent des données personnelles : servis uniquement via /api/admin/media/cv
+		if (objectKey.isCv()) {
+			return ResponseEntity.notFound().build();
+		}
+		MediaDownload download = downloadMedia.download(objectKey);
 
 		try (StoredObject object = download.object()) {
 			byte[] original = object.stream().readAllBytes();

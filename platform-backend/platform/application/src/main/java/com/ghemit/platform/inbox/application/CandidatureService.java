@@ -16,8 +16,6 @@ import com.ghemit.platform.inbox.domain.ProgramCode;
 import com.ghemit.platform.shared.domain.EntityNotFoundException;
 import com.ghemit.platform.shared.domain.Page;
 import com.ghemit.platform.shared.domain.PageRequest;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,26 +52,9 @@ public class CandidatureService
 
 	@Override
 	public CandidatureSummary summary() {
-		List<Candidature> all = repository.findAll();
-		Map<String, Long> byProgram = new LinkedHashMap<>();
-		Map<String, Long> byStatus = new LinkedHashMap<>();
-		long unread = 0;
-		for (Candidature candidature : all) {
-			byProgram.merge(candidature.program().value(), 1L, Long::sum);
-			byStatus.merge(candidature.status().code(), 1L, Long::sum);
-			if (!candidature.isRead()) {
-				unread++;
-			}
-		}
-		return new CandidatureSummary(all.size(), unread, byProgram, byStatus);
-	}
-
-	@Override
-	@Transactional
-	public Candidature markAsRead(CandidatureId id) {
-		Candidature candidature = require(id);
-		candidature.markAsRead();
-		return repository.save(candidature);
+		Map<String, Long> byProgram = repository.countByProgram();
+		long total = byProgram.values().stream().mapToLong(Long::longValue).sum();
+		return new CandidatureSummary(total, repository.countUnread(), byProgram, repository.countByStatus());
 	}
 
 	@Override

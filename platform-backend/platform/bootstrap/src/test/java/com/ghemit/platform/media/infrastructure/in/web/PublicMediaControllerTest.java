@@ -1,7 +1,9 @@
 package com.ghemit.platform.media.infrastructure.in.web;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,6 +49,14 @@ class PublicMediaControllerTest {
 				.andExpect(jsonPath("$.objectKey").value("cv/abc-cv.pdf"))
 				.andExpect(jsonPath("$.url").value("/api/public/media/cv/abc-cv.pdf"))
 				.andExpect(jsonPath("$.filename").value("cv.pdf"));
+	}
+
+	@Test
+	void ne_sert_jamais_un_cv_sur_l_endpoint_public() throws Exception {
+		mockMvc.perform(get("/api/public/media/cv/abc-cv.pdf"))
+				.andExpect(status().isNotFound());
+
+		verifyNoInteractions(downloadMedia);
 	}
 
 	@Test

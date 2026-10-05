@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
-import { EyeIcon, MailIcon, MailOpenIcon, SearchIcon } from "lucide-react"
+import { SearchIcon } from "lucide-react"
 import { cn } from "cn"
-import { api, API_URL } from "@/lib/api"
+import { api, openCv } from "@/lib/api"
 import type {
   Candidature,
   CandidaturesSummary,
@@ -69,9 +69,7 @@ export function CandidaturesPage() {
   const [group, setGroup] = useState("all") // "all" | groupe d'origine | programme isolé
   const [program, setProgram] = useState("all") // sous-filtre : programme exact
   const [status, setStatus] = useState("all")
-  const [read, setRead] = useState("all") // all | unread | read
   const [q, setQ] = useState("")
-  const [sort, setSort] = useState("createdAt,desc")
   const [pageNo, setPageNo] = useState(0)
   const [size, setSize] = useState(20)
   const debouncedQ = useDebounced(q)
@@ -92,7 +90,7 @@ export function CandidaturesPage() {
       const params = new URLSearchParams()
       params.set("page", String(pageNo))
       params.set("size", String(size))
-      params.set("sort", sort)
+      params.set("sort", "createdAt,desc")
       if (program !== "all") {
         params.set("program", program)
       } else if (group !== "all") {
@@ -100,8 +98,6 @@ export function CandidaturesPage() {
         params.set("program", g ? g.programs.join(",") : group)
       }
       if (status !== "all") params.set("status", status)
-      if (read === "unread") params.set("read", "false")
-      if (read === "read") params.set("read", "true")
       if (debouncedQ.trim()) params.set("q", debouncedQ.trim())
       setPage(await api.get<Page<Candidature>>(`/api/admin/candidatures?${params}`))
       setError(null)
@@ -110,7 +106,7 @@ export function CandidaturesPage() {
     } finally {
       setLoading(false)
     }
-  }, [pageNo, size, sort, group, program, status, read, debouncedQ])
+  }, [pageNo, size, group, program, status, debouncedQ])
 
   useEffect(() => {
     void refresh()
@@ -122,7 +118,7 @@ export function CandidaturesPage() {
   // Tout changement de filtre ramène à la première page
   useEffect(() => {
     setPageNo(0)
-  }, [group, program, status, read, debouncedQ, size])
+  }, [group, program, status, debouncedQ, size])
 
   const update = async (id: string, patch: Record<string, unknown>) => {
     try {
@@ -187,13 +183,6 @@ export function CandidaturesPage() {
     onClick: () => void
   }[] = [
     {
-      key: "unread",
-      label: "Non lues",
-      value: summary?.unread,
-      active: read === "unread",
-      onClick: () => setRead(read === "unread" ? "all" : "unread"),
-    },
-    {
       key: "new",
       label: "Nouvelles",
       value: summary?.byStatus?.new,
@@ -218,13 +207,11 @@ export function CandidaturesPage() {
       key: "total",
       label: "Total",
       value: summary?.total,
-      active:
-        group === "all" && program === "all" && status === "all" && read === "all" && !debouncedQ,
+      active: group === "all" && program === "all" && status === "all" && !debouncedQ,
       onClick: () => {
         setGroup("all")
         setProgram("all")
         setStatus("all")
-        setRead("all")
         setQ("")
       },
     },
@@ -335,27 +322,6 @@ export function CandidaturesPage() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={read} onValueChange={(v) => setRead(v ?? "all")}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes</SelectItem>
-            <SelectItem value="unread">Non lues</SelectItem>
-            <SelectItem value="read">Lues</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={sort} onValueChange={(v) => setSort(v ?? "createdAt,desc")}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="createdAt,desc">Plus récentes</SelectItem>
-            <SelectItem value="createdAt,asc">Plus anciennes</SelectItem>
-            <SelectItem value="program">Origine (A→Z)</SelectItem>
-            <SelectItem value="status">Par statut</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {error && (
@@ -375,25 +341,28 @@ export function CandidaturesPage() {
                 <TableHead>Origine</TableHead>
                 <TableHead>Candidat</TableHead>
                 <TableHead>Statut</TableHead>
-                <TableHead className="w-[110px] text-right pr-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
                     Chargement…
                   </TableCell>
                 </TableRow>
               ) : (page?.content.length ?? 0) === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
                     Aucune candidature ne correspond aux filtres.
                   </TableCell>
                 </TableRow>
               ) : (
                 page?.content.map((c) => (
-                  <TableRow key={c.id} className={c.readFlag ? "" : "bg-primary/[0.03]"}>
+                  <TableRow
+                    key={c.id}
+                    onClick={() => void openDetail(c)}
+                    className={cn("cursor-pointer", !c.readFlag && "bg-primary/[0.03]")}
+                  >
                     <TableCell className="pl-6">
                       {!c.readFlag && (
                         <span className="block size-2 rounded-full bg-gehmit" title="Non lue" />
@@ -411,7 +380,7 @@ export function CandidaturesPage() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Select
                         value={c.status ?? "new"}
                         onValueChange={(v) => void update(c.id, { status: v })}
@@ -433,31 +402,6 @@ export function CandidaturesPage() {
                           ))}
                         </SelectContent>
                       </Select>
-                    </TableCell>
-                    <TableCell className="pr-6">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => void update(c.id, { readFlag: !c.readFlag })}
-                          aria-label={c.readFlag ? "Marquer non lue" : "Marquer lue"}
-                          title={c.readFlag ? "Marquer non lue" : "Marquer lue"}
-                        >
-                          {c.readFlag ? (
-                            <MailIcon className="size-4" />
-                          ) : (
-                            <MailOpenIcon className="size-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => void openDetail(c)}
-                          aria-label="Ouvrir"
-                        >
-                          <EyeIcon className="size-4" />
-                        </Button>
-                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -572,14 +516,17 @@ function CandidatureDialog({
                 <dt className="font-semibold">{fieldLabel(k)}</dt>
                 {k === "cvUrl" && typeof v === "string" && v ? (
                   <dd>
-                    <a
-                      href={`${API_URL}${v}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openCv(v).catch((e: Error) =>
+                          toast.add({ title: "Ouverture du CV impossible", description: e.message })
+                        )
+                      }
                       className="font-medium text-primary underline underline-offset-2"
                     >
-                      Télécharger le CV
-                    </a>
+                      Ouvrir le CV
+                    </button>
                   </dd>
                 ) : (
                   <dd className="whitespace-pre-wrap break-words">

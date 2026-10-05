@@ -3,6 +3,7 @@ package com.ghemit.platform.inbox.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ghemit.platform.inbox.application.port.in.SubmitCandidatureCommand;
+import com.ghemit.platform.inbox.application.port.in.UpdateCandidatureCommand;
 import com.ghemit.platform.inbox.application.port.out.NewsletterEnrollment;
 import com.ghemit.platform.inbox.domain.Candidature;
 import com.ghemit.platform.inbox.domain.CandidatureCriteria;
@@ -16,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 class CandidatureServiceTest {
@@ -40,7 +43,7 @@ class CandidatureServiceTest {
 		service.submit(new SubmitCandidatureCommand("mentorat", Map.of("nom", "Ngo")));
 
 		assertThat(enrollment.calls).isEmpty();
-		assertThat(candidatures.findAll()).hasSize(1);
+		assertThat(candidatures.store).hasSize(1);
 	}
 
 	@Test
@@ -61,7 +64,7 @@ class CandidatureServiceTest {
 	void marquer_comme_lu_est_persiste() {
 		Candidature submitted = service.submit(new SubmitCandidatureCommand("paei", Map.of()));
 
-		service.markAsRead(submitted.id());
+		service.update(new UpdateCandidatureCommand(submitted.id(), true, null, false, null));
 
 		assertThat(candidatures.findById(submitted.id()).orElseThrow().isRead()).isTrue();
 	}
@@ -104,8 +107,23 @@ class CandidatureServiceTest {
 		}
 
 		@Override
-		public List<Candidature> findAll() {
-			return List.copyOf(store.values());
+		public Map<String, Long> countByProgram() {
+			return count(c -> c.program().value());
+		}
+
+		@Override
+		public Map<String, Long> countByStatus() {
+			return count(c -> c.status().code());
+		}
+
+		@Override
+		public long countUnread() {
+			return store.values().stream().filter(c -> !c.isRead()).count();
+		}
+
+		private Map<String, Long> count(Function<Candidature, String> key) {
+			return store.values().stream()
+					.collect(Collectors.groupingBy(key, LinkedHashMap::new, Collectors.counting()));
 		}
 	}
 }

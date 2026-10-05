@@ -6,8 +6,6 @@ import com.ghemit.platform.inbox.domain.CandidatureId;
 /** Traitement des candidatures par l'équipe. */
 public interface ManageCandidaturesUseCase {
 
-	Candidature markAsRead(CandidatureId id);
-
 	Candidature update(UpdateCandidatureCommand command);
 
 	void delete(CandidatureId id);
