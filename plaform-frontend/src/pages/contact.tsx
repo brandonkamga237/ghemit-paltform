@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { motion } from "motion/react"
 import { MessageCircleIcon } from "lucide-react"
@@ -34,6 +35,7 @@ const sujets = [
 ]
 
 export function ContactPage() {
+  usePageMeta("Contact", "Écrivez à l'équipe Gehmit : question sur un programme, un partenariat ou une caravane.")
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
   const [sending, setSending] = useState(false)

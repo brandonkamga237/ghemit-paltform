@@ -7,6 +7,7 @@ import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
 import { StatusPill } from "@/components/site/status-pill"
 import { Button } from "@/components/ui/button"
+import { usePageMeta } from "@/lib/seo"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -14,6 +15,7 @@ export function ProgrammeDetailPage() {
   const { slug } = useParams()
   const programs = usePrograms()
   const program = programs.find((p) => p.slug === slug)
+  usePageMeta(program?.name)
 
   if (!program || !program.detail) {
     return <Navigate to="/programmes" replace />

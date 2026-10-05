@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
 import { stats } from "@/data/content"
-import { useArticleSummaries, usePrograms } from "@/data/remote"
+import { useArticleSummaries, useEvents, usePrograms } from "@/data/remote"
 import { Photo } from "@/components/site/photo"
 import { PartnerLogos } from "@/components/site/partner-logos"
 import { Reveal } from "@/components/site/reveal"
@@ -12,9 +12,16 @@ import { Button } from "@/components/ui/button"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
+const MONTHS = [
+  "janv.", "févr.", "mars", "avr.", "mai", "juin",
+  "juil.", "août", "sept.", "oct.", "nov.", "déc.",
+]
+
 export function HomePage() {
   const programs = usePrograms()
   const articles = useArticleSummaries()
+  const events = useEvents()
+  const upcoming = (events ?? []).filter((e) => e.upcoming !== false).slice(0, 3)
   const featured = ["mentorat", "formations", "glab-sisters"]
     .map((s) => programs.find((p) => p.slug === s)!)
     .filter(Boolean)
@@ -103,6 +110,51 @@ export function HomePage() {
 
       {/* Chiffres */}
       <StatBand stats={stats} tone="navy" />
+
+      {/* Prochains événements — n'apparaît que si l'agenda est rempli */}
+      {upcoming.length > 0 && (
+        <section className="bg-surface">
+          <Container className="flex flex-col gap-7 py-16">
+            <Reveal>
+              <SectionHeading
+                title="Prochains événements"
+                linkLabel="Tout l'agenda"
+                linkTo="/evenements"
+              />
+            </Reveal>
+            <div className="grid gap-5 md:grid-cols-3">
+              {upcoming.map((e, i) => {
+                const m = e.date.match(/^(\d{4})-(\d{2})-(\d{2})/)
+                return (
+                  <Reveal key={`${e.title}-${e.date}`} delay={i * 0.08}>
+                    <Link
+                      to="/evenements"
+                      className="group flex h-full gap-4 rounded-lg border border-sand-dark bg-cream p-5 transition-colors hover:border-gehmit/50"
+                    >
+                      <div className="flex w-14 shrink-0 flex-col items-center gap-0.5 border-r border-sand pr-4">
+                        <span className="font-heading text-2xl leading-none font-semibold text-navy">
+                          {m ? Number(m[3]) : "—"}
+                        </span>
+                        <span className="font-mono text-[10px] tracking-[0.08em] text-ink-faint uppercase">
+                          {m ? `${MONTHS[Number(m[2]) - 1]} ${m[1]}` : ""}
+                        </span>
+                      </div>
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <span className="text-[15.5px] leading-snug font-semibold text-navy group-hover:text-gehmit">
+                          {e.title}
+                        </span>
+                        <span className="text-[13.5px] text-ink-faint">
+                          {[e.time, e.location].filter(Boolean).join(" · ")}
+                        </span>
+                      </div>
+                    </Link>
+                  </Reveal>
+                )
+              })}
+            </div>
+          </Container>
+        </section>
+      )}
 
       {/* TechPath */}
       <section className="grid bg-surface lg:grid-cols-2">

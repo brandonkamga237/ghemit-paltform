@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { usePageMeta } from "@/lib/seo"
 import {
   Select,
   SelectContent,
@@ -61,6 +62,7 @@ export function CandidaturePage() {
     cv: "",
   })
   const [cvFile, setCvFile] = useState<File | null>(null)
+  usePageMeta(program ? `Candidature — ${program.name}` : "Candidature")
 
   if (!program || program.status === "closed") {
     return <Navigate to="/programmes" replace />

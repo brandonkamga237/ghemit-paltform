@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon, FileTextIcon } from "lucide-react"
@@ -57,6 +58,7 @@ const infos = [
 ]
 
 export function JuniorBuildersPage() {
+  usePageMeta("Junior Builders", "Le club des jeunes qui construisent leurs premières applications avec Gehmit.")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)

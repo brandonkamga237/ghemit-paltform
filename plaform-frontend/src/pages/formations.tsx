@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { Link } from "react-router"
 import { motion } from "motion/react"
@@ -14,6 +15,7 @@ const filters = ["Toutes", "Data", "Développement", "IA", "En ligne", "Douala"]
 export function FormationsPage() {
   const [filter, setFilter] = useState("Toutes")
   const formations = useFormations()
+  usePageMeta("Formations", "Le catalogue des formations Gehmit : courtes, intensives, en ligne ou en présentiel.")
 
   const rows = (formations ?? []).filter((f) => {
     if (filter === "Toutes") return true

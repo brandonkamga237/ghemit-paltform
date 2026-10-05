@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
@@ -30,6 +31,7 @@ const apartes = [
 ]
 
 export function CaravanesPage() {
+  usePageMeta("Caravanes numériques", "Les caravanes Gehmit vont à la rencontre des jeunes dans les établissements et les quartiers.")
   const [tab, setTab] = useState<"jeune" | "entreprise">("jeune")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)

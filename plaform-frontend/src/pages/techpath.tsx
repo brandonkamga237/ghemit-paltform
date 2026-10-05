@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { Link } from "react-router"
 import { motion } from "motion/react"
 import { ArrowRightIcon } from "lucide-react"
@@ -25,6 +26,7 @@ const steps = [
 ]
 
 export function TechPathPage() {
+  usePageMeta("Nos solutions", "TechPath : les solutions numériques développées par Gehmit pour les organisations.")
   return (
     <div className="flex flex-col">
       {/* Héros navy — bannière compacte (page secondaire) */}

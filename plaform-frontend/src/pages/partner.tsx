@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useRef, useState } from "react"
 import { Link } from "react-router"
 import { motion } from "motion/react"
@@ -68,6 +69,7 @@ const gains = [
 const types = ["Stage", "Mécénat", "Matériel", "Événement"]
 
 export function PartnerPage() {
+  usePageMeta("Devenir partenaire", "Entreprises et institutions : engagez-vous aux côtés de Gehmit.")
   const formRef = useRef<HTMLDivElement>(null)
   const [picked, setPicked] = useState<string[]>([])
   const [sent, setSent] = useState(false)

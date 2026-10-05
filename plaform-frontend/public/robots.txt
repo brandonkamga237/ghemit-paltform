@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /candidature/
+
+Sitemap: https://gehmit.org/sitemap.xml

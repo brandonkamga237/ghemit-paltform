@@ -7,8 +7,10 @@ import { Breadcrumb } from "@/components/site/page-header"
 import { ArticleCard } from "@/components/site/cards"
 import { Reveal } from "@/components/site/reveal"
 import { motion } from "motion/react"
+import { usePageMeta } from "@/lib/seo"
 
 export function BlogPage() {
+  usePageMeta("Blog", "Actualités, retours d'expérience et conseils de l'équipe Gehmit.")
   const articles = useArticleSummaries()
   const [cat, setCat] = useState("Tous")
   const [query, setQuery] = useState("")

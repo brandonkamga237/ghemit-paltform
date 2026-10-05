@@ -1,4 +1,5 @@
 import { usePrograms } from "@/data/remote"
+import { usePageMeta } from "@/lib/seo"
 import { PageHeader } from "@/components/site/page-header"
 import { ProgramRow } from "@/components/site/cards"
 import { Container } from "@/components/site/bands"
@@ -6,6 +7,7 @@ import { Reveal } from "@/components/site/reveal"
 
 export function ProgrammesPage() {
   const programs = usePrograms()
+  usePageMeta("Programmes", "Cinq programmes Gehmit pour avancer dans le numérique : conditions, durée, calendrier.")
   return (
     <div className="flex flex-col">
       <Container>

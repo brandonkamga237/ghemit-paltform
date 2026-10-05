@@ -4,6 +4,7 @@ import { cn } from "cn"
 import type { EventItem } from "@/data/content"
 import { useEvents } from "@/data/remote"
 import { mediaUrl } from "@/lib/api"
+import { usePageMeta } from "@/lib/seo"
 import { imageSrcSet } from "@/components/site/photo"
 import { PageHeader } from "@/components/site/page-header"
 import { Container } from "@/components/site/bands"
@@ -109,6 +110,7 @@ function EventCard({ event }: { event: EventItem }) {
 
 export function EvenementsPage() {
   const events = useEvents()
+  usePageMeta("Événements", "Forums, ateliers et rencontres organisés par Gehmit et ses partenaires.")
   const upcoming = (events ?? []).filter((e) => e.upcoming !== false)
   const past = (events ?? []).filter((e) => e.upcoming === false)
 

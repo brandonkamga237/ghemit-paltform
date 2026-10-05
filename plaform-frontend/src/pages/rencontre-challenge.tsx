@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
@@ -39,6 +40,7 @@ const formats = [
 ]
 
 export function RencontreChallengePage() {
+  usePageMeta("Rencontre Challenge", "Le grand rendez-vous Gehmit : démonstrations, rencontres et défis numériques.")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)

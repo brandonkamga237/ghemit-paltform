@@ -2,11 +2,13 @@ import { Link, useSearchParams } from "react-router"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
 import { Container } from "@/components/site/bands"
 import { Button } from "@/components/ui/button"
+import { usePageMeta } from "@/lib/seo"
 
 /** Destination du lien de désinscription présent dans chaque e-mail. */
 export function DesinscriptionPage() {
   const [params] = useSearchParams()
   const ok = params.get("ok") === "1"
+  usePageMeta("Désinscription")
 
   return (
     <div className="flex flex-col">

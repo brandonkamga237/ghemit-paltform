@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { Link } from "react-router"
 import { motion } from "motion/react"
@@ -24,6 +25,7 @@ const methods = [
 const fmt = (n: number) => n.toLocaleString("fr-FR").replace(/\u202f/g, " ")
 
 export function DonatePage() {
+  usePageMeta("Faire un don", "Soutenez la prochaine promotion Gehmit.")
   const [amount, setAmount] = useState<number | "other">(10_000)
   const [custom, setCustom] = useState("")
   const [monthly, setMonthly] = useState(false)

@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
 import { motion } from "motion/react"
 import { CheckCircle2Icon, CircleAlertIcon } from "lucide-react"
@@ -54,6 +55,7 @@ const steps = [
 ]
 
 export function HireDeveloperPage() {
+  usePageMeta("Louer un développeur", "Recrutez un développeur junior formé et encadré par Gehmit.")
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [submitError, setSubmitError] = useState(false)

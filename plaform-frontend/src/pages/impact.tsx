@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/lib/seo"
 import { achievements, stats } from "@/data/content"
 import { PageHeader } from "@/components/site/page-header"
 import { Container, CtaBand, StatBand } from "@/components/site/bands"
@@ -5,6 +6,7 @@ import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 
 export function ImpactPage() {
+  usePageMeta("Notre impact", "Ce que Gehmit a accompli : promotions formées, événements et résultats.")
   return (
     <div className="flex flex-col">
       <Container>

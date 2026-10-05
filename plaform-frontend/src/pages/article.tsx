@@ -5,6 +5,7 @@ import { InfoIcon, CheckCircle2Icon, AlertTriangleIcon } from "lucide-react"
 import type { Article, Block } from "@/data/content"
 import { articleDate } from "@/data/remote"
 import { fetchArticle, mediaUrl } from "@/lib/api"
+import { usePageMeta } from "@/lib/seo"
 import { cn } from "cn"
 import { Container } from "@/components/site/bands"
 import { imageSrcSet, Photo } from "@/components/site/photo"
@@ -208,18 +209,7 @@ function BlockView({ block }: { block: Block }) {
 
 /** Titre d'onglet et meta description propres à l'article. */
 function useArticleMeta(article: Article | null) {
-  useEffect(() => {
-    if (!article) return
-    const prevTitle = document.title
-    const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]')
-    const prevDesc = meta?.content
-    document.title = `${article.title} — Gehmit`
-    if (meta && article.excerpt) meta.content = article.excerpt
-    return () => {
-      document.title = prevTitle
-      if (meta && prevDesc !== undefined) meta.content = prevDesc
-    }
-  }, [article])
+  usePageMeta(article?.title, article?.excerpt)
 }
 
 export function ArticlePage() {

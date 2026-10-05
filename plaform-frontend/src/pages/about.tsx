@@ -4,6 +4,7 @@ import { Photo } from "@/components/site/photo"
 import { Reveal } from "@/components/site/reveal"
 import { Container, CtaBand } from "@/components/site/bands"
 import { Breadcrumb } from "@/components/site/page-header"
+import { usePageMeta } from "@/lib/seo"
 import { Button } from "@/components/ui/button"
 
 const missions = [
@@ -22,6 +23,7 @@ const missions = [
 ]
 
 export function AboutPage() {
+  usePageMeta("À propos", "Qui est Gehmit : mission, équipe et programmes au service des carrières numériques.")
   return (
     <div className="flex flex-col">
       {/* En-tête éditorial */}
