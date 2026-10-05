@@ -6,8 +6,10 @@ import com.ghemit.platform.content.domain.Article;
 import com.ghemit.platform.content.domain.ContentItem;
 import com.ghemit.platform.content.domain.ContentItemRepository;
 import com.ghemit.platform.content.domain.ContentType;
+import com.ghemit.platform.content.domain.Event;
 import com.ghemit.platform.content.domain.Payload;
 import com.ghemit.platform.shared.domain.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class PublicContentService implements PublicContentQuery {
 						.sorted(Article.NEWEST_FIRST)
 						.map(item -> Article.summary(item.payload()))
 						.toList(),
+				events(),
 				payloads(ContentType.PARTNER));
 	}
 
@@ -53,6 +56,15 @@ public class PublicContentService implements PublicContentQuery {
 		status.put("status", payload.getOrDefault("status", ""));
 		status.put("statusLabel", payload.getOrDefault("statusLabel", ""));
 		return status;
+	}
+
+	/** Événements triés pour l'agenda : à venir d'abord, puis passés récents. */
+	private List<Map<String, Object>> events() {
+		LocalDate today = LocalDate.now();
+		return repository.findByType(ContentType.EVENT).stream()
+				.sorted(Event.calendar(today))
+				.map(item -> Event.view(item.payload(), today))
+				.toList();
 	}
 
 	private List<Map<String, Object>> payloads(ContentType type) {

@@ -13,6 +13,7 @@ const navItems = [
   { label: "Programmes", to: "/programmes", dropdown: true },
   { label: "Solutions", to: "/solutions" },
   { label: "Notre impact", to: "/notre-impact" },
+  { label: "Événements", to: "/evenements" },
   { label: "Blog", to: "/blog" },
   { label: "Contact", to: "/contact" },
 ]

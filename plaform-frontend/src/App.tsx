@@ -44,6 +44,9 @@ const RencontreChallengePage = lazy(() =>
 const ImpactPage = lazy(() =>
   import("@/pages/impact").then((m) => ({ default: m.ImpactPage }))
 )
+const EvenementsPage = lazy(() =>
+  import("@/pages/evenements").then((m) => ({ default: m.EvenementsPage }))
+)
 const BlogPage = lazy(() =>
   import("@/pages/blog").then((m) => ({ default: m.BlogPage }))
 )
@@ -80,6 +83,7 @@ export default function App() {
               element={<RencontreChallengePage />}
             />
             <Route path="notre-impact" element={<ImpactPage />} />
+            <Route path="evenements" element={<EvenementsPage />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="blog/:slug" element={<ArticlePage />} />
             <Route path="contact" element={<ContactPage />} />

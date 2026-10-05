@@ -9,9 +9,11 @@ public record PublicContentResponse(
 		List<Map<String, Object>> programs,
 		List<Map<String, Object>> formations,
 		List<Map<String, Object>> articles,
+		List<Map<String, Object>> events,
 		List<Map<String, Object>> partners) {
 
 	public static PublicContentResponse from(PublicContentView view) {
-		return new PublicContentResponse(view.programs(), view.formations(), view.articles(), view.partners());
+		return new PublicContentResponse(
+				view.programs(), view.formations(), view.articles(), view.events(), view.partners());
 	}
 }

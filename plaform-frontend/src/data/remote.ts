@@ -2,6 +2,7 @@ import { useMemo, useSyncExternalStore } from "react"
 import {
   programs as staticPrograms,
   type ArticleSummary,
+  type EventItem,
   type Formation,
   type Partner,
   type Program,
@@ -19,6 +20,7 @@ export interface RemoteContent {
   programs?: ProgramStatusUpdate[]
   formations?: Formation[]
   articles?: ArticleSummary[]
+  events?: EventItem[]
   partners?: Partner[]
 }
 
@@ -101,6 +103,10 @@ export function usePrograms(): Program[] {
 
 export function useArticleSummaries(): ArticleSummary[] | null {
   return useRemoteContent()?.articles ?? null
+}
+
+export function useEvents(): EventItem[] | null {
+  return useRemoteContent()?.events ?? null
 }
 
 export function useFormations(): Formation[] | null {

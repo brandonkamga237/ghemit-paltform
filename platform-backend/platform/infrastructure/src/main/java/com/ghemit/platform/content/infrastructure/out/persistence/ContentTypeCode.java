@@ -13,6 +13,7 @@ public enum ContentTypeCode {
 	FORMATION,
 	CALENDAR_ROW,
 	ARTICLE,
+	EVENT,
 	FAQ,
 	PARTNER,
 	STAT,

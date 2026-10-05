@@ -7,6 +7,7 @@ public enum ContentType {
 	PROGRAM("programs"),
 	FORMATION("formations"),
 	ARTICLE("articles"),
+	EVENT("events"),
 	PARTNER("partners"),
 	// Stockage interne (ex. dossiers de la médiathèque), pas un écran d'administration.
 	SETTING("settings");

@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router"
 import {
+  BookOpenIcon,
   CalendarDaysIcon,
   FolderOpenIcon,
   GraduationCapIcon,
@@ -34,7 +35,8 @@ import logoUrl from "@/assets/logo-gehmit.webp"
 
 const contentLinks = [
   { to: "/articles", label: "Articles", icon: NewspaperIcon },
-  { to: "/formations", label: "Formations", icon: CalendarDaysIcon },
+  { to: "/evenements", label: "Événements", icon: CalendarDaysIcon },
+  { to: "/formations", label: "Formations", icon: BookOpenIcon },
   { to: "/programmes", label: "Programmes", icon: GraduationCapIcon },
   { to: "/partenaires", label: "Partenaires", icon: HandshakeIcon },
   { to: "/medias", label: "Médiathèque", icon: FolderOpenIcon },

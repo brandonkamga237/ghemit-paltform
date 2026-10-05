@@ -242,5 +242,29 @@
         "name": "Partenaire 6"
       }
     }
+  ],
+  "events": [
+    {
+      "slug": "forum-emploi-numerique-2026",
+      "payload": {
+        "title": "Forum de l'emploi numérique",
+        "date": "2026-11-14",
+        "time": "9h – 16h",
+        "location": "Douala, siège Gehmit",
+        "description": "Rencontre entre les jeunes des programmes et les entreprises partenaires : stands, entretiens éclairs et tables rondes.",
+        "status": "scheduled"
+      }
+    },
+    {
+      "slug": "seminaire-recherche-innovation",
+      "payload": {
+        "title": "Séminaire « De la recherche à l'innovation »",
+        "date": "2025-09-20",
+        "time": "14h – 18h",
+        "location": "Douala",
+        "description": "Cinq intervenants sur l'IA comme levier de développement.",
+        "status": "scheduled"
+      }
+    }
   ]
 }

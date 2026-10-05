@@ -5,6 +5,7 @@ import { AdminLayout } from "@/layouts/admin-layout"
 import { DashboardPage } from "@/pages/dashboard"
 import {
   ArticlesPage,
+  EventsPage,
   FormationsPage,
   PartnersPage,
   ProgramsPage,
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="programmes" element={<ProgramsPage />} />
           <Route path="formations" element={<FormationsPage />} />
           <Route path="articles" element={<ArticlesPage />} />
+          <Route path="evenements" element={<EventsPage />} />
           <Route path="partenaires" element={<PartnersPage />} />
           <Route path="medias" element={<MediaPage />} />
           <Route path="newsletter" element={<NewsletterPage />} />

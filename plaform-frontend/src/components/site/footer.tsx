@@ -97,6 +97,7 @@ export function Footer() {
             links={[
               { label: "À propos", to: "/a-propos" },
               { label: "Notre impact", to: "/notre-impact" },
+              { label: "Événements", to: "/evenements" },
               { label: "Blog", to: "/blog" },
               { label: "Contact", to: "/contact" },
               { label: "Devenir partenaire", to: "/partenaire" },

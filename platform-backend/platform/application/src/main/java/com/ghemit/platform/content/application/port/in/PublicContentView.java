@@ -11,5 +11,6 @@ public record PublicContentView(
 		List<Map<String, Object>> programs,
 		List<Map<String, Object>> formations,
 		List<Map<String, Object>> articles,
+		List<Map<String, Object>> events,
 		List<Map<String, Object>> partners) {
 }

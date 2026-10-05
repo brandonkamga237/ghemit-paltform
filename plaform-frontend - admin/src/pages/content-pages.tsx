@@ -128,6 +128,60 @@ const articlesConfig: CrudConfig = {
   ],
 }
 
+const eventsConfig: CrudConfig = {
+  type: "events",
+  title: "Événements",
+  description:
+    "Agenda affiché sur /evenements. Passée, la date bascule l'événement dans « Passés » automatiquement.",
+  hasSlug: true,
+  columns: [
+    { key: "title", label: "Événement" },
+    { key: "date", label: "Date" },
+    { key: "location", label: "Lieu" },
+    {
+      key: "status",
+      label: "Statut",
+      render: (i: ContentItem) =>
+        i.payload.status === "cancelled" ? (
+          <Badge variant="outline">Annulé</Badge>
+        ) : (
+          <Badge>Prévu</Badge>
+        ),
+    },
+  ],
+  fields: [
+    { name: "title", label: "Titre" },
+    {
+      name: "date",
+      label: "Date",
+      placeholder: "AAAA-MM-JJ",
+      hint: "Format ISO, ex. 2026-11-14.",
+    },
+    { name: "time", label: "Horaire", placeholder: "Ex. 9h – 16h" },
+    { name: "location", label: "Lieu", placeholder: "Ex. Douala, siège Gehmit" },
+    { name: "description", label: "Description", kind: "textarea" },
+    {
+      name: "status",
+      label: "Statut",
+      kind: "select",
+      options: ["scheduled", "cancelled"],
+      hint: "« cancelled » = annulé, affiché avec un badge.",
+    },
+    {
+      name: "registerUrl",
+      label: "Lien d'inscription",
+      placeholder: "/contact ou https://…",
+      hint: "Bouton « S'inscrire » sur la carte. Vide = pas de bouton.",
+    },
+    {
+      name: "imageUrl",
+      label: "Visuel",
+      kind: "image",
+      hint: "Affiché sur la carte de l'événement. Vide = pas d'image.",
+    },
+  ],
+}
+
 const partnersConfig: CrudConfig = {
   type: "partners",
   title: "Partenaires",
@@ -166,6 +220,9 @@ export function FormationsPage() {
 }
 export function ArticlesPage() {
   return <CrudPage config={articlesConfig} />
+}
+export function EventsPage() {
+  return <CrudPage config={eventsConfig} />
 }
 export function PartnersPage() {
   return <CrudPage config={partnersConfig} />

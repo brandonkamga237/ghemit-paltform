@@ -37,6 +37,7 @@ class PublicContentControllerTest {
 				List.of(Map.of("slug", "paei", "status", "open")),
 				List.of(Map.of("name", "Développement web")),
 				List.of(Map.of("slug", "seminaire-orientation")),
+				List.of(Map.of("title", "Forum de l'emploi", "upcoming", true)),
 				List.of(Map.of("name", "Partenaire"))));
 
 		mockMvc.perform(get("/api/public/content"))
@@ -44,6 +45,7 @@ class PublicContentControllerTest {
 				.andExpect(jsonPath("$.programs[0].slug").value("paei"))
 				.andExpect(jsonPath("$.formations[0].name").value("Développement web"))
 				.andExpect(jsonPath("$.articles[0].slug").value("seminaire-orientation"))
+				.andExpect(jsonPath("$.events[0].title").value("Forum de l'emploi"))
 				.andExpect(jsonPath("$.partners[0].name").value("Partenaire"));
 	}
 

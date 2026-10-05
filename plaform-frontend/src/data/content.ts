@@ -338,6 +338,21 @@ export interface Article extends ArticleSummary {
   cta?: { title: string; text: string; label: string; to: string }
 }
 
+/** Événement administré (agenda). `upcoming`/`cancelled` sont calculés par l'API. */
+export interface EventItem {
+  title: string
+  /** Date ISO (AAAA-MM-JJ). */
+  date: string
+  time?: string
+  location?: string
+  description?: string
+  status?: "scheduled" | "cancelled"
+  registerUrl?: string
+  imageUrl?: string
+  upcoming?: boolean
+  cancelled?: boolean
+}
+
 export interface FaqItem {
   q: string
   a: string
