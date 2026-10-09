@@ -1,12 +1,13 @@
 import { Link } from "react-router"
 import { ArrowRightIcon } from "lucide-react"
 import { achievements, donationEquivalences, stats, testimonials } from "@/data/content"
-import { forCompanies } from "@/data/parcours"
-import { articleDate, useArticleSummaries, useEvents } from "@/data/remote"
+import { forCompanies, parcours, programStatus } from "@/data/parcours"
+import { articleDate, useArticleSummaries, useEvents, usePrograms } from "@/data/remote"
 import { mediaUrl, imageSrcSet } from "@/lib/api"
-import { Figure, Photo } from "@/components/site/photo"
+import { Photo } from "@/components/site/photo"
 import { PartnerLogos } from "@/components/site/partner-logos"
-import { Parcours } from "@/components/site/parcours"
+import { StatusDot } from "@/components/site/status-pill"
+import { Ledger } from "@/components/site/page-header"
 import { ArrowLink, CtaLink } from "@/components/site/cta"
 import { Container } from "@/components/site/bands"
 
@@ -19,94 +20,96 @@ const MONTHS = [
 export function HomePage() {
   const articles = useArticleSummaries()
   const events = useEvents()
+  const programs = usePrograms()
   const upcoming = (events ?? []).filter((e) => e.upcoming !== false).slice(0, 3)
   const [lead, ...others] = articles ?? []
   const testimonial = testimonials[0]
 
   return (
     <div className="flex flex-col">
-      {/* 1. Qui, pour qui, et la preuve en image */}
-      <section className="overflow-x-clip bg-cream">
-        <Container className="grid gap-block pt-block pb-block lg:grid-cols-12">
-          <div
-            className="flex flex-col gap-group lg:col-span-7 lg:pt-6">
-            <p className="text-small font-semibold text-ink-muted">
-              Association à but non lucratif · Douala, Cameroun
-            </p>
-            <h1 className="font-heading text-display font-semibold text-navy">
-              Former, inspirer, <span className="accent-word">connecter</span> les talents du numérique.
-            </h1>
-            <p className="max-w-[560px] text-lead text-ink-muted">
-              Gehmit oriente, forme et accompagne les jeunes jusqu'à leur premier emploi dans
-              le numérique, et les met en relation avec les entreprises qui recrutent. La plupart
-              de nos programmes sont gratuits.
-            </p>
-            <div className="flex flex-wrap items-center gap-x-group gap-y-item pt-1">
-              <CtaLink to="/programmes" arrow>
-                Trouver mon programme
-              </CtaLink>
-              <ArrowLink to="/louer-developpeur">Je recrute un talent</ArrowLink>
-            </div>
-          </div>
+      {/* 1. Héros plein cadre : qui nous sommes, la preuve en image, et le parcours à portée de main */}
+      <section className="relative isolate overflow-hidden bg-navy-deep text-surface">
+        <div aria-hidden className="absolute inset-0 -z-10">
+          <Photo
+            photo="seminaire-public"
+            alt=""
+            priority
+            sizes="100vw"
+            className="hero-settle [object-position:50%_38%]"
+          />
+          {/* Voile : lisibilité du texte à gauche, photo visible à droite */}
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(20_30_51/0.92)_0%,rgb(20_30_51/0.78)_42%,rgb(20_30_51/0.35)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[linear-gradient(0deg,rgb(20_30_51/0.95)_0%,rgb(20_30_51/0)_100%)]" />
+        </div>
 
-          <div
-            className="lg:col-span-5 lg:bleed-r">
-            <Figure
-              photo="seminaire-public"
-              alt="Le public du séminaire Gehmit « De la recherche à l'innovation »"
-              priority
-              sizes="(min-width: 1024px) 45vw, 100vw"
-              frameClassName="aspect-[4/3] lg:aspect-auto lg:h-[540px]"
-              position="50% 40%"
-              caption="Séminaire « De la recherche à l'innovation », Douala, septembre 2025 — 120 participants."
-            />
-          </div>
-        </Container>
-
-        {/* Registre des chiffres : sobre, en pied de héros */}
-        <Container>
-          <dl className="grid grid-cols-2 border-t border-sand-dark lg:grid-cols-4">
-            {stats.map((s, i) => (
-              <div
-                key={s.label}
-                className={
-                  "flex flex-col gap-1 py-6 pr-4" +
-                  (i % 2 === 1 ? "pl-5 border-l border-sand-dark " : "") +
-                  (i === 2 ? "lg:pl-5 lg:border-l lg:border-sand-dark " : "") +
-                  (i >= 2 ? "max-lg:border-t max-lg:border-sand-dark" : "")
-                }
-              >
-                <dt className="order-2 text-small text-ink-muted">{s.label}</dt>
-                <dd className="tnum order-1 font-heading text-h1 leading-none font-semibold text-navy">
-                  {s.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </Container>
-      </section>
-
-      {/* 2. Le parcours : l'offre racontée comme un chemin */}
-      <section className="bg-surface">
-        <Container className="flex flex-col gap-block py-section">
-          <div className="grid gap-group lg:grid-cols-12 lg:items-end">
-            <h2 className="font-heading text-h2 font-semibold text-navy lg:col-span-7">
-              Un parcours, <span className="accent-word">pas un catalogue</span>.
-            </h2>
-            <p className="max-w-[440px] text-body text-ink-muted lg:col-span-5 lg:justify-self-end">
-              Où que vous en soyez, il y a une étape pour vous. Commencez par celle qui vous
-              ressemble ; nous vous accompagnons vers la suivante.
-            </p>
-          </div>
-          <Parcours />
-          <p className="text-small text-ink-muted">
-            Pas encore décidé ?{" "}
-            <Link to="/solutions" className="font-semibold text-gehmit underline-offset-4 hover:underline">
-              TechPath vous oriente en quelques questions
+        <Container className="flex min-h-[min(78svh,700px)] flex-col justify-end gap-group pt-section pb-block">
+          <p className="text-small font-semibold text-surface/75">
+            Association à but non lucratif · Douala, Cameroun
+          </p>
+          <h1 className="max-w-[16ch] font-heading text-display font-semibold">
+            Former, inspirer, <span className="font-normal text-gold italic">connecter</span> les talents du numérique.
+          </h1>
+          <p className="max-w-[560px] text-lead text-surface/85">
+            Gehmit oriente, forme et accompagne les jeunes jusqu'à leur premier emploi dans le
+            numérique, et les met en relation avec les entreprises qui recrutent. La plupart de nos
+            programmes sont gratuits.
+          </p>
+          <div className="flex flex-wrap items-center gap-x-group gap-y-item pt-1">
+            <CtaLink to="/programmes" arrow>
+              Trouver mon programme
+            </CtaLink>
+            <Link
+              to="/louer-developpeur"
+              className="group inline-flex items-center gap-2 text-small font-semibold text-surface underline-offset-4 hover:underline"
+            >
+              Je recrute un talent
+              <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-            .
+          </div>
+          <p className="pt-group text-caption text-surface/55 lg:self-end">
+            Séminaire « De la recherche à l'innovation », Douala, septembre 2025 · 120 participants
           </p>
         </Container>
+
+        {/* Barre du parcours : quatre étapes, leurs offres et leur statut */}
+        <nav aria-label="Le parcours Gehmit" className="border-t border-white/15 bg-navy-deep/70 backdrop-blur-sm">
+          <Container>
+            <ol className="grid sm:grid-cols-2 lg:grid-cols-4">
+              {parcours.map((stage, i) => (
+                <li
+                  key={stage.id}
+                  className="flex flex-col gap-2 border-white/15 py-5 max-sm:[&:not(:first-child)]:border-t sm:max-lg:[&:nth-child(n+3)]:border-t sm:max-lg:[&:nth-child(even)]:border-l sm:max-lg:[&:nth-child(even)]:pl-5 lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-5 lg:pr-4"
+                >
+                  <Link to={`/programmes#${stage.id}`} className="flex items-baseline gap-2.5 hover:text-gold">
+                    <span className="tnum text-caption font-semibold text-gold">{i + 1}</span>
+                    <span className="font-heading text-h3 italic">{stage.verb}</span>
+                  </Link>
+                  <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                    {stage.offers.map((o) => {
+                      const st = programStatus(programs, o.programSlug)
+                      return (
+                        <li key={o.name}>
+                          <Link
+                            to={o.to}
+                            className="inline-flex items-center gap-1.5 text-small text-surface/75 underline-offset-4 transition-colors hover:text-surface hover:underline"
+                          >
+                            {o.name}
+                            {st?.status === "open" && <StatusDot status="open" />}
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          </Container>
+        </nav>
+      </section>
+
+      {/* Chiffres clés */}
+      <section className="bg-cream">
+        <Ledger items={stats} />
       </section>
 
       {/* 3. Sur le terrain : des dates, des lieux, des chiffres */}

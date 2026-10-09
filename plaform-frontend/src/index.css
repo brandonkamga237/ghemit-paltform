@@ -227,6 +227,15 @@
     }
 }
 
+/* Héros : la photo se pose doucement au chargement (désactivé si l'on préfère moins d'animation). */
+@keyframes hero-settle {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-settle { animation: hero-settle 1.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+}
+
 @layer utilities {
   /* Filet de rubrique : trait court + intitulé, remplace l'étiquette mono. */
   .rubric {

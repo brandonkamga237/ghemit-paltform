@@ -79,7 +79,7 @@ export function ProgrammeDetailPage() {
               <div
                 key={f.label}
                 className={
-                  "flex flex-col gap-1.5 py-6 pr-4" +
+                  "flex flex-col gap-1.5 py-6 pr-4 " +
                   (i % 2 === 1 ? "border-l border-sand-dark pl-5 " : "") +
                   (i === 2 ? "lg:border-l lg:border-sand-dark lg:pl-5 " : "") +
                   (i >= 2 ? "max-lg:border-t max-lg:border-sand-dark" : "")
