@@ -18,11 +18,11 @@ export function ScrollToTop() {
 export function SlimHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-sand bg-cream">
-      <div className="mx-auto flex h-[72px] max-w-[1240px] items-center justify-between px-5 sm:px-10">
+      <div className="mx-auto flex h-[72px] max-w-page items-center justify-between px-gutter">
         <Link to="/" aria-label="Gehmit — accueil">
           <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-10 w-auto" />
         </Link>
-        <div className="flex items-center gap-4 text-[15px] text-ink-muted">
+        <div className="flex items-center gap-4 text-small text-ink-muted">
           <span className="hidden sm:inline">Besoin d'aide ?</span>
           <Link to="/contact" className="font-semibold text-gehmit hover:underline">
             Nous écrire

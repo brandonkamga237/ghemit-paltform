@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router"
 import { ArrowRightIcon, MailIcon, MessageCircleIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { contact, donationEquivalences, whatsappUrl } from "@/data/content"
 import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
@@ -39,18 +39,18 @@ export function DonatePage() {
   return (
     <div className="flex flex-col">
       <section className="bg-cream">
-        <Container className="grid items-start gap-12 pt-8 pb-16 lg:grid-cols-12 lg:gap-10 lg:pt-12 lg:pb-24">
+        <Container className="grid items-start gap-block pt-block pb-section lg:grid-cols-12">
           {/* Ce que finance un don */}
-          <div className="flex flex-col gap-8 lg:col-span-6">
+          <div className="flex flex-col gap-group lg:col-span-6">
             <Breadcrumb trail={[{ label: "Accueil", to: "/" }, { label: "Faire un don" }]} />
-            <h1 className="font-heading text-[40px] leading-[1.04] font-semibold tracking-[-0.025em] text-navy sm:text-[56px]">
+            <h1 className="font-heading text-display font-semibold text-navy">
               Un don finance <span className="accent-word">un accompagnement</span>.
             </h1>
             <dl className="flex flex-col border-t border-sand-dark">
               {donationEquivalences.map((e) => (
                 <div key={e.amount} className="flex items-baseline justify-between gap-4 border-b border-sand py-4">
-                  <dt className="text-[17px] text-navy/80">{e.text}</dt>
-                  <dd className="tnum font-heading text-[26px] font-semibold text-navy">{e.amount}</dd>
+                  <dt className="text-body text-navy/80">{e.text}</dt>
+                  <dd className="tnum font-heading text-h3 font-semibold text-navy">{e.amount}</dd>
                 </div>
               ))}
             </dl>
@@ -63,8 +63,8 @@ export function DonatePage() {
           </div>
 
           {/* Intention de don */}
-          <div className="flex flex-col gap-6 bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9 lg:sticky lg:top-24 lg:col-span-5 lg:col-start-8">
-            <p className="bg-gold-tint px-4 py-3 text-[15px] leading-relaxed text-navy/80">
+          <div className="flex flex-col gap-group bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9 lg:sticky lg:top-24 lg:col-span-5 lg:col-start-8">
+            <p className="bg-gold-tint px-4 py-3 text-small text-navy/80">
               Le paiement en ligne arrive bientôt. En attendant, choisissez votre don : l'équipe vous
               envoie les coordonnées de paiement et votre reçu.
             </p>
@@ -78,7 +78,7 @@ export function DonatePage() {
                     aria-pressed={amount === a}
                     onClick={() => setAmount(a)}
                     className={cn(
-                      "tnum h-[52px] rounded-sm border text-[16px] font-semibold transition-colors",
+                      "tnum h-[52px] rounded-sm border text-body font-semibold transition-colors",
                       amount === a ? "border-navy bg-navy text-surface" : "border-sand-dark bg-white text-navy hover:border-navy"
                     )}
                   >
@@ -90,7 +90,7 @@ export function DonatePage() {
                   aria-pressed={amount === "other"}
                   onClick={() => setAmount("other")}
                   className={cn(
-                    "h-[52px] rounded-sm border text-[16px] font-semibold transition-colors",
+                    "h-[52px] rounded-sm border text-body font-semibold transition-colors",
                     amount === "other" ? "border-navy bg-navy text-surface" : "border-sand-dark bg-white text-navy hover:border-navy"
                   )}
                 >
@@ -119,8 +119,8 @@ export function DonatePage() {
 
             <div className="flex flex-col gap-4 border-t border-sand pt-5">
               <div className="flex items-baseline justify-between">
-                <span className="text-[16px] text-ink-muted">Votre don{frequency === "Chaque mois" ? " / mois" : ""}</span>
-                <span className="tnum font-heading text-[34px] font-semibold text-navy">{fmt(total)} FCFA</span>
+                <span className="text-body text-ink-muted">Votre don{frequency === "Chaque mois" ? " / mois" : ""}</span>
+                <span className="tnum font-heading text-h2 font-semibold text-navy">{fmt(total)} FCFA</span>
               </div>
               <a
                 href={total > 0 ? waLink : undefined}
@@ -128,7 +128,7 @@ export function DonatePage() {
                 rel="noopener noreferrer"
                 aria-disabled={total <= 0}
                 className={cn(
-                  "flex h-[52px] items-center justify-center gap-2.5 rounded-sm bg-gold text-[16px] font-semibold text-navy transition-colors hover:bg-gold-hover",
+                  "flex h-[52px] items-center justify-center gap-2.5 rounded-sm bg-gold text-body font-semibold text-navy transition-colors hover:bg-gold-hover",
                   total <= 0 && "pointer-events-none opacity-50"
                 )}
               >
@@ -139,7 +139,7 @@ export function DonatePage() {
                 href={total > 0 ? mailLink : undefined}
                 aria-disabled={total <= 0}
                 className={cn(
-                  "flex h-12 items-center justify-center gap-2.5 rounded-sm border border-navy/25 text-[15.5px] font-semibold text-navy transition-colors hover:border-navy",
+                  "flex h-12 items-center justify-center gap-2.5 rounded-sm border border-navy/25 text-small font-semibold text-navy transition-colors hover:border-navy",
                   total <= 0 && "pointer-events-none opacity-50"
                 )}
               >
@@ -153,16 +153,16 @@ export function DonatePage() {
 
       {/* Don en nature */}
       <section className="bg-navy text-surface">
-        <Container className="flex flex-wrap items-center justify-between gap-6 py-12">
+        <Container className="flex flex-wrap items-center justify-between gap-group py-block">
           <div className="flex flex-col gap-1.5">
-            <span className="font-heading text-[26px] leading-tight font-semibold">Don en nature ou partenariat</span>
-            <span className="text-[16.5px] text-surface/70">
+            <span className="font-heading text-h3 font-semibold">Don en nature ou partenariat</span>
+            <span className="text-body text-surface/70">
               Matériel informatique, mise à disposition de locaux, mécénat de compétences.
             </span>
           </div>
           <Link
             to="/partenaire"
-            className="group inline-flex items-center gap-2 text-[16px] font-semibold text-gold underline-offset-4 hover:underline"
+            className="group inline-flex items-center gap-2 text-body font-semibold text-gold underline-offset-4 hover:underline"
           >
             Devenir partenaire
             <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />

@@ -6,7 +6,7 @@ import type { Article, Block } from "@/data/content"
 import { articleDate } from "@/data/remote"
 import { fetchArticle, mediaUrl, imageSrcSet } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { Container } from "@/components/site/bands"
 import { Photo } from "@/components/site/photo"
 import { Breadcrumb } from "@/components/site/page-header"
@@ -69,7 +69,7 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
           <thead>
             <tr className="border-b border-sand-dark bg-cream">
               {head.map((c, i) => (
-                <th key={i} className="px-4 py-3 text-[14px] font-semibold text-navy">
+                <th key={i} className="px-4 py-3 text-small font-semibold text-navy">
                   {richText(c)}
                 </th>
               ))}
@@ -79,7 +79,7 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
             {body.map((row, i) => (
               <tr key={i} className="border-b border-sand last:border-0">
                 {row.map((c, j) => (
-                  <td key={j} className="px-4 py-3 text-[15.5px] leading-relaxed text-ink-muted">
+                  <td key={j} className="px-4 py-3 text-small text-ink-muted">
                     {richText(c)}
                   </td>
                 ))}
@@ -89,7 +89,7 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
         </table>
       </div>
       {caption ? (
-        <figcaption className="text-[14px] text-ink-muted">{caption}</figcaption>
+        <figcaption className="text-small text-ink-muted">{caption}</figcaption>
       ) : null}
     </figure>
   )
@@ -104,17 +104,17 @@ const CALLOUT_TONES = {
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "h2":
-      return <h2 className="pt-4 font-heading text-[30px] leading-tight font-semibold text-navy">{richText(block.text)}</h2>
+      return <h2 className="pt-4 font-heading text-h2 font-semibold text-navy">{richText(block.text)}</h2>
     case "h3":
-      return <h3 className="pt-2 font-heading text-[24px] leading-snug font-semibold text-navy">{richText(block.text)}</h3>
+      return <h3 className="pt-2 font-heading text-h3 font-semibold text-navy">{richText(block.text)}</h3>
     case "quote":
       return (
         <blockquote className="my-4 flex flex-col gap-3 border-y border-sand-dark py-8">
-          <p className="font-heading text-[26px] leading-[1.45] text-navy italic sm:text-[30px]">
+          <p className="font-heading text-h2 text-navy italic">
             {richText(block.text)}
           </p>
           {block.cite ? (
-            <cite className="block text-[15px] font-semibold not-italic text-ink-muted">{block.cite}</cite>
+            <cite className="block text-small font-semibold not-italic text-ink-muted">{block.cite}</cite>
           ) : null}
         </blockquote>
       )
@@ -132,7 +132,7 @@ function BlockView({ block }: { block: Block }) {
             className="w-full object-cover"
           />
           {block.text ? (
-            <figcaption className="text-[14px] text-ink-muted">{block.text}</figcaption>
+            <figcaption className="text-small text-ink-muted">{block.text}</figcaption>
           ) : null}
         </figure>
       )
@@ -160,7 +160,7 @@ function BlockView({ block }: { block: Block }) {
             />
           )}
           {block.text ? (
-            <figcaption className="text-[14px] text-ink-muted">{block.text}</figcaption>
+            <figcaption className="text-small text-ink-muted">{block.text}</figcaption>
           ) : null}
         </figure>
       )
@@ -173,7 +173,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <aside className={cn("flex gap-3.5 px-6 py-5", tone.className)}>
           <Icon className="mt-0.5 size-5 shrink-0 text-navy" />
-          <p className="text-[17px] leading-[1.7] text-navy">{richText(block.text)}</p>
+          <p className="text-body text-navy">{richText(block.text)}</p>
         </aside>
       )
     }
@@ -181,7 +181,7 @@ function BlockView({ block }: { block: Block }) {
       return <hr className="border-t border-sand" />
     case "ul":
       return (
-        <ul className="list-disc space-y-2 pl-6 text-[19px] leading-[1.75] text-navy/80 marker:text-gehmit">
+        <ul className="list-disc space-y-2 pl-6 text-lead text-navy/80 marker:text-gehmit">
           {block.text.split("\n").filter((l) => l.trim() !== "").map((line, idx) => (
             <li key={idx}>{richText(line)}</li>
           ))}
@@ -189,7 +189,7 @@ function BlockView({ block }: { block: Block }) {
       )
     case "ol":
       return (
-        <ol className="list-decimal space-y-2 pl-6 text-[19px] leading-[1.75] text-navy/80 marker:font-semibold marker:text-gehmit">
+        <ol className="list-decimal space-y-2 pl-6 text-lead text-navy/80 marker:font-semibold marker:text-gehmit">
           {block.text.split("\n").filter((l) => l.trim() !== "").map((line, idx) => (
             <li key={idx}>{richText(line)}</li>
           ))}
@@ -198,11 +198,11 @@ function BlockView({ block }: { block: Block }) {
     case "code":
       return (
         <pre className="overflow-x-auto bg-navy p-5">
-          <code className="font-mono text-[14px] text-surface">{block.text}</code>
+          <code className="font-mono text-small text-surface">{block.text}</code>
         </pre>
       )
     default:
-      return <p className="text-[19px] leading-[1.75] text-navy/80">{richText(block.text)}</p>
+      return <p className="text-lead text-navy/80">{richText(block.text)}</p>
   }
 }
 
@@ -236,14 +236,14 @@ export function ArticlePage() {
   if (!article) {
     return (
       <div className="flex flex-col bg-surface" aria-busy="true">
-        <Container className="flex flex-col items-center pt-16 pb-10">
+        <Container className="flex flex-col items-center pt-section pb-block">
           <div className="flex w-full max-w-[680px] flex-col gap-5">
             <div className="h-4 w-32 animate-pulse rounded bg-sand" />
             <div className="h-12 w-full animate-pulse rounded bg-sand" />
             <div className="h-6 w-3/4 animate-pulse rounded bg-sand" />
           </div>
         </Container>
-        <Container className="flex justify-center pb-12">
+        <Container className="flex justify-center pb-block">
           <div className="h-[240px] w-full max-w-[1040px] animate-pulse bg-sand sm:h-[460px]" />
         </Container>
       </div>
@@ -252,7 +252,7 @@ export function ArticlePage() {
 
   return (
     <div className="flex flex-col bg-surface">
-      <Container className="flex flex-col items-center pt-16 pb-10">
+      <Container className="flex flex-col items-center pt-section pb-block">
         <motion.div
           className="flex w-full max-w-[680px] flex-col gap-5"
           initial={{ opacity: 0, y: 16 }}
@@ -265,17 +265,17 @@ export function ArticlePage() {
               { label: article.category },
             ]}
           />
-          <p className="text-[15px] text-ink-muted">
+          <p className="text-small text-ink-muted">
             {articleDate(article)} · {article.readingMinutes} min de lecture
           </p>
-          <h1 className="font-heading text-[38px] leading-[1.1] font-semibold tracking-[-0.02em] text-navy sm:text-[52px]">
+          <h1 className="font-heading text-display font-semibold text-navy">
             {article.title}
           </h1>
-          <p className="text-[21px] leading-relaxed text-navy/75">{article.excerpt}</p>
+          <p className="text-lead text-navy/75">{article.excerpt}</p>
         </motion.div>
       </Container>
 
-      <Container className="flex justify-center pb-12">
+      <Container className="flex justify-center pb-block">
         {article.imageUrl ? (
           <img
             src={mediaUrl(article.imageUrl)}
@@ -295,8 +295,8 @@ export function ArticlePage() {
         ) : null}
       </Container>
 
-      <Container className="flex flex-col items-center pb-16">
-        <article className="flex w-full max-w-[680px] flex-col gap-6">
+      <Container className="flex flex-col items-center pb-section">
+        <article className="flex w-full max-w-[680px] flex-col gap-group">
           {article.body.map((block, i) => (
             <BlockView key={i} block={block} />
           ))}
@@ -305,10 +305,10 @@ export function ArticlePage() {
 
       {article.cta ? (
         <section className="bg-navy text-surface">
-          <Container className="flex flex-wrap items-center justify-between gap-8 py-14">
+          <Container className="flex flex-wrap items-center justify-between gap-group py-block">
             <div className="flex flex-col gap-2">
-              <span className="font-heading text-[28px] leading-tight font-semibold">{article.cta.title}</span>
-              <span className="text-[17px] text-surface/70">{article.cta.text}</span>
+              <span className="font-heading text-h2 font-semibold">{article.cta.title}</span>
+              <span className="text-body text-surface/70">{article.cta.text}</span>
             </div>
             <CtaLink to={article.cta.to} arrow>
               {article.cta.label}

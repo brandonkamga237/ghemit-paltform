@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 
 /** Colonne centrale du site : 1240 px maximum, gouttières 20 / 40 px. */
 export function Container({
@@ -10,7 +10,7 @@ export function Container({
   className?: string
 }) {
   return (
-    <div className={cn("mx-auto w-full max-w-[1240px] px-5 sm:px-10", className)}>
+    <div className={cn("mx-auto w-full max-w-page px-gutter", className)}>
       {children}
     </div>
   )

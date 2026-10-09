@@ -101,7 +101,7 @@ export function PartnerPage() {
     <div className="flex flex-col">
       <PageHero
         trail={[{ label: "À propos", to: "/a-propos" }, { label: "Devenir partenaire" }]}
-        kicker={<p className="text-[15px] text-ink-muted">Pour les entreprises et institutions</p>}
+        kicker={<p className="text-small text-ink-muted">Pour les entreprises et institutions</p>}
         title={<>Les jeunes que nous formons ont besoin de vous, <span className="accent-word">pas seulement de nous</span>.</>}
         lede="Un stage, une expertise, du matériel ou une salle : chaque contribution ouvre une place de plus. Aucune n'exige un budget."
         actions={
@@ -124,19 +124,19 @@ export function PartnerPage() {
 
       {/* Quatre façons de contribuer */}
       <section className="bg-surface">
-        <Container className="flex flex-col gap-10 py-16 lg:py-24">
-          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold tracking-[-0.02em] text-navy sm:text-[40px]">
+        <Container className="flex flex-col gap-block py-section">
+          <h2 className="font-heading text-h2 font-semibold text-navy">
             Quatre façons de contribuer
           </h2>
           <ol className="grid gap-px bg-sand-dark md:grid-cols-2">
             {ways.map((w, i) => (
               <li key={w.title} className="flex flex-col gap-3 bg-surface py-8 md:p-8 md:[&:nth-child(odd)]:pl-0">
                 <span className="flex items-baseline gap-3">
-                  <span className="tnum text-[14px] font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-heading text-[26px] leading-tight font-semibold text-navy">{w.title}</span>
+                  <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-heading text-h3 font-semibold text-navy">{w.title}</span>
                 </span>
-                <p className="max-w-[480px] text-[17px] leading-relaxed text-navy/75">{w.text}</p>
-                <p className={w.urgent ? "text-[15px] font-semibold text-gehmit" : "text-[15px] text-ink-muted"}>
+                <p className="max-w-[480px] text-body text-navy/75">{w.text}</p>
+                <p className={w.urgent ? "text-small font-semibold text-gehmit" : "text-small text-ink-muted"}>
                   {w.note}
                 </p>
               </li>
@@ -147,15 +147,15 @@ export function PartnerPage() {
 
       {/* Ce que vous recevez */}
       <section className="bg-navy text-surface">
-        <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-10 lg:py-24">
-          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold sm:text-[40px] lg:col-span-4">
+        <Container className="grid gap-block py-section lg:grid-cols-12">
+          <h2 className="font-heading text-h2 font-semibold lg:col-span-4">
             Ce que vous <span className="font-normal text-gold italic">recevez</span>
           </h2>
           <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-8">
             {gains.map((g) => (
               <div key={g.title} className="flex flex-col gap-2 border-t border-white/15 pt-5">
-                <dt className="text-[18px] font-semibold">{g.title}</dt>
-                <dd className="text-[16px] leading-relaxed text-surface/70">{g.text}</dd>
+                <dt className="text-body font-semibold">{g.title}</dt>
+                <dd className="text-body text-surface/70">{g.text}</dd>
               </div>
             ))}
           </dl>
@@ -170,13 +170,13 @@ export function PartnerPage() {
         text="Nous revenons vers vous sous 48 heures ouvrées, avec une proposition écrite."
         aside={
           <aside className="flex flex-col gap-4 bg-navy p-7 text-surface lg:sticky lg:top-24">
-            <span className="text-[14px] text-surface/60">Contact direct</span>
-            <span className="font-heading text-[24px] leading-tight font-semibold">Vous préférez en parler de vive voix ?</span>
-            <div className="flex flex-col gap-1 border-y border-white/10 py-4 text-[16px]">
+            <span className="text-small text-surface/60">Contact direct</span>
+            <span className="font-heading text-h3 font-semibold">Vous préférez en parler de vive voix ?</span>
+            <div className="flex flex-col gap-1 border-y border-white/10 py-4 text-body">
               <a href={`mailto:${contact.email}`} className="hover:text-gold">{contact.email}</a>
               <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-gold">{contact.phone}</a>
             </div>
-            <p className="text-[14.5px] text-surface/65">
+            <p className="text-small text-surface/65">
               Un soutien financier ?{" "}
               <Link to="/don" className="font-semibold text-gold underline-offset-4 hover:underline">
                 Faire un don

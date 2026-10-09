@@ -44,19 +44,19 @@ export function AboutPage() {
 
       {/* Pourquoi */}
       <section className="bg-surface">
-        <Container className="grid gap-8 py-20 lg:grid-cols-12 lg:gap-10 lg:py-28">
-          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold text-navy sm:text-[40px] lg:col-span-4">
+        <Container className="grid gap-block py-section lg:grid-cols-12">
+          <h2 className="font-heading text-h2 font-semibold text-navy lg:col-span-4">
             Pourquoi Gehmit existe
           </h2>
-          <div className="flex max-w-[680px] flex-col gap-6 lg:col-span-8">
-            <p className="font-heading text-[24px] leading-[1.5] text-navy sm:text-[28px]">
+          <div className="flex max-w-[680px] flex-col gap-group lg:col-span-8">
+            <p className="font-heading text-h2 text-navy">
               Le numérique crée des emplois plus vite qu'il ne crée de repères.
             </p>
-            <p className="text-[18px] leading-[1.75] text-navy/75">
+            <p className="text-body text-navy/75">
               En Afrique centrale, un étudiant qui s'y intéresse découvre rarement l'étendue réelle
               des métiers, et ceux qui ont un objectif précis avancent souvent seuls.
             </p>
-            <p className="text-[18px] leading-[1.75] text-navy/75">
+            <p className="text-body text-navy/75">
               Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de
               formation et un réseau d'entreprises. Le reste dépend d'elles.
             </p>
@@ -66,14 +66,14 @@ export function AboutPage() {
 
       {/* Former. Inspirer. Connecter. */}
       <section className="bg-navy text-surface">
-        <Container className="grid gap-12 py-20 md:grid-cols-3 md:gap-8 lg:py-28">
+        <Container className="grid gap-block py-section md:grid-cols-3">
           {missions.map((m, i) => (
             <div key={m.verb} className="flex flex-col gap-4 border-t border-white/15 pt-6">
-              <span className="tnum text-[14px] font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-              <span className="font-heading text-[44px] leading-none font-normal italic sm:text-[52px]">
+              <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-heading text-display leading-none font-normal italic">
                 {m.verb}.
               </span>
-              <p className="max-w-[340px] text-[16.5px] leading-relaxed text-surface/70">{m.text}</p>
+              <p className="max-w-[340px] text-body text-surface/70">{m.text}</p>
             </div>
           ))}
         </Container>
@@ -83,11 +83,11 @@ export function AboutPage() {
       <section className="bg-cream">
         <Container>
           <div className="grid gap-px bg-sand-dark md:grid-cols-2">
-          <div className="flex flex-col gap-5 bg-cream py-16 md:pr-10">
-            <h2 className="font-heading text-[28px] leading-tight font-semibold text-navy sm:text-[32px]">
+          <div className="flex flex-col gap-5 bg-cream py-section md:pr-10">
+            <h2 className="font-heading text-h2 font-semibold text-navy">
               Vous cherchez votre voie ?
             </h2>
-            <p className="max-w-[440px] text-[17px] leading-relaxed text-ink-muted">
+            <p className="max-w-[440px] text-body text-ink-muted">
               Le parcours Gehmit commence où vous en êtes : orientation, formation, accompagnement
               ou insertion.
             </p>
@@ -95,22 +95,22 @@ export function AboutPage() {
               Voir le parcours
             </CtaLink>
           </div>
-          <div className="flex flex-col gap-5 bg-cream py-16 md:pl-10">
-            <h2 className="font-heading text-[28px] leading-tight font-semibold text-navy sm:text-[32px]">
+          <div className="flex flex-col gap-5 bg-cream py-section md:pl-10">
+            <h2 className="font-heading text-h2 font-semibold text-navy">
               Entreprises et institutions
             </h2>
-            <p className="max-w-[440px] text-[17px] leading-relaxed text-ink-muted">
+            <p className="max-w-[440px] text-body text-ink-muted">
               Stages, mécénat de compétences, matériel ou salles : quatre façons de contribuer,
               aucune n'exige un budget.
             </p>
             <Link
               to="/partenaire"
-              className="group inline-flex items-center gap-2 text-[15.5px] font-semibold text-gehmit underline-offset-4 hover:underline"
+              className="group inline-flex items-center gap-2 text-small font-semibold text-gehmit underline-offset-4 hover:underline"
             >
               Devenir partenaire
               <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
-            <p className="pt-2 text-[15px] text-ink-muted">
+            <p className="pt-2 text-small text-ink-muted">
               Ou écrivez-nous :{" "}
               <a href={`mailto:${contact.email}`} className="font-semibold text-navy hover:text-gehmit">
                 {contact.email}

@@ -101,7 +101,7 @@ export function HireDeveloperPage() {
     <div className="flex flex-col">
       <PageHero
         trail={[{ label: "Entreprises", to: "/partenaire" }, { label: "Recruter un développeur" }]}
-        kicker={<p className="text-[15px] text-ink-muted">Pour les entreprises · Sans commission</p>}
+        kicker={<p className="text-small text-ink-muted">Pour les entreprises · Sans commission</p>}
         title={<>Un développeur qualifié, <span className="accent-word">sans cabinet de recrutement</span>.</>}
         lede="Décrivez votre besoin : nous vous présentons des jeunes talents du vivier Junior Builders, vérifiés sur leurs réalisations réelles."
         actions={
@@ -118,9 +118,9 @@ export function HireDeveloperPage() {
                   key={s.title}
                   className="flex flex-col gap-2 border-sand-dark py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
                 >
-                  <span className="tnum text-[14px] font-semibold text-gold">{i + 1}</span>
-                  <span className="font-heading text-[22px] leading-snug font-semibold text-navy">{s.title}</span>
-                  <span className="text-[16px] leading-relaxed text-ink-muted">{s.text}</span>
+                  <span className="tnum text-small font-semibold text-gold">{i + 1}</span>
+                  <span className="font-heading text-h3 font-semibold text-navy">{s.title}</span>
+                  <span className="text-body text-ink-muted">{s.text}</span>
                 </li>
               ))}
             </ol>

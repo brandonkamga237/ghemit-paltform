@@ -76,7 +76,7 @@ export function ContactPage() {
       />
 
       <section className="bg-surface">
-        <Container className="grid items-start gap-12 py-12 lg:grid-cols-12 lg:gap-10 lg:py-16">
+        <Container className="grid items-start gap-block py-section lg:grid-cols-12">
           <div className="lg:col-span-7">
             {state === "sent" ? (
               <FormSuccess title="Message envoyé">
@@ -107,9 +107,9 @@ export function ContactPage() {
             )}
           </div>
 
-          <aside className="flex flex-col gap-10 lg:sticky lg:top-24 lg:col-span-5">
+          <aside className="flex flex-col gap-block lg:sticky lg:top-24 lg:col-span-5">
             <div className="flex flex-col gap-4">
-              <h2 className="font-heading text-[24px] font-semibold text-navy">Directement</h2>
+              <h2 className="font-heading text-h3 font-semibold text-navy">Directement</h2>
               <dl className="flex flex-col border-t border-sand-dark">
                 <Row label="E-mail">
                   <a href={`mailto:${contact.email}`} className="hover:text-gehmit">{contact.email}</a>
@@ -123,7 +123,7 @@ export function ContactPage() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-navy text-[15.5px] font-semibold text-surface transition-colors hover:bg-navy-light"
+                className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-navy text-small font-semibold text-surface transition-colors hover:bg-navy-light"
               >
                 <MessageCircleIcon className="size-5 text-gold" strokeWidth={1.8} />
                 Écrire sur WhatsApp
@@ -131,14 +131,14 @@ export function ContactPage() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <h2 className="font-heading text-[24px] font-semibold text-navy">Questions fréquentes</h2>
+              <h2 className="font-heading text-h3 font-semibold text-navy">Questions fréquentes</h2>
               <Accordion>
                 {faq.map((f, i) => (
                   <AccordionItem key={i} value={`faq-${i}`} className="border-sand-dark">
-                    <AccordionTrigger className="py-4 text-left text-[16.5px] font-semibold text-navy hover:no-underline">
+                    <AccordionTrigger className="py-4 text-left text-body font-semibold text-navy hover:no-underline">
                       {f.q}
                     </AccordionTrigger>
-                    <AccordionContent className="text-[16px] leading-relaxed text-ink-muted">{f.a}</AccordionContent>
+                    <AccordionContent className="text-body text-ink-muted">{f.a}</AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -153,8 +153,8 @@ export function ContactPage() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-sand py-3.5">
-      <dt className="text-[14.5px] text-ink-muted">{label}</dt>
-      <dd className="text-right text-[16.5px] font-semibold text-navy">{children}</dd>
+      <dt className="text-small text-ink-muted">{label}</dt>
+      <dd className="text-right text-body font-semibold text-navy">{children}</dd>
     </div>
   )
 }

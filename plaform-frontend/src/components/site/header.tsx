@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, NavLink, useLocation } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
 import { ChevronDownIcon, MenuIcon, XIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { contact } from "@/data/content"
 import { usePrograms } from "@/data/remote"
 import { forCompanies, parcours, programStatus } from "@/data/parcours"
@@ -71,7 +71,7 @@ export function Header() {
         )}
         onMouseLeave={() => setMenuOpen(false)}
       >
-        <div className="mx-auto flex h-[72px] max-w-[1240px] items-center justify-between gap-6 px-5 sm:px-10">
+        <div className="mx-auto flex h-[72px] max-w-page items-center justify-between gap-group px-gutter">
           <Link to="/" aria-label="Gehmit — accueil" className="shrink-0">
             <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-10 w-auto" />
           </Link>
@@ -113,7 +113,7 @@ export function Header() {
           <div className="flex items-center gap-1">
             <Link
               to="/don"
-              className="inline-flex h-10 items-center rounded-sm bg-gold px-4 text-[14.5px] font-semibold whitespace-nowrap text-navy transition-colors hover:bg-gold-hover active:bg-gold-active sm:px-5"
+              className="inline-flex h-10 items-center rounded-sm bg-gold px-4 text-small font-semibold whitespace-nowrap text-navy transition-colors hover:bg-gold-hover active:bg-gold-active sm:px-5"
             >
               Faire un don
             </Link>
@@ -138,22 +138,22 @@ export function Header() {
               transition={{ duration: 0.16, ease: "easeOut" }}
               className="absolute inset-x-0 top-full hidden border-t border-sand bg-surface shadow-[0_16px_32px_-16px_rgba(30,45,74,0.3)] lg:block"
             >
-              <div className="mx-auto grid max-w-[1240px] grid-cols-[230px_1fr] gap-12 px-10 pt-8 pb-9">
+              <div className="mx-auto grid max-w-page grid-cols-[230px_1fr] gap-block px-gutter py-block">
                 <div className="flex flex-col gap-4 border-r border-sand pr-10">
-                  <p className="font-heading text-[24px] leading-[1.2] text-navy">
+                  <p className="font-heading text-h3 text-navy">
                     De l'orientation à l'emploi, <span className="accent-word">quatre étapes</span>.
                   </p>
-                  <Link to="/programmes" className="text-[14.5px] font-semibold text-gehmit hover:underline">
+                  <Link to="/programmes" className="text-small font-semibold text-gehmit hover:underline">
                     Tout le parcours →
                   </Link>
                 </div>
-                <div className="flex flex-col gap-7">
-                  <div className="grid grid-cols-4 gap-8">
+                <div className="flex flex-col gap-group">
+                  <div className="grid grid-cols-4 gap-group">
                     {parcours.map((stage, i) => (
                       <div key={stage.id} className="flex flex-col gap-3.5">
                         <span className="flex items-baseline gap-2 border-b border-sand pb-2.5 text-navy">
-                          <span className="tnum text-[13px] font-semibold text-gold">{i + 1}</span>
-                          <span className="font-heading text-[19px] italic">{stage.verb}</span>
+                          <span className="tnum text-caption font-semibold text-gold">{i + 1}</span>
+                          <span className="font-heading text-lead italic">{stage.verb}</span>
                         </span>
                         <ul className="flex flex-col gap-3">
                           {stage.offers.map((o) => {
@@ -161,11 +161,11 @@ export function Header() {
                             return (
                               <li key={o.name}>
                                 <Link to={o.to} className="group flex flex-col gap-0.5">
-                                  <span className="flex items-center gap-2 text-[15px] font-semibold text-navy transition-colors group-hover:text-gehmit">
+                                  <span className="flex items-center gap-2 text-small font-semibold text-navy transition-colors group-hover:text-gehmit">
                                     {o.name}
                                     {st && st.status !== "archived" && <StatusDot status={st.status} />}
                                   </span>
-                                  <span className="text-[13.5px] leading-snug text-ink-muted">{o.line}</span>
+                                  <span className="text-caption text-ink-muted">{o.line}</span>
                                 </Link>
                               </li>
                             )
@@ -174,7 +174,7 @@ export function Header() {
                       </div>
                     ))}
                   </div>
-                  <div className="flex items-center gap-6 border-t border-sand pt-4 text-[14px]">
+                  <div className="flex items-center gap-group border-t border-sand pt-4 text-small">
                     <span className="font-semibold text-navy">Vous êtes une entreprise ?</span>
                     {forCompanies.slice(0, 3).map((o) => (
                       <Link key={o.name} to={o.to} className="text-ink-muted transition-colors hover:text-gehmit">
@@ -203,7 +203,7 @@ export function Header() {
             aria-label="Menu"
           >
             <div className="flex h-[72px] shrink-0 items-center justify-between px-5">
-              <span className="font-heading text-[24px] font-semibold">Gehmit</span>
+              <span className="font-heading text-h3 font-semibold">Gehmit</span>
               <button
                 type="button"
                 className="inline-flex size-11 items-center justify-center"
@@ -221,7 +221,7 @@ export function Header() {
                     to={item.to}
                     end={item.to === "/"}
                     className={({ isActive }) =>
-                      cn("block py-3.5 font-heading text-[24px]", isActive ? "text-gold" : "text-surface")
+                      cn("block py-3.5 font-heading text-h3", isActive ? "text-gold" : "text-surface")
                     }
                   >
                     {item.label}
@@ -230,9 +230,9 @@ export function Header() {
                     <div className="grid grid-cols-2 gap-x-4 gap-y-4 pb-5">
                       {parcours.map((stage) => (
                         <div key={stage.id} className="flex flex-col gap-1">
-                          <span className="text-[12.5px] text-gold italic">{stage.verb}</span>
+                          <span className="text-caption text-gold italic">{stage.verb}</span>
                           {stage.offers.map((o) => (
-                            <Link key={o.name} to={o.to} className="py-1 text-[15.5px] text-surface/85">
+                            <Link key={o.name} to={o.to} className="py-1 text-small text-surface/85">
                               {o.name}
                             </Link>
                           ))}
@@ -245,12 +245,12 @@ export function Header() {
             </nav>
 
             <div className="mt-auto flex flex-col gap-3 border-t border-white/10 p-5">
-              <a href={`mailto:${contact.email}`} className="text-[14px] text-surface/60">
+              <a href={`mailto:${contact.email}`} className="text-small text-surface/60">
                 {contact.email}
               </a>
               <Link
                 to="/don"
-                className="flex h-12 items-center justify-center rounded-sm bg-gold text-[16px] font-semibold text-navy"
+                className="flex h-12 items-center justify-center rounded-sm bg-gold text-body font-semibold text-navy"
               >
                 Faire un don
               </Link>
@@ -263,6 +263,6 @@ export function Header() {
 }
 
 const navCls =
-  "relative inline-flex h-10 items-center px-3 text-[15px] font-medium whitespace-nowrap text-navy transition-colors hover:text-gehmit xl:px-3.5"
+  "relative inline-flex h-10 items-center px-3 text-small font-medium whitespace-nowrap text-navy transition-colors hover:text-gehmit xl:px-3.5"
 const activeCls =
   "text-gehmit after:absolute after:inset-x-3 after:-bottom-[15px] after:h-0.5 after:bg-gehmit"

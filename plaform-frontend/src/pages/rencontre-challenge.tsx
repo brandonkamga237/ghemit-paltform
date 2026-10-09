@@ -79,16 +79,16 @@ export function RencontreChallengePage() {
 
       {/* La journée, en trois temps */}
       <section className="bg-navy text-surface">
-        <Container className="flex flex-col gap-10 py-16 lg:py-24">
-          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold sm:text-[40px]">
+        <Container className="flex flex-col gap-block py-section">
+          <h2 className="font-heading text-h2 font-semibold">
             Une journée, <span className="font-normal text-gold italic">trois temps</span>.
           </h2>
-          <ol className="grid gap-10 md:grid-cols-3 md:gap-8">
+          <ol className="grid gap-block md:grid-cols-3">
             {day.map((d, i) => (
               <li key={d.title} className="flex flex-col gap-3 border-t border-white/15 pt-6">
-                <span className="tnum text-[14px] font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-                <span className="font-heading text-[30px] leading-tight italic">{d.title}</span>
-                <p className="text-[16.5px] leading-relaxed text-surface/70">{d.text}</p>
+                <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-heading text-h2 italic">{d.title}</span>
+                <p className="text-body text-surface/70">{d.text}</p>
               </li>
             ))}
           </ol>

@@ -8,8 +8,8 @@ export function PartnerLogos({ title }: { title: string }) {
   if (partners.length === 0) return null
   return (
     <section className="bg-surface">
-      <Container className="flex flex-col gap-8 py-14">
-        <h2 className="text-[15px] font-semibold text-ink-muted">{title}</h2>
+      <Container className="flex flex-col gap-group py-block">
+        <h2 className="text-small font-semibold text-ink-muted">{title}</h2>
         <ul className="grid grid-cols-2 gap-px bg-sand sm:grid-cols-3 lg:grid-cols-6">
           {partners.map((p) => (
             <li
@@ -28,7 +28,7 @@ export function PartnerLogos({ title }: { title: string }) {
                   className="max-h-12 w-auto object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
                 />
               ) : (
-                <span className="text-center font-heading text-[17px] font-semibold text-navy">{p.name}</span>
+                <span className="text-center font-heading text-body font-semibold text-navy">{p.name}</span>
               )}
             </li>
           ))}

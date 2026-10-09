@@ -22,17 +22,17 @@ export function Footer() {
     <footer className="bg-navy-deep text-surface">
       {/* Newsletter */}
       <div className="border-b border-white/10">
-        <div className="mx-auto grid max-w-[1240px] gap-8 px-5 py-14 sm:px-10 lg:grid-cols-2 lg:items-end lg:gap-16">
+        <div className="mx-auto grid max-w-page gap-block px-gutter py-block lg:grid-cols-2 lg:items-end">
           <div className="flex flex-col gap-3">
-            <h2 className="font-heading text-[28px] leading-[1.15] font-semibold sm:text-[34px]">
+            <h2 className="font-heading text-h2 font-semibold">
               Ne manquez plus un appel à candidature.
             </h2>
-            <p className="text-[16px] text-surface/65">
+            <p className="text-body text-surface/65">
               Les sessions, les dates limites et les événements. Une lettre par mois.
             </p>
           </div>
           {state === "sent" ? (
-            <p className="text-[16px] text-surface/85">Inscription confirmée. À très bientôt.</p>
+            <p className="text-body text-surface/85">Inscription confirmée. À très bientôt.</p>
           ) : (
             <form
               className="flex flex-col gap-2"
@@ -59,18 +59,18 @@ export function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre@email.com"
-                  className="h-14 min-w-0 flex-1 bg-transparent text-[17px] text-surface outline-none placeholder:text-surface/40"
+                  className="h-14 min-w-0 flex-1 bg-transparent text-body text-surface outline-none placeholder:text-surface/40"
                 />
                 <button
                   type="submit"
                   disabled={state === "sending"}
-                  className="shrink-0 px-1 text-[15.5px] font-semibold text-gold transition-colors hover:text-surface disabled:opacity-60"
+                  className="shrink-0 px-1 text-small font-semibold text-gold transition-colors hover:text-surface disabled:opacity-60"
                 >
                   {state === "sending" ? "Envoi…" : "S'inscrire →"}
                 </button>
               </div>
               {state === "error" && (
-                <span className="text-[14px] text-gold-tint">
+                <span className="text-small text-gold-tint">
                   Inscription impossible pour le moment. Réessayez plus tard.
                 </span>
               )}
@@ -79,13 +79,13 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-[1240px] flex-col gap-12 px-5 pt-14 pb-24 sm:px-10 sm:pb-10">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-          <div className="flex flex-col gap-5">
+      <div className="mx-auto flex max-w-page flex-col gap-block px-gutter pt-block pb-24 sm:pb-block">
+        <div className="grid grid-cols-2 gap-block lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+          <div className="col-span-2 flex flex-col gap-5 lg:col-span-1">
             <Link to="/" aria-label="Gehmit — accueil">
               <img src={logoWhiteUrl} alt="Gehmit" width={472} height={192} className="h-12 w-auto" />
             </Link>
-            <div className="flex flex-col gap-1.5 text-[15px] text-surface/70">
+            <div className="flex flex-col gap-1.5 text-small text-surface/70">
               <a href={`mailto:${contact.email}`} className="hover:text-surface">
                 {contact.email}
               </a>
@@ -119,7 +119,7 @@ export function Footer() {
           </FooterCol>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-[14px] text-surface/45">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-small text-surface/45">
           <span>© 2026 Gehmit · Ensemble vers l'excellence numérique</span>
           <span>Mentions légales · Politique de confidentialité</span>
         </div>
@@ -131,7 +131,7 @@ export function Footer() {
 function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <span className="pb-1 font-heading text-[15px] text-gold italic">{title}</span>
+      <span className="pb-1 font-heading text-small text-gold italic">{title}</span>
       {children}
     </div>
   )
@@ -139,7 +139,7 @@ function FooterCol({ title, children }: { title: string; children: React.ReactNo
 
 function FooterLink({ to, children }: { to: string; children: string }) {
   return (
-    <Link to={to} className="text-[15px] text-surface/75 transition-colors hover:text-surface">
+    <Link to={to} className="text-small text-surface/75 transition-colors hover:text-surface">
       {children}
     </Link>
   )

@@ -112,7 +112,7 @@ export function JuniorBuildersPage() {
       />
 
       <section className="bg-surface">
-        <Container className="py-16 lg:py-20">
+        <Container className="py-section">
           <InfoRows rows={rows} />
         </Container>
       </section>
@@ -209,7 +209,7 @@ export function JuniorBuildersPage() {
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <fieldset className="flex flex-col gap-5">
-      <legend className="mb-5 font-heading text-[20px] font-semibold text-navy italic">{title}</legend>
+      <legend className="mb-5 font-heading text-h3 font-semibold text-navy italic">{title}</legend>
       {children}
     </fieldset>
   )

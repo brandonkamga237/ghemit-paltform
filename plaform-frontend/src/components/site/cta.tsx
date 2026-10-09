@@ -1,7 +1,7 @@
 import { Link } from "react-router"
 import type { ReactNode } from "react"
 import { ArrowRightIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 
 type Variant = "primary" | "gold" | "outline" | "inverse" | "outline-inverse"
 
@@ -30,7 +30,7 @@ export function CtaLink({
   children: ReactNode
 }) {
   const cls = cn(
-    "group inline-flex h-12 items-center justify-center gap-2.5 rounded-sm px-6 text-[15.5px] font-semibold whitespace-nowrap transition-colors duration-150",
+    "group inline-flex h-12 items-center justify-center gap-2.5 rounded-sm px-6 text-small font-semibold whitespace-nowrap transition-colors duration-150",
     variants[variant],
     className
   )
@@ -77,7 +77,7 @@ export function ArrowLink({
     <Link
       to={to}
       className={cn(
-        "group inline-flex items-center gap-2 text-[15.5px] font-semibold text-gehmit underline-offset-4 hover:underline",
+        "group inline-flex items-center gap-2 text-small font-semibold text-gehmit underline-offset-4 hover:underline",
         className
       )}
     >

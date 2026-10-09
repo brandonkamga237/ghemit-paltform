@@ -1,4 +1,4 @@
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import type { ProgramStatus } from "@/data/content"
 
 const styles: Record<ProgramStatus, string> = {
@@ -20,7 +20,7 @@ export function StatusPill({
   return (
     <span
       className={cn(
-        "inline-flex w-fit items-center rounded-full border px-2.5 py-0.5 text-[12.5px] font-semibold whitespace-nowrap",
+        "inline-flex w-fit items-center rounded-full border px-2.5 py-0.5 text-caption font-semibold whitespace-nowrap",
         styles[status],
         className
       )}

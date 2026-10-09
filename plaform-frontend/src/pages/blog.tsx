@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { SearchIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { useArticleSummaries } from "@/data/remote"
 import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
@@ -36,7 +36,7 @@ export function BlogPage() {
       />
 
       <section className="bg-surface">
-        <Container className="flex flex-col gap-12 py-10 lg:py-14">
+        <Container className="flex flex-col gap-block py-section">
           <div className="flex flex-col gap-4 border-b border-sand-dark pb-6 lg:flex-row lg:items-center lg:justify-between">
             {categories.length > 1 ? (
               <div className="flex flex-wrap gap-x-5 gap-y-2" role="group" aria-label="Rubriques">
@@ -47,7 +47,7 @@ export function BlogPage() {
                     aria-pressed={cat === c}
                     onClick={() => setCat(c)}
                     className={cn(
-                      "relative h-10 text-[15.5px] transition-colors",
+                      "relative h-10 text-small transition-colors",
                       cat === c
                         ? "font-semibold text-navy after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-gehmit"
                         : "text-ink-muted hover:text-navy"
@@ -68,20 +68,20 @@ export function BlogPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Rechercher un article"
-                className="w-full bg-transparent text-[16px] text-navy outline-none placeholder:text-ink-faint"
+                className="w-full bg-transparent text-body text-navy outline-none placeholder:text-ink-faint"
               />
             </label>
           </div>
 
           {articles === null ? (
-            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+            <div className="grid gap-block sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
               {[0, 1, 2].map((i) => (
                 <div key={i} className="aspect-[4/3] animate-pulse bg-cream" />
               ))}
             </div>
           ) : list.length === 0 ? (
-            <div className="flex flex-col items-start gap-3 py-10">
-              <p className="font-heading text-[28px] text-navy">
+            <div className="flex flex-col items-start gap-3 py-block">
+              <p className="font-heading text-h2 text-navy">
                 {articles.length === 0 ? "Les premiers articles arrivent bientôt." : "Aucun article ne correspond."}
               </p>
               {filtering && (
@@ -91,7 +91,7 @@ export function BlogPage() {
                     setCat("Tous")
                     setQuery("")
                   }}
-                  className="text-[16px] font-semibold text-gehmit underline-offset-4 hover:underline"
+                  className="text-body font-semibold text-gehmit underline-offset-4 hover:underline"
                 >
                   Effacer la recherche
                 </button>
@@ -101,7 +101,7 @@ export function BlogPage() {
             <>
               {lead ? <ArticleCard article={lead} lead /> : null}
               {rest.length > 0 && (
-                <div className="grid gap-x-8 gap-y-14 border-t border-sand-dark pt-12 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-x-group gap-y-block border-t border-sand-dark pt-block sm:grid-cols-2 lg:grid-cols-3">
                   {rest.map((a) => (
                     <ArticleCard key={a.slug} article={a} />
                   ))}

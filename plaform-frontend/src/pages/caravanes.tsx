@@ -85,7 +85,7 @@ export function CaravanesPage() {
       />
 
       <section className="bg-surface">
-        <Container className="py-16 lg:py-20">
+        <Container className="py-section">
           <InfoRows rows={rows} />
         </Container>
       </section>

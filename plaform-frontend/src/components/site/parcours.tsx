@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import { ArrowRightIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { usePrograms } from "@/data/remote"
 import { parcours, programStatus } from "@/data/parcours"
 import { StatusDot } from "./status-pill"
@@ -29,7 +29,7 @@ export function Parcours({ current, className }: { current?: string; className?:
             <span
               aria-hidden
               className={cn(
-                "tnum absolute top-0 left-0 flex size-7 items-center justify-center rounded-full border text-[13px] font-semibold",
+                "tnum absolute top-0 left-0 flex size-7 items-center justify-center rounded-full border text-caption font-semibold",
                 here ? "border-gehmit bg-gehmit text-surface" : "border-sand-dark bg-surface text-navy"
               )}
             >
@@ -37,10 +37,10 @@ export function Parcours({ current, className }: { current?: string; className?:
             </span>
 
             <div className="flex flex-col gap-2">
-              <h3 className="font-heading text-[26px] leading-tight font-normal text-navy italic sm:text-[28px]">
+              <h3 className="font-heading text-h3 font-normal text-navy italic">
                 {stage.verb}
               </h3>
-              <p className="max-w-[300px] text-[15.5px] leading-relaxed text-ink-muted">{stage.text}</p>
+              <p className="max-w-[300px] text-small text-ink-muted">{stage.text}</p>
             </div>
 
             <ul className="mt-5 flex flex-col border-t border-sand">
@@ -58,11 +58,11 @@ export function Parcours({ current, className }: { current?: string; className?:
                       )}
                     >
                       <span className="flex flex-col gap-0.5">
-                        <span className="flex items-center gap-2 text-[16.5px] font-semibold text-navy transition-colors group-hover:text-gehmit">
+                        <span className="flex items-center gap-2 text-body font-semibold text-navy transition-colors group-hover:text-gehmit">
                           {o.name}
                           {st && st.status !== "archived" && <StatusDot status={st.status} />}
                         </span>
-                        <span className="text-[14px] leading-snug text-ink-muted">
+                        <span className="text-small text-ink-muted">
                           {isCurrent ? "Vous êtes ici" : o.line}
                         </span>
                       </span>
@@ -86,18 +86,18 @@ export function NextStep({ offer }: { offer: string }) {
   if (!next) return null
   return (
     <section className="border-t border-sand bg-surface">
-      <div className="mx-auto grid w-full max-w-[1240px] gap-6 px-5 py-14 sm:px-10 lg:grid-cols-12 lg:items-center lg:gap-10">
+      <div className="mx-auto grid w-full max-w-page gap-block px-gutter py-block lg:grid-cols-12 lg:items-center">
         <p className="flex flex-col gap-1 lg:col-span-5">
-          <span className="text-[14.5px] text-ink-muted">Étape suivante du parcours</span>
-          <span className="font-heading text-[32px] leading-tight text-navy italic">{next.verb}</span>
+          <span className="text-small text-ink-muted">Étape suivante du parcours</span>
+          <span className="font-heading text-h2 text-navy italic">{next.verb}</span>
         </p>
         <ul className="flex flex-col border-t border-sand-dark lg:col-span-7">
           {next.offers.map((o) => (
             <li key={o.name} className="border-b border-sand">
               <Link to={o.to} className="group flex items-center justify-between gap-4 py-4">
                 <span className="flex flex-col gap-0.5">
-                  <span className="text-[17px] font-semibold text-navy group-hover:text-gehmit">{o.name}</span>
-                  <span className="text-[14.5px] text-ink-muted">{o.line}</span>
+                  <span className="text-body font-semibold text-navy group-hover:text-gehmit">{o.name}</span>
+                  <span className="text-small text-ink-muted">{o.line}</span>
                 </span>
                 <ArrowRightIcon className="size-4 shrink-0 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:text-gehmit" />
               </Link>

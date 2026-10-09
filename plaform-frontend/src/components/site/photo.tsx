@@ -1,4 +1,4 @@
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { photoCaptions, staticPhoto, type PhotoName } from "@/data/photos"
 import { imageSrcSet } from "@/lib/api"
 
@@ -80,7 +80,7 @@ export function Photo({
       {label ? (
         <span
           className={cn(
-            "font-mono text-[11px] leading-relaxed",
+            "font-mono text-caption",
             dark ? "text-surface/60" : "text-sand-text",
             captionClassName
           )}
@@ -131,7 +131,7 @@ export function Figure({
       </div>
       <figcaption
         className={cn(
-          "text-[13px] leading-snug",
+          "text-caption",
           tone === "dark" ? "text-surface/60" : "text-ink-muted"
         )}
       >

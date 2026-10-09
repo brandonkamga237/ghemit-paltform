@@ -20,25 +20,25 @@ export function ImpactPage() {
 
       {/* Réalisations, en chronologie */}
       <section className="bg-surface">
-        <Container className="flex flex-col gap-12 py-20 lg:py-28">
-          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold tracking-[-0.02em] text-navy sm:text-[40px]">
+        <Container className="flex flex-col gap-block py-section">
+          <h2 className="font-heading text-h2 font-semibold text-navy">
             Les rendez-vous marquants
           </h2>
           <ol className="flex flex-col">
             {achievements.map((a) => (
               <li
                 key={a.title}
-                className="grid gap-6 border-t border-sand-dark py-10 lg:grid-cols-12 lg:gap-10"
+                className="grid gap-block border-t border-sand-dark py-block lg:grid-cols-12"
               >
                 <div className="flex flex-col gap-2 lg:col-span-3">
-                  <span className="font-heading text-[22px] text-navy italic">{a.date}</span>
-                  <span className="tnum font-heading text-[34px] leading-none font-semibold text-gold">
+                  <span className="font-heading text-h3 text-navy italic">{a.date}</span>
+                  <span className="tnum font-heading text-h2 leading-none font-semibold text-gold">
                     {a.figure}
                   </span>
                 </div>
                 <div className="flex flex-col gap-3 lg:col-span-4">
-                  <h3 className="font-heading text-[26px] leading-snug font-semibold text-navy">{a.title}</h3>
-                  <p className="text-[17px] leading-relaxed text-navy/75">{a.text}</p>
+                  <h3 className="font-heading text-h3 font-semibold text-navy">{a.title}</h3>
+                  <p className="text-body text-navy/75">{a.text}</p>
                 </div>
                 {a.photo ? (
                   <Figure
@@ -58,14 +58,14 @@ export function ImpactPage() {
       {/* Témoignage */}
       {testimonial && (
         <section className="bg-navy text-surface">
-          <Container className="py-20 lg:py-28">
-            <figure className="mx-auto flex max-w-[920px] flex-col gap-8">
-              <blockquote className="font-heading text-[26px] leading-[1.4] italic sm:text-[34px]">
+          <Container className="py-section">
+            <figure className="mx-auto flex max-w-[920px] flex-col gap-group">
+              <blockquote className="font-heading text-h2 italic">
                 <span aria-hidden className="text-gold">« </span>
                 {testimonial.quote}
                 <span aria-hidden className="text-gold"> »</span>
               </blockquote>
-              <figcaption className="text-[16px]">
+              <figcaption className="text-body">
                 <span className="font-semibold">{testimonial.name}</span>
                 <span className="text-surface/60"> · {testimonial.place}</span>
               </figcaption>
@@ -76,12 +76,12 @@ export function ImpactPage() {
 
       {/* Suite */}
       <section className="bg-gold-tint">
-        <Container className="flex flex-wrap items-center justify-between gap-8 py-14">
+        <Container className="flex flex-wrap items-center justify-between gap-group py-block">
           <div className="flex flex-col gap-2">
-            <h2 className="font-heading text-[28px] leading-tight font-semibold text-navy sm:text-[34px]">
+            <h2 className="font-heading text-h2 font-semibold text-navy">
               Soutenez la prochaine promotion.
             </h2>
-            <p className="text-[17px] text-navy/75">Chaque don finance directement l'accompagnement d'un jeune.</p>
+            <p className="text-body text-navy/75">Chaque don finance directement l'accompagnement d'un jeune.</p>
           </div>
           <CtaLink to="/don" variant="gold" arrow>
             Faire un don

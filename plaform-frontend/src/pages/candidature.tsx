@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, Navigate, useParams } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { usePrograms } from "@/data/remote"
 import { apiPost, uploadCv } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
@@ -102,8 +102,8 @@ export function CandidaturePage() {
 
   return (
     <div className="bg-cream">
-      <Container className="grid items-start gap-10 py-10 lg:grid-cols-12 lg:gap-10 lg:py-14">
-        <div className="flex flex-col gap-8 lg:col-span-7">
+      <Container className="grid items-start gap-block py-section lg:grid-cols-12">
+        <div className="flex flex-col gap-group lg:col-span-7">
           <div className="flex flex-col gap-4">
             <Breadcrumb
               trail={[
@@ -112,11 +112,11 @@ export function CandidaturePage() {
                 { label: "Candidature" },
               ]}
             />
-            <h1 className="font-heading text-[40px] leading-[1.05] font-semibold tracking-[-0.025em] text-navy sm:text-[52px]">
+            <h1 className="font-heading text-display font-semibold text-navy">
               Candidature <span className="accent-word">{program.name}</span>
             </h1>
-            <p className="text-[18px] leading-relaxed text-navy/75">
-              Dix minutes, trois étapes. Vous recevez un accusé de réception immédiat par e-mail.
+            <p className="text-body text-navy/75">
+              Dix minutes, trois étapes. Réponse par e-mail sous dix jours ouvrés.
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export function CandidaturePage() {
               {steps.map((s, i) => (
                 <li key={s} aria-current={i === step ? "step" : undefined} className="flex flex-col gap-2">
                   <span className={cn("h-1 transition-colors duration-300", i <= step ? "bg-gehmit" : "bg-sand-dark")} />
-                  <span className={cn("text-[14px]", i === step ? "font-semibold text-navy" : "text-ink-muted")}>
+                  <span className={cn("text-small", i === step ? "font-semibold text-navy" : "text-ink-muted")}>
                     {i + 1}. {s}
                   </span>
                 </li>
@@ -136,7 +136,7 @@ export function CandidaturePage() {
           <AnimatePresence mode="wait">
             {state === "sent" ? (
               <FormSuccess key="sent" title="Candidature envoyée">
-                Vous recevez un accusé de réception à {form.email}, puis une réponse sous dix jours
+                Votre dossier est bien arrivé. Nous vous répondons à {form.email} sous dix jours
                 ouvrés.{" "}
                 <Link to="/programmes" className="font-semibold text-gehmit underline-offset-4 hover:underline">
                   Revenir au parcours
@@ -151,7 +151,7 @@ export function CandidaturePage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.25, ease }}
-                className="flex flex-col gap-6 bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9"
+                className="flex flex-col gap-group bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9"
               >
                 {step === 0 && (
                   <div className="grid gap-5 sm:grid-cols-2">
@@ -204,7 +204,7 @@ export function CandidaturePage() {
                       <button
                         type="button"
                         onClick={() => setStep(step - 1)}
-                        className="inline-flex h-12 items-center rounded-sm border border-navy/25 px-6 text-[15.5px] font-semibold text-navy transition-colors hover:border-navy"
+                        className="inline-flex h-12 items-center rounded-sm border border-navy/25 px-6 text-small font-semibold text-navy transition-colors hover:border-navy"
                       >
                         Retour
                       </button>

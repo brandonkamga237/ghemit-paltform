@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import type { ArticleSummary } from "@/data/content"
 import { articleDate } from "@/data/remote"
 import { mediaUrl, imageSrcSet } from "@/lib/api"
@@ -12,7 +12,7 @@ export function ArticleCard({ article, lead = false }: { article: ArticleSummary
   return (
     <Link
       to={`/blog/${article.slug}`}
-      className={cn("group grid gap-5", lead && "lg:grid-cols-12 lg:items-center lg:gap-10")}
+      className={cn("group grid gap-5", lead && "lg:grid-cols-12 lg:items-center gap-block")}
     >
       <div className={cn("aspect-[4/3] overflow-hidden bg-sand", lead && "lg:col-span-7 lg:aspect-[16/10]")}>
         {article.imageUrl ? (
@@ -27,23 +27,23 @@ export function ArticleCard({ article, lead = false }: { article: ArticleSummary
           />
         ) : (
           <div className="flex h-full items-end bg-navy p-6">
-            <span className="font-heading text-[22px] leading-snug text-surface/80 italic">{article.category || "Gehmit"}</span>
+            <span className="font-heading text-h3 text-surface/80 italic">{article.category || "Gehmit"}</span>
           </div>
         )}
       </div>
       <div className={cn("flex flex-col gap-3", lead && "lg:col-span-5")}>
-        <span className="text-[14px] text-ink-muted">
+        <span className="text-small text-ink-muted">
           {[articleDate(article), article.category, `${article.readingMinutes} min`].filter(Boolean).join(" · ")}
         </span>
         <span
           className={cn(
             "font-heading leading-[1.2] font-semibold text-navy decoration-1 underline-offset-4 group-hover:underline",
-            lead ? "text-[30px] sm:text-[38px]" : "text-[23px]"
+            lead ? "text-h3" : "text-h3"
           )}
         >
           {article.title}
         </span>
-        <p className={cn("leading-relaxed text-navy/70", lead ? "text-[18px]" : "line-clamp-3 text-[16px]")}>
+        <p className={cn("leading-relaxed text-navy/70", lead ? "text-body" : "line-clamp-3 text-body")}>
           {article.excerpt}
         </p>
       </div>

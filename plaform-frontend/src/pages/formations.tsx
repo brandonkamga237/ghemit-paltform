@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { useFormations } from "@/data/remote"
 import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
@@ -39,7 +39,7 @@ export function FormationsPage() {
       />
 
       <section className="bg-surface">
-        <Container className="flex flex-col gap-8 py-12 lg:py-16">
+        <Container className="flex flex-col gap-group py-section">
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrer les formations">
             {filters.map((f) => (
               <button
@@ -48,7 +48,7 @@ export function FormationsPage() {
                 aria-pressed={filter === f}
                 onClick={() => setFilter(f)}
                 className={cn(
-                  "h-11 rounded-sm border px-4 text-[15px] transition-colors",
+                  "h-11 rounded-sm border px-4 text-small transition-colors",
                   filter === f
                     ? "border-navy bg-navy font-semibold text-surface"
                     : "border-sand-dark bg-white text-navy hover:border-navy"
@@ -66,9 +66,9 @@ export function FormationsPage() {
               ))}
             </div>
           ) : rows.length === 0 ? (
-            <div className="flex flex-col items-start gap-3 border-t border-sand-dark py-10">
-              <p className="font-heading text-[24px] text-navy">Aucune session programmée pour ce filtre.</p>
-              <p className="text-[16px] text-ink-muted">
+            <div className="flex flex-col items-start gap-3 border-t border-sand-dark py-block">
+              <p className="font-heading text-h3 text-navy">Aucune session programmée pour ce filtre.</p>
+              <p className="text-body text-ink-muted">
                 Les prochaines dates sont annoncées dans la lettre mensuelle (en bas de page).
               </p>
             </div>
@@ -77,7 +77,7 @@ export function FormationsPage() {
               {/* En-têtes de colonnes (grand écran) */}
               <li
                 aria-hidden
-                className="hidden grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] gap-6 border-b border-sand-dark py-3 text-[13.5px] text-ink-muted lg:grid"
+                className="hidden grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] gap-group border-b border-sand-dark py-3 text-caption text-ink-muted lg:grid"
               >
                 <span>Formation</span>
                 <span>Prochaine session</span>
@@ -97,12 +97,12 @@ export function FormationsPage() {
                     )}
                   >
                     <div className="flex flex-col gap-1">
-                      <span className={cn("font-heading text-[22px] leading-snug font-semibold", done ? "text-ink-muted" : "text-navy")}>
+                      <span className={cn("font-heading text-h3 font-semibold", done ? "text-ink-muted" : "text-navy")}>
                         {f.name}
                       </span>
-                      <span className="text-[14px] text-ink-muted">{f.category}</span>
+                      <span className="text-small text-ink-muted">{f.category}</span>
                     </div>
-                    <dl className="contents text-[16px]">
+                    <dl className="contents text-body">
                       <Cell label="Prochaine session" value={f.session} />
                       <Cell label="Durée" value={f.duration} />
                       <Cell label="Format" value={f.format} />
@@ -110,11 +110,11 @@ export function FormationsPage() {
                     </dl>
                     <div className="lg:text-right">
                       {f.status === "open" ? (
-                        <CtaLink to={inscriptionLink(f.name, f.session)} className="h-11 px-5 text-[15px]">
+                        <CtaLink to={inscriptionLink(f.name, f.session)} className="h-11 px-5 text-small">
                           S'inscrire
                         </CtaLink>
                       ) : (
-                        <span className="inline-flex items-center gap-2 text-[14.5px] font-semibold">
+                        <span className="inline-flex items-center gap-2 text-small font-semibold">
                           <StatusDot status={f.status} />
                           {f.statusLabel}
                         </span>
@@ -134,7 +134,7 @@ export function FormationsPage() {
 function Cell({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 lg:block">
-      <dt className="text-[14px] text-ink-muted lg:sr-only">{label}</dt>
+      <dt className="text-small text-ink-muted lg:sr-only">{label}</dt>
       <dd className="tnum">{value}</dd>
     </div>
   )
