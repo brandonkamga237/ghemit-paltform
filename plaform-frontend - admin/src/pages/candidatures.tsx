@@ -26,6 +26,7 @@ import {
   fmtDate,
   fmtDateTime,
   programLabel,
+  STATUS_LABELS,
   STATUS_META,
   STATUS_ORDER,
   useDebounced,
@@ -385,7 +386,11 @@ export function CandidaturesPage() {
 
         {/* Sélecteur d'espace mobile + recherche + filtre statut (liste) */}
         <div className="flex flex-wrap items-center gap-3">
-          <Select value={domain} onValueChange={(v) => setDomain(v ?? "all")}>
+          <Select
+            value={domain}
+            onValueChange={(v) => setDomain(v ?? "all")}
+            items={{ all: "Toutes les candidatures", ...Object.fromEntries(SPACE_FAMILIES.flatMap((f) => f.keys).map((k) => [k, programLabel(k)])) }}
+          >
             <SelectTrigger className="w-[210px] lg:hidden">
               <SelectValue />
             </SelectTrigger>
@@ -408,7 +413,7 @@ export function CandidaturesPage() {
             />
           </div>
           {listMode && (
-            <Select value={status} onValueChange={(v) => setStatus(v ?? "all")}>
+            <Select value={status} onValueChange={(v) => setStatus(v ?? "all")} items={{ all: "Tous les statuts", ...STATUS_LABELS }}>
               <SelectTrigger className="w-[160px]">
                 <SelectValue />
               </SelectTrigger>
@@ -594,6 +599,7 @@ export function CandidaturesPage() {
                           <TableCell onClick={(e) => e.stopPropagation()}>
                             <Select
                               value={c.status ?? "new"}
+                              items={STATUS_LABELS}
                               onValueChange={(v) => void update(c.id, { status: v })}
                             >
                               <SelectTrigger
@@ -768,6 +774,7 @@ function CandidatureDrawer({
           <div className="flex flex-wrap items-center gap-3">
             <Select
               value={c.status ?? "new"}
+                              items={STATUS_LABELS}
               onValueChange={(v) => void onUpdate(c.id, { status: v })}
             >
               <SelectTrigger

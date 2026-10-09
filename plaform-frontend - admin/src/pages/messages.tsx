@@ -11,6 +11,7 @@ import {
   Trash2Icon,
 } from "lucide-react"
 import { cn } from "@/lib/cn"
+import { PageHeader } from "@/components/admin/page-header"
 import { api } from "@/lib/api"
 import type { ContactMessage, MessagesSummary, Page } from "@/lib/types"
 import { fmtDateTime, useDebounced } from "@/lib/inbox"
@@ -136,7 +137,12 @@ export function MessagesPage() {
   const openIdx = open ? items.findIndex((m) => m.id === open.id) : -1
 
   return (
-    <div className="flex h-[calc(100vh-8.5rem)] min-h-[540px] flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Messages"
+        description="Les messages envoyés depuis le formulaire de contact du site."
+      />
+    <div className="flex h-[calc(100svh-15rem)] min-h-[540px] flex-col gap-4">
       {/* Barre d'outils */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex rounded-lg border p-0.5">
@@ -387,6 +393,7 @@ export function MessagesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
     </div>
   )
 }

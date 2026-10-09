@@ -11,6 +11,7 @@ import {
   type Block,
 } from "@/components/admin/structured-editors"
 import { Badge } from "@/components/ui/badge"
+import { PageHeader } from "@/components/admin/page-header"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -50,6 +51,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
+/** Libellés français des codes stockés (statuts, états). */
+const VALUE_LABELS: Record<string, string> = {
+  open: "Ouvert",
+  soon: "Bientôt",
+  closed: "Fermé",
+  archived: "Archivé",
+  scheduled: "Prévu",
+  cancelled: "Annulé",
+  published: "Publié",
+  draft: "Brouillon",
+}
+const valueLabel = (v: string) => VALUE_LABELS[v] ?? v
 
 export type FieldKind =
   | "text"
@@ -306,22 +320,18 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 
   return (
     <div className="flex flex-col gap-group">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
-            {config.title}
-          </h1>
-          {config.description && (
-            <p className="text-small text-ink-muted">{config.description}</p>
-          )}
-        </div>
-        {!config.fixedItems && (
-          <Button onClick={openCreate} className="gap-2">
-            <PlusIcon className="size-4" />
-            Nouveau
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title={config.title}
+        description={config.description}
+        actions={
+          !config.fixedItems && (
+            <Button onClick={openCreate} className="gap-2">
+              <PlusIcon className="size-4" />
+              Nouveau
+            </Button>
+          )
+        }
+      />
 
       {!loadError && items.length > 0 && (
         <div className="flex flex-wrap items-center gap-3">
@@ -546,6 +556,7 @@ function FieldInput({
           <Select
             value={String(value ?? "")}
             onValueChange={(v) => set(field.name, v)}
+            items={Object.fromEntries((field.options ?? []).map((o) => [o, valueLabel(o)]))}
           >
             <SelectTrigger className="w-full justify-between">
               <SelectValue placeholder="Sélectionner" />
@@ -553,7 +564,7 @@ function FieldInput({
             <SelectContent>
               {(field.options ?? []).map((o) => (
                 <SelectItem key={o} value={o}>
-                  {o}
+                  {valueLabel(o)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -612,6 +623,6 @@ function FieldInput({
 export function StatusBadge({ value }: { value: unknown }) {
   const v = String(value ?? "")
   const variant =
-    v === "open" ? "default" : v === "soon" ? "secondary" : "outline"
-  return <Badge variant={variant}>{v || "—"}</Badge>
+    v === "open" || v === "scheduled" || v === "published" ? "default" : v === "soon" ? "secondary" : "outline"
+  return <Badge variant={variant}>{valueLabel(v) || "—"}</Badge>
 }

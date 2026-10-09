@@ -39,12 +39,17 @@ export const ORIGIN_GROUPS: OriginGroup[] = [
 ]
 
 export const STATUS_META: Record<CandidatureStatus, { label: string; cls: string }> = {
-  new: { label: "Nouvelle", cls: "bg-blue-100 text-blue-800" },
-  in_progress: { label: "En cours", cls: "bg-amber-100 text-amber-800" },
-  accepted: { label: "Retenue", cls: "bg-green-100 text-green-800" },
-  rejected: { label: "Non retenue", cls: "bg-red-100 text-red-700" },
-  archived: { label: "Archivée", cls: "bg-gray-100 text-gray-600" },
+  new: { label: "Nouvelle", cls: "bg-gold-tint text-navy" },
+  in_progress: { label: "En cours", cls: "bg-soon-bg text-soon-text" },
+  accepted: { label: "Retenue", cls: "bg-open-bg text-open-text" },
+  rejected: { label: "Non retenue", cls: "bg-destructive/10 text-destructive" },
+  archived: { label: "Archivée", cls: "bg-sand text-ink-muted" },
 }
+
+/** Libellés des statuts, pour l'affichage de la valeur choisie dans les listes. */
+export const STATUS_LABELS: Record<string, string> = Object.fromEntries(
+  Object.entries(STATUS_META).map(([k, v]) => [k, v.label])
+)
 
 export const STATUS_ORDER: CandidatureStatus[] = [
   "new",
