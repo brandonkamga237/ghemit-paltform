@@ -8,7 +8,7 @@ import {
   Trash2Icon,
   UploadIcon,
 } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { API_URL, api } from "@/lib/api"
 import type { MediaFile } from "@/lib/types"
 import { toast } from "@/components/ui/toast"
@@ -159,7 +159,7 @@ export function MediaPage() {
 
   return (
     <div
-      className="relative flex flex-col gap-6"
+      className="relative flex flex-col gap-group"
       onDragOver={(e) => {
         e.preventDefault()
         setDragging(true)
@@ -177,7 +177,7 @@ export function MediaPage() {
         <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-navy/40">
           <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-surface bg-navy px-10 py-8 text-surface shadow-2xl">
             <UploadIcon className="size-8" />
-            <span className="text-[16px] font-semibold">Déposez les fichiers pour les téléverser</span>
+            <span className="text-body font-semibold">Déposez les fichiers pour les téléverser</span>
           </div>
         </div>
       )}
@@ -186,7 +186,7 @@ export function MediaPage() {
           <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
             Médiathèque
           </h1>
-          <p className="text-[15px] text-ink-muted">
+          <p className="text-small text-ink-muted">
             Organisez vos images et fichiers en dossiers. Ils sont réutilisables
             dans les articles, partenaires et pages du site.
           </p>
@@ -245,15 +245,15 @@ export function MediaPage() {
       </div>
 
       {error && (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-small">
           {error}
         </div>
       )}
 
       {visible.length === 0 && !error ? (
-        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed px-5 py-16 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed px-5 py-section text-center">
           <ImageIcon className="size-8 text-ink-faint" />
-          <p className="text-[14px] text-ink-muted">
+          <p className="text-small text-ink-muted">
             {query
               ? `Aucun fichier ne correspond à « ${q} ».`
               : "Aucun fichier ici. Téléversez ou déposez une image pour commencer."}
@@ -275,16 +275,16 @@ export function MediaPage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-[13px] text-muted-foreground">
+                  <span className="text-caption text-muted-foreground">
                     {m.contentType ?? "fichier"}
                   </span>
                 )}
               </button>
               <CardContent className="flex flex-col gap-2 p-4">
-                <span className="truncate text-[14px] font-medium" title={m.filename}>
+                <span className="truncate text-small font-medium" title={m.filename}>
                   {m.filename}
                 </span>
-                <span className="text-[12px] text-muted-foreground">
+                <span className="text-caption text-muted-foreground">
                   {(m.size / 1024).toFixed(0)} Ko
                   {m.folder ? ` · ${m.folder}` : ""}
                 </span>
@@ -414,7 +414,7 @@ function FolderChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] transition-colors",
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-caption transition-colors",
         active
           ? "border-primary bg-primary text-primary-foreground"
           : "border-input bg-background hover:border-primary/60"

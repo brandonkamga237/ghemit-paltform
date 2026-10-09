@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import { ArrowDownRightIcon, ArrowRightIcon, ArrowUpRightIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { Sparkline } from "./charts"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -35,13 +35,13 @@ export function MetricCard({
         <Card className="h-full transition-colors group-hover:border-primary/50">
           <CardContent className="flex h-full flex-col gap-1 p-5">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[13px] font-medium text-muted-foreground">{label}</span>
+              <span className="text-caption font-medium text-muted-foreground">{label}</span>
               <ArrowRightIcon className="size-3.5 text-ink-faint transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
             </div>
             {value === undefined ? (
               <Skeleton className="mt-1 h-8 w-20" />
             ) : (
-              <span className="font-heading text-[30px] leading-tight font-semibold tabular-nums">
+              <span className="font-heading text-h2 font-semibold tabular-nums">
                 {value}
               </span>
             )}
@@ -49,7 +49,7 @@ export function MetricCard({
               {delta != null ? (
                 <span
                   className={cn(
-                    "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11.5px] font-semibold tabular-nums",
+                    "inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-caption font-semibold tabular-nums",
                     positive ? "bg-open-bg text-open-text" : "bg-destructive/10 text-destructive"
                   )}
                 >
@@ -64,7 +64,7 @@ export function MetricCard({
                   )}
                 </span>
               ) : (
-                hint && <span className="truncate text-[12px] text-ink-faint">{hint}</span>
+                hint && <span className="truncate text-caption text-ink-faint">{hint}</span>
               )}
               {spark && spark.length > 1 && (
                 <Sparkline data={spark} color={sparkColor} className="h-8 w-24" />

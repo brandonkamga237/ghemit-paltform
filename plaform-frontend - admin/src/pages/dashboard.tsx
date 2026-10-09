@@ -13,7 +13,7 @@ import {
   UserPlusIcon,
   UsersIcon,
 } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { api } from "@/lib/api"
 import type {
   Campaign,
@@ -179,14 +179,14 @@ export function DashboardPage() {
 
   /* ─── Rendu ─── */
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-group">
       {/* En-tête */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
             Bonjour{username ? `, ${username}` : ""}
           </h1>
-          <p className="text-[15px] text-ink-muted">
+          <p className="text-small text-ink-muted">
             {new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
             {" — "}
             {pending > 0
@@ -211,7 +211,7 @@ export function DashboardPage() {
       </div>
 
       {error && (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-small">
           {error}
         </div>
       )}
@@ -219,18 +219,18 @@ export function DashboardPage() {
       {/* Bande attention */}
       {data && pending > 0 && (
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-navy px-5 py-4 text-surface">
-          <span className="flex items-center gap-2 text-[15px] font-semibold">
+          <span className="flex items-center gap-2 text-small font-semibold">
             <BellRingIcon className="size-4.5 text-gold" />
             Centre d'attention
           </span>
           <div className="flex flex-wrap gap-2">
             {derived!.unreadMsgs > 0 && (
-              <Link to="/messages?read=unread" className="rounded-full bg-surface/10 px-3 py-1 text-[13px] transition-colors hover:bg-surface/20">
+              <Link to="/messages?read=unread" className="rounded-full bg-surface/10 px-3 py-1 text-caption transition-colors hover:bg-surface/20">
                 {derived!.unreadMsgs} message{derived!.unreadMsgs > 1 ? "s" : ""} non lu{derived!.unreadMsgs > 1 ? "s" : ""}
               </Link>
             )}
             {derived!.newCands > 0 && (
-              <Link to="/candidatures?status=new" className="rounded-full bg-surface/10 px-3 py-1 text-[13px] transition-colors hover:bg-surface/20">
+              <Link to="/candidatures?status=new" className="rounded-full bg-surface/10 px-3 py-1 text-caption transition-colors hover:bg-surface/20">
                 {derived!.newCands} candidature{derived!.newCands > 1 ? "s" : ""} à examiner
               </Link>
             )}
@@ -284,7 +284,7 @@ export function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex-row flex-wrap items-center justify-between gap-3 pb-2">
             <div className="flex flex-col gap-0.5">
-              <CardTitle className="text-[16px]">Flux de demandes</CardTitle>
+              <CardTitle className="text-body">Flux de demandes</CardTitle>
               <CardDescription>
                 Candidatures et messages reçus chaque jour
               </CardDescription>
@@ -296,7 +296,7 @@ export function DashboardPage() {
                   type="button"
                   onClick={() => setPeriod(p.days)}
                   className={cn(
-                    "rounded-md px-3 py-1 text-[12.5px] font-medium transition-colors",
+                    "rounded-md px-3 py-1 text-caption font-medium transition-colors",
                     period === p.days
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -332,13 +332,13 @@ export function DashboardPage() {
                     { name: "Candidatures", color: "var(--color-chart-1)", total: sum(derived!.candSeries.slice(-period)) },
                     { name: "Messages", color: "var(--color-chart-3)", total: sum(derived!.msgSeries.slice(-period)) },
                   ].map((s) => (
-                    <span key={s.name} className="flex items-center gap-2 text-[13px]">
+                    <span key={s.name} className="flex items-center gap-2 text-caption">
                       <span className="size-2.5 rounded-full" style={{ background: s.color }} />
                       <span className="text-muted-foreground">{s.name}</span>
                       <span className="font-semibold tabular-nums">{s.total}</span>
                     </span>
                   ))}
-                  <span className="ml-auto text-[12px] text-ink-faint">
+                  <span className="ml-auto text-caption text-ink-faint">
                     sur {period} jours
                   </span>
                 </div>
@@ -350,14 +350,14 @@ export function DashboardPage() {
         {/* Centre d'attention */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-[16px]">À traiter en priorité</CardTitle>
+            <CardTitle className="text-body">À traiter en priorité</CardTitle>
             <CardDescription>Éléments récents sans réponse</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col px-3 pb-3">
             {!data ? (
               [0, 1, 2].map((i) => <Skeleton key={i} className="mb-2 h-14 w-full" />)
             ) : derived!.attention.length === 0 ? (
-              <p className="px-3 py-6 text-center text-[14px] text-muted-foreground">
+              <p className="px-3 py-6 text-center text-small text-muted-foreground">
                 Rien en attente — toutes les demandes ont été traitées.
               </p>
             ) : (
@@ -368,12 +368,12 @@ export function DashboardPage() {
                   className="group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/70"
                 >
                   <div className="flex min-w-0 flex-1 flex-col">
-                    <span className="truncate text-[14px] font-medium">{a.title}</span>
-                    <span className="truncate text-[12.5px] text-muted-foreground">{a.detail}</span>
+                    <span className="truncate text-small font-medium">{a.title}</span>
+                    <span className="truncate text-caption text-muted-foreground">{a.detail}</span>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1">
-                    <Badge variant="outline" className="text-[10.5px]">{a.tag}</Badge>
-                    <span className="text-[11px] text-ink-faint">{timeAgo(a.at)}</span>
+                    <Badge variant="outline" className="text-caption">{a.tag}</Badge>
+                    <span className="text-caption text-ink-faint">{timeAgo(a.at)}</span>
                   </div>
                 </Link>
               ))
@@ -386,7 +386,7 @@ export function DashboardPage() {
       <div className="grid items-start gap-4 lg:grid-cols-12">
         <Card className="lg:col-span-5">
           <CardHeader className="pb-3">
-            <CardTitle className="text-[16px]">Candidatures</CardTitle>
+            <CardTitle className="text-body">Candidatures</CardTitle>
             <CardDescription>Répartition et accès filtré</CardDescription>
           </CardHeader>
           <CardContent>
@@ -432,10 +432,10 @@ export function DashboardPage() {
         <Card className="lg:col-span-4">
           <CardHeader className="flex-row items-center justify-between pb-3">
             <div className="flex flex-col gap-0.5">
-              <CardTitle className="text-[16px]">Newsletter</CardTitle>
+              <CardTitle className="text-body">Newsletter</CardTitle>
               <CardDescription>Croissance des abonnés — 90 jours</CardDescription>
             </div>
-            <Link to="/newsletter" className="flex items-center gap-1 text-[13px] text-gehmit hover:underline">
+            <Link to="/newsletter" className="flex items-center gap-1 text-caption text-gehmit hover:underline">
               Gérer<ArrowRightIcon className="size-3.5" />
             </Link>
           </CardHeader>
@@ -449,17 +449,17 @@ export function DashboardPage() {
                     <span className="font-heading text-3xl font-semibold tabular-nums">
                       {derived!.activeSubs}
                     </span>
-                    <span className="text-[13px] text-muted-foreground">abonnés actifs</span>
+                    <span className="text-caption text-muted-foreground">abonnés actifs</span>
                   </div>
                   <Sparkline data={derived!.subSeries} className="h-12 w-40" />
                 </div>
                 {data.campaigns[0] && (
                   <div className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5">
                     <div className="flex min-w-0 flex-col">
-                      <span className="truncate text-[13.5px] font-medium">
+                      <span className="truncate text-caption font-medium">
                         {data.campaigns[0].subject}
                       </span>
-                      <span className="text-[12px] text-muted-foreground">
+                      <span className="text-caption text-muted-foreground">
                         {data.campaigns[0].sentAt
                           ? `Envoyée le ${new Date(data.campaigns[0].sentAt).toLocaleDateString("fr-FR")} · ${data.campaigns[0].recipientCount} dest.`
                           : "Dernière campagne"}
@@ -479,8 +479,8 @@ export function DashboardPage() {
 
         <Card className="lg:col-span-3">
           <CardHeader className="flex-row items-center justify-between pb-3">
-            <CardTitle className="text-[16px]">Agenda</CardTitle>
-            <Link to="/evenements" className="flex items-center gap-1 text-[13px] text-gehmit hover:underline">
+            <CardTitle className="text-body">Agenda</CardTitle>
+            <Link to="/evenements" className="flex items-center gap-1 text-caption text-gehmit hover:underline">
               Tout<ArrowRightIcon className="size-3.5" />
             </Link>
           </CardHeader>
@@ -489,7 +489,7 @@ export function DashboardPage() {
               [0, 1].map((i) => <Skeleton key={i} className="h-12 w-full" />)
             ) : derived!.upcomingEvents.length === 0 ? (
               <div className="flex flex-col items-start gap-2 py-4">
-                <p className="text-[14px] text-muted-foreground">Aucun événement planifié.</p>
+                <p className="text-small text-muted-foreground">Aucun événement planifié.</p>
                 <Button variant="outline" size="sm" render={<Link to="/evenements" />}>
                   Ajouter un événement
                 </Button>
@@ -501,13 +501,13 @@ export function DashboardPage() {
                   <Link key={e.id} to="/evenements" className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted/70">
                     <div className="flex w-11 shrink-0 flex-col items-center rounded-md bg-muted px-1 py-1.5">
                       <span className="font-heading text-lg leading-none font-semibold">{m ? Number(m[3]) : "—"}</span>
-                      <span className="text-[9.5px] tracking-wide text-ink-faint uppercase">
+                      <span className="text-caption tracking-wide text-ink-faint uppercase">
                         {m ? new Date(`${m[0]}T00:00:00`).toLocaleDateString("fr-FR", { month: "short" }) : ""}
                       </span>
                     </div>
                     <div className="flex min-w-0 flex-col">
-                      <span className="truncate text-[13.5px] font-medium">{String(e.payload.title ?? "")}</span>
-                      <span className="truncate text-[12px] text-muted-foreground">
+                      <span className="truncate text-caption font-medium">{String(e.payload.title ?? "")}</span>
+                      <span className="truncate text-caption text-muted-foreground">
                         {[e.payload.time, e.payload.location].filter(Boolean).join(" · ")}
                       </span>
                     </div>
@@ -523,14 +523,14 @@ export function DashboardPage() {
       <div className="grid items-start gap-4 lg:grid-cols-12">
         <Card className="lg:col-span-7">
           <CardHeader className="pb-3">
-            <CardTitle className="text-[16px]">Activité récente</CardTitle>
+            <CardTitle className="text-body">Activité récente</CardTitle>
             <CardDescription>Tous les flux, réunis</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col">
             {!data ? (
               [0, 1, 2, 3].map((i) => <Skeleton key={i} className="mb-3 h-10 w-full" />)
             ) : derived!.feed.length === 0 ? (
-              <p className="py-6 text-center text-[14px] text-muted-foreground">
+              <p className="py-6 text-center text-small text-muted-foreground">
                 Aucune activité pour le moment.
               </p>
             ) : (
@@ -554,10 +554,10 @@ export function DashboardPage() {
                     </span>
                     <Link to={f.to} className="group flex min-w-0 flex-1 items-baseline justify-between gap-3">
                       <div className="min-w-0">
-                        <span className="text-[14px] font-medium group-hover:underline">{f.title}</span>
-                        <span className="block truncate text-[12.5px] text-muted-foreground">{f.detail}</span>
+                        <span className="text-small font-medium group-hover:underline">{f.title}</span>
+                        <span className="block truncate text-caption text-muted-foreground">{f.detail}</span>
                       </div>
-                      <span className="shrink-0 text-[11.5px] text-ink-faint">{timeAgo(f.at)}</span>
+                      <span className="shrink-0 text-caption text-ink-faint">{timeAgo(f.at)}</span>
                     </Link>
                   </li>
                 ))}
@@ -568,7 +568,7 @@ export function DashboardPage() {
 
         <Card className="lg:col-span-5">
           <CardHeader className="pb-3">
-            <CardTitle className="text-[16px]">Contenu du site</CardTitle>
+            <CardTitle className="text-body">Contenu du site</CardTitle>
             <CardDescription>État de ce qui est publié</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col px-3 pb-3">
@@ -610,12 +610,12 @@ export function DashboardPage() {
                   className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-muted/70"
                 >
                   <r.icon className="size-4 shrink-0 text-ink-faint transition-colors group-hover:text-primary" />
-                  <span className="text-[14px] font-medium">{r.label}</span>
+                  <span className="text-small font-medium">{r.label}</span>
                   {r.hint && (
-                    <span className="text-[11.5px] text-ink-faint">· {r.hint}</span>
+                    <span className="text-caption text-ink-faint">· {r.hint}</span>
                   )}
                   <span className="ml-auto flex items-center gap-2">
-                    <span className="font-heading text-[16px] font-semibold tabular-nums">{r.count}</span>
+                    <span className="font-heading text-body font-semibold tabular-nums">{r.count}</span>
                     <ArrowRightIcon className="size-3.5 text-ink-faint opacity-0 transition-opacity group-hover:opacity-100" />
                   </span>
                 </Link>

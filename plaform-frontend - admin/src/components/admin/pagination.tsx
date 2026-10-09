@@ -24,7 +24,7 @@ export function Pagination({
   const totalPages = page?.totalPages ?? 0
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-[13px] text-muted-foreground">
+      <span className="text-caption text-muted-foreground">
         {page
           ? `${page.totalElements} résultat${page.totalElements > 1 ? "s" : ""} — page ${pageNo + 1}/${Math.max(totalPages, 1)}`
           : "…"}

@@ -3,6 +3,9 @@ import { getAccessToken, logoutTokens } from "./token"
 export const API_URL: string =
   (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8080"
 
+/** Adresse affichable d'un média : les URL relatives de la médiathèque passent par l'API. */
+export const mediaSrc = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = await getAccessToken()
   if (!token) {

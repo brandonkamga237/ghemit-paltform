@@ -69,65 +69,6 @@ const formationsConfig: CrudConfig = {
   ],
 }
 
-const articlesConfig: CrudConfig = {
-  type: "articles",
-  title: "Articles",
-  description: "Les articles du blog. Un brouillon n'est jamais visible sur le site.",
-  hasSlug: true,
-  columns: [
-    { key: "title", label: "Titre" },
-    { key: "category", label: "Catégorie" },
-    { key: "publishedAt", label: "Publication" },
-    {
-      key: "status",
-      label: "Statut",
-      render: (i: ContentItem) =>
-        i.payload.status === "draft" ? (
-          <Badge variant="outline">Brouillon</Badge>
-        ) : (
-          <Badge>Publié</Badge>
-        ),
-    },
-    {
-      key: "featured",
-      label: "À la une",
-      render: (i: ContentItem) => (i.payload.featured ? <Badge variant="secondary">Une</Badge> : "—"),
-    },
-  ],
-  fields: [
-    { name: "title", label: "Titre" },
-    { name: "category", label: "Catégorie" },
-    {
-      name: "status",
-      label: "Statut",
-      kind: "select",
-      options: ["published", "draft"],
-      hint: "« draft » = brouillon, invisible sur le site.",
-    },
-    {
-      name: "publishedAt",
-      label: "Date de publication",
-      placeholder: "AAAA-MM-JJ",
-      hint: "Format ISO, ex. 2026-08-10. Détermine l'ordre d'affichage.",
-    },
-    { name: "excerpt", label: "Résumé", kind: "textarea" },
-    { name: "featured", label: "Mettre à la une", kind: "checkbox" },
-    {
-      name: "imageUrl",
-      label: "Image de couverture",
-      kind: "image",
-      hint: "Affichée en haut de l'article et sur les cartes.",
-    },
-    { name: "imageAlt", label: "Texte alternatif de la couverture", placeholder: "Description courte pour l'accessibilité" },
-    {
-      name: "body",
-      label: "Corps de l'article",
-      kind: "blocks",
-    },
-    { name: "cta", label: "Encart CTA", kind: "articleCta" },
-  ],
-}
-
 const eventsConfig: CrudConfig = {
   type: "events",
   title: "Événements",
@@ -217,9 +158,6 @@ export function ProgramsPage() {
 }
 export function FormationsPage() {
   return <CrudPage config={formationsConfig} />
-}
-export function ArticlesPage() {
-  return <CrudPage config={articlesConfig} />
 }
 export function EventsPage() {
   return <CrudPage config={eventsConfig} />

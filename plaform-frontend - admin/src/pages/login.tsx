@@ -64,7 +64,7 @@ export function LoginPage() {
               />
             </div>
             {error && (
-              <p className="flex items-center gap-1.5 text-[13.5px] text-destructive">
+              <p className="flex items-center gap-1.5 text-caption text-destructive">
                 <TriangleAlertIcon className="size-4 shrink-0" />
                 {error}
               </p>

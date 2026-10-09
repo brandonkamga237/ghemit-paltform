@@ -305,14 +305,14 @@ export function CrudPage({ config }: { config: CrudConfig }) {
     : items
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-group">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
             {config.title}
           </h1>
           {config.description && (
-            <p className="text-[15px] text-ink-muted">{config.description}</p>
+            <p className="text-small text-ink-muted">{config.description}</p>
           )}
         </div>
         {!config.fixedItems && (
@@ -334,14 +334,14 @@ export function CrudPage({ config }: { config: CrudConfig }) {
               className="pl-9"
             />
           </div>
-          <span className="ml-auto text-[13px] text-muted-foreground">
+          <span className="ml-auto text-caption text-muted-foreground">
             {visible.length} affiché{visible.length > 1 ? "s" : ""} / {items.length}
           </span>
         </div>
       )}
 
       {loadError ? (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-small">
           Impossible de charger les données : {loadError}
         </div>
       ) : loading ? (
@@ -351,11 +351,11 @@ export function CrudPage({ config }: { config: CrudConfig }) {
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="rounded-lg border border-dashed px-5 py-16 text-center text-ink-muted">
+        <div className="rounded-lg border border-dashed px-5 py-section text-center text-ink-muted">
           Aucun élément. Cliquez sur « Nouveau » pour commencer.
         </div>
       ) : visible.length === 0 ? (
-        <div className="rounded-lg border border-dashed px-5 py-12 text-center text-ink-muted">
+        <div className="rounded-lg border border-dashed px-5 py-block text-center text-ink-muted">
           Aucun élément ne correspond à « {q} ».
         </div>
       ) : (
@@ -384,7 +384,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
                         : String(item.payload[c.key] ?? item.slug ?? "—")}
                     </TableCell>
                   ))}
-                  <TableCell className="text-[12.5px] whitespace-nowrap text-ink-faint">
+                  <TableCell className="text-caption whitespace-nowrap text-ink-faint">
                     {new Date(item.updatedAt).toLocaleDateString("fr-FR", {
                       day: "numeric",
                       month: "short",
@@ -455,7 +455,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
               <FieldInput key={f.name} field={f} draft={draft} set={set} />
             ))}
             {formError && (
-              <p className="text-[14px] text-destructive">{formError}</p>
+              <p className="text-small text-destructive">{formError}</p>
             )}
           </div>
           <DialogFooter>
@@ -499,9 +499,9 @@ function FieldWrap({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <Label className="text-[14px] font-semibold">{label}</Label>
+      <Label className="text-small font-semibold">{label}</Label>
       {children}
-      {hint && <span className="text-[13px] text-ink-faint">{hint}</span>}
+      {hint && <span className="text-caption text-ink-faint">{hint}</span>}
     </div>
   )
 }
@@ -537,7 +537,7 @@ function FieldInput({
             checked={Boolean(value)}
             onCheckedChange={(v) => set(field.name, v === true)}
           />
-          <Label className="text-[14px] font-semibold">{field.label}</Label>
+          <Label className="text-small font-semibold">{field.label}</Label>
         </div>
       )
     case "select":

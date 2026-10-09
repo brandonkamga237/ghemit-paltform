@@ -10,7 +10,7 @@ import {
   SearchIcon,
   Trash2Icon,
 } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { api } from "@/lib/api"
 import type { ContactMessage, MessagesSummary, Page } from "@/lib/types"
 import { fmtDateTime, useDebounced } from "@/lib/inbox"
@@ -146,7 +146,7 @@ export function MessagesPage() {
               type="button"
               onClick={() => setRead(t.value)}
               className={cn(
-                "flex items-center gap-1.5 rounded-md px-3 py-1 text-[12.5px] font-medium transition-colors",
+                "flex items-center gap-1.5 rounded-md px-3 py-1 text-caption font-medium transition-colors",
                 read === t.value
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:text-foreground"
@@ -155,7 +155,7 @@ export function MessagesPage() {
               {t.label}
               {t.value === "unread" && summary && summary.unread > 0 && (
                 <span className={cn(
-                  "rounded-full px-1.5 text-[11px] font-semibold tabular-nums",
+                  "rounded-full px-1.5 text-caption font-semibold tabular-nums",
                   read === "unread" ? "bg-primary-foreground/20" : "bg-gehmit/15 text-gehmit"
                 )}>
                   {summary.unread}
@@ -173,13 +173,13 @@ export function MessagesPage() {
             className="pl-9"
           />
         </div>
-        <span className="ml-auto text-[13px] text-muted-foreground">
+        <span className="ml-auto text-caption text-muted-foreground">
           {page ? `${page.totalElements} message${page.totalElements > 1 ? "s" : ""}` : "…"}
         </span>
       </div>
 
       {error && (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-small">
           {error}
         </div>
       )}
@@ -200,9 +200,9 @@ export function MessagesPage() {
                 </div>
               ))
             ) : items.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center gap-2 px-6 py-16 text-center">
+              <div className="flex h-full flex-col items-center justify-center gap-2 px-6 py-section text-center">
                 <InboxIcon className="size-8 text-ink-faint" />
-                <p className="text-[14px] text-muted-foreground">
+                <p className="text-small text-muted-foreground">
                   Aucun message ne correspond aux filtres.
                 </p>
               </div>
@@ -220,7 +220,7 @@ export function MessagesPage() {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className={cn(
-                      "flex min-w-0 items-center gap-2 truncate text-[14px]",
+                      "flex min-w-0 items-center gap-2 truncate text-small",
                       !m.readFlag ? "font-semibold" : "font-medium text-ink-muted"
                     )}>
                       {!m.readFlag && (
@@ -228,17 +228,17 @@ export function MessagesPage() {
                       )}
                       {m.name || m.email}
                     </span>
-                    <span className="shrink-0 text-[11.5px] text-ink-faint">
+                    <span className="shrink-0 text-caption text-ink-faint">
                       {timeAgo(m.createdAt)}
                     </span>
                   </div>
                   <span className={cn(
-                    "truncate text-[13px]",
+                    "truncate text-caption",
                     !m.readFlag ? "font-medium" : "text-muted-foreground"
                   )}>
                     {m.subject || "(sans objet)"}
                   </span>
-                  <span className="truncate text-[12.5px] text-ink-faint">
+                  <span className="truncate text-caption text-ink-faint">
                     {m.message}
                   </span>
                 </button>
@@ -330,10 +330,10 @@ export function MessagesPage() {
               <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
                 <div className="mx-auto flex max-w-2xl flex-col gap-5">
                   <div className="flex flex-col gap-1.5">
-                    <h2 className="font-heading text-[22px] font-semibold">
+                    <h2 className="font-heading text-h3 font-semibold">
                       {open.subject || "(sans objet)"}
                     </h2>
-                    <div className="flex flex-wrap items-center gap-2 text-[13.5px] text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-2 text-caption text-muted-foreground">
                       <span className="flex size-8 items-center justify-center rounded-full bg-navy/10 font-semibold text-navy">
                         {(open.name || open.email).charAt(0).toUpperCase()}
                       </span>
@@ -348,7 +348,7 @@ export function MessagesPage() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
+                  <p className="text-small whitespace-pre-wrap">
                     {open.message}
                   </p>
                 </div>
@@ -357,7 +357,7 @@ export function MessagesPage() {
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
               <MailOpenIcon className="size-8 text-ink-faint" />
-              <p className="text-[14px] text-muted-foreground">
+              <p className="text-small text-muted-foreground">
                 Sélectionnez un message pour le lire.
               </p>
             </div>

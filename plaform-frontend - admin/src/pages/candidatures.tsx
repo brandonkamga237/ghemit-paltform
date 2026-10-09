@@ -11,7 +11,7 @@ import {
   XIcon,
   ZapIcon,
 } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { api, openCv } from "@/lib/api"
 import type {
   Candidature,
@@ -298,10 +298,10 @@ export function CandidaturesPage() {
   /* ─── Rendu ─── */
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-group">
       {/* Rail des espaces */}
       <aside className="hidden w-52 shrink-0 flex-col gap-1 lg:flex">
-        <span className="px-2 pb-2 text-[11px] font-semibold tracking-wider text-ink-faint uppercase">
+        <span className="px-2 pb-2 text-caption font-semibold tracking-wider text-ink-faint uppercase">
           Espaces de réception
         </span>
         <SpaceItem
@@ -313,7 +313,7 @@ export function CandidaturesPage() {
         />
         {SPACE_FAMILIES.map((f) => (
           <div key={f.label} className="flex flex-col gap-0.5 pt-3">
-            <span className="px-2 pb-1 text-[11px] font-semibold tracking-wider text-ink-faint uppercase">
+            <span className="px-2 pb-1 text-caption font-semibold tracking-wider text-ink-faint uppercase">
               {f.label}
             </span>
             {f.keys.map((k) => (
@@ -337,7 +337,7 @@ export function CandidaturesPage() {
             <h1 className="font-heading text-2xl font-semibold tracking-[-0.01em]">
               {domain === "all" ? "Toutes les candidatures" : programLabel(domain)}
             </h1>
-            <p className="text-[13.5px] text-ink-muted">
+            <p className="text-caption text-ink-muted">
               {listMode
                 ? `${page?.totalElements ?? "…"} élément(s)`
                 : `${board.length} candidature${board.length > 1 ? "s" : ""} dans cet espace`}
@@ -362,7 +362,7 @@ export function CandidaturesPage() {
                   type="button"
                   onClick={() => setView("board")}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[12.5px] font-medium transition-colors",
+                    "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-caption font-medium transition-colors",
                     view === "board" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -372,7 +372,7 @@ export function CandidaturesPage() {
                   type="button"
                   onClick={() => setView("list")}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[12.5px] font-medium transition-colors",
+                    "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-caption font-medium transition-colors",
                     view === "list" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -425,7 +425,7 @@ export function CandidaturesPage() {
         </div>
 
         {error && (
-          <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
+          <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-small">
             {error}
           </div>
         )}
@@ -450,14 +450,14 @@ export function CandidaturesPage() {
                   )}
                 >
                   <div className="flex items-center justify-between px-1.5 pt-1">
-                    <span className="flex items-center gap-1.5 text-[12.5px] font-semibold">
+                    <span className="flex items-center gap-1.5 text-caption font-semibold">
                       <span
                         className="size-2 rounded-full"
                         style={{ background: STATUS_COLORS[s] }}
                       />
                       {STATUS_META[s].label}
                     </span>
-                    <span className="text-[12px] font-medium text-muted-foreground tabular-nums">
+                    <span className="text-caption font-medium text-muted-foreground tabular-nums">
                       {cards.length}
                     </span>
                   </div>
@@ -475,14 +475,14 @@ export function CandidaturesPage() {
                           dragId === c.id && "opacity-50"
                         )}
                       >
-                        <span className="flex items-center gap-1.5 text-[14px] font-semibold">
+                        <span className="flex items-center gap-1.5 text-small font-semibold">
                           {!c.readFlag && <span className="size-2 shrink-0 rounded-full bg-gehmit" />}
                           <span className="truncate">{candidateName(c)}</span>
                         </span>
-                        <span className="truncate text-[12.5px] text-muted-foreground">
+                        <span className="truncate text-caption text-muted-foreground">
                           {String(c.form.domaine ?? c.form.poste ?? c.form.projet ?? candidateEmail(c) ?? "—")}
                         </span>
-                        <span className="flex items-center gap-2 pt-0.5 text-[11px] text-ink-faint">
+                        <span className="flex items-center gap-2 pt-0.5 text-caption text-ink-faint">
                           {timeAgo(c.createdAt)}
                           {Boolean(c.form.cvUrl) && <PaperclipIcon className="size-3" />}
                           {c.note && <span title="Note interne">•••</span>}
@@ -490,7 +490,7 @@ export function CandidaturesPage() {
                       </button>
                     ))}
                     {cards.length === 0 && (
-                      <p className="px-1.5 py-3 text-[12px] text-ink-faint">
+                      <p className="px-1.5 py-3 text-caption text-ink-faint">
                         {dragId ? (canDrop ? "Déposer ici" : "Transition non autorisée") : "Vide"}
                       </p>
                     )}
@@ -543,7 +543,7 @@ export function CandidaturesPage() {
                       </TableRow>
                     ) : items.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                        <TableCell colSpan={6} className="py-block text-center text-muted-foreground">
                           Aucune candidature ne correspond aux filtres.
                         </TableCell>
                       </TableRow>
@@ -586,7 +586,7 @@ export function CandidaturesPage() {
                               <span className={c.readFlag ? "" : "font-semibold"}>
                                 {candidateName(c)}
                               </span>
-                              <span className="text-[13px] text-muted-foreground">
+                              <span className="text-caption text-muted-foreground">
                                 {candidateEmail(c)}
                               </span>
                             </div>
@@ -634,7 +634,7 @@ export function CandidaturesPage() {
         {/* Barre d'actions groupées */}
         {selected.size > 0 && (
           <div className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-xl border bg-navy px-4 py-2.5 text-surface shadow-xl">
-            <span className="mr-2 text-[13.5px] font-semibold tabular-nums">
+            <span className="mr-2 text-caption font-semibold tabular-nums">
               {selected.size} sélectionnée{selected.size > 1 ? "s" : ""}
             </span>
             <Button
@@ -704,17 +704,17 @@ function SpaceItem({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[13.5px] transition-colors",
+        "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-caption transition-colors",
         active ? "bg-primary/10 font-semibold text-primary" : "hover:bg-muted/70"
       )}
     >
       <span className="min-w-0 flex-1 truncate">{label}</span>
       {fresh > 0 && (
-        <span className="rounded-full bg-gehmit/15 px-1.5 text-[11px] font-semibold text-gehmit tabular-nums">
+        <span className="rounded-full bg-gehmit/15 px-1.5 text-caption font-semibold text-gehmit tabular-nums">
           {fresh}
         </span>
       )}
-      <span className="text-[12px] text-ink-faint tabular-nums">{count ?? "…"}</span>
+      <span className="text-caption text-ink-faint tabular-nums">{count ?? "…"}</span>
     </button>
   )
 }
@@ -758,7 +758,7 @@ function CandidatureDrawer({
           <SheetTitle className="flex flex-wrap items-center gap-2 text-lg">
             {programLabel(c.program)}
           </SheetTitle>
-          <span className="text-[13px] text-muted-foreground">
+          <span className="text-caption text-muted-foreground">
             Reçue le {fmtDateTime(c.createdAt)} · {candidateName(c)}
           </span>
         </SheetHeader>
@@ -811,7 +811,7 @@ function CandidatureDrawer({
           {/* Mode triage : décision immédiate + candidature suivante */}
           {triage && (
             <div className="flex flex-col gap-2 rounded-lg border border-primary/30 bg-primary/[0.04] p-3.5">
-              <span className="text-[12.5px] font-semibold text-primary">
+              <span className="text-caption font-semibold text-primary">
                 Mode triage — {queueSize} nouvelle{queueSize > 1 ? "s" : ""} restante{queueSize > 1 ? "s" : ""}
               </span>
               <div className="flex flex-wrap gap-2">
@@ -842,7 +842,7 @@ function CandidatureDrawer({
           {/* Données du formulaire */}
           <dl className="flex flex-col gap-2.5 rounded-lg border p-4">
             {Object.entries(c.form).map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[160px_1fr] gap-3 text-[14px]">
+              <div key={k} className="grid grid-cols-[160px_1fr] gap-3 text-small">
                 <dt className="font-semibold">{fieldLabel(k)}</dt>
                 {k === "cvUrl" && typeof v === "string" && v ? (
                   <dd>

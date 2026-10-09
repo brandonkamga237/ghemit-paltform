@@ -212,7 +212,7 @@ export function BlocksField({
 
   return (
     <div className="flex flex-col gap-4">
-      <Label className="text-[14px] font-semibold">Corps de l'article</Label>
+      <Label className="text-small font-semibold">Corps de l'article</Label>
 
       <div className="flex flex-col gap-4">
         {blocks.map((block, i) => {
@@ -369,9 +369,9 @@ export function BlocksField({
                       block.type === "p"
                         ? "text-lg leading-[1.8] text-ink-muted placeholder:text-ink-faint/60"
                         : block.type === "h2"
-                          ? "font-heading text-[26px] font-semibold leading-tight text-foreground placeholder:text-ink-faint"
+                          ? "font-heading text-h3 font-semibold text-foreground placeholder:text-ink-faint"
                           : block.type === "h3"
-                            ? "font-heading text-[22px] font-semibold leading-tight text-foreground placeholder:text-ink-faint"
+                            ? "font-heading text-h3 font-semibold text-foreground placeholder:text-ink-faint"
                             : block.type === "quote"
                               ? "italic text-lg leading-relaxed text-navy border-l-[3px] border-gold pl-4 placeholder:text-ink-faint"
                               : block.type === "code"
@@ -415,7 +415,7 @@ export function BlocksField({
                     onChange={(e) => update(i, { caption: e.target.value })}
                     placeholder="Légende du tableau (facultative)"
                   />
-                  <span className="text-[12px] text-ink-faint">
+                  <span className="text-caption text-ink-faint">
                     Une ligne = une ligne du tableau, cellules séparées par « | ».
                     La première ligne sert d'en-tête.
                   </span>
@@ -423,7 +423,7 @@ export function BlocksField({
               )}
 
               {(block.type === "ul" || block.type === "ol") && (
-                <span className="text-[12px] text-ink-faint">
+                <span className="text-caption text-ink-faint">
                   Une ligne = un élément de liste.
                 </span>
               )}
@@ -488,7 +488,7 @@ export function ArticleCtaField({
           checked={!empty}
           onCheckedChange={(v) => onChange(v === true ? cta : null)}
         />
-        <Label className="text-[14px] font-semibold">Encart d'appel à l'action en fin d'article</Label>
+        <Label className="text-small font-semibold">Encart d'appel à l'action en fin d'article</Label>
       </div>
       {!empty && (
         <div className="grid gap-3 rounded-lg border p-3 sm:grid-cols-2">
@@ -517,7 +517,7 @@ function LabeledInput({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      {label ? <Label className="text-[12px] text-muted-foreground">{label}</Label> : null}
+      {label ? <Label className="text-caption text-muted-foreground">{label}</Label> : null}
       <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
     </div>
   )

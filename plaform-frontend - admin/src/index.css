@@ -85,6 +85,55 @@
     --color-archived-border: #d1d5db;
 }
 
+/*
+ * Échelle unique d'espacement et de typographie (site public et back office).
+ * Valeurs fluides entre 390 px (mobile) et 1440 px (ordinateur). Toute la
+ * mise en page passe par ces jetons : pas de taille ou d'écart « à l'œil ».
+ */
+@theme {
+    /* Texte — 8 tailles */
+    --text-display: clamp(2.25rem, 1.82rem + 1.76vw, 3.375rem);   /* 36 → 54 */
+    --text-display--line-height: 1.04;
+    --text-display--letter-spacing: -0.025em;
+    --text-h1: clamp(2rem, 1.71rem + 1.14vw, 2.75rem);            /* 32 → 44 */
+    --text-h1--line-height: 1.08;
+    --text-h1--letter-spacing: -0.02em;
+    --text-h2: clamp(1.625rem, 1.44rem + 0.76vw, 2.125rem);       /* 26 → 34 */
+    --text-h2--line-height: 1.15;
+    --text-h2--letter-spacing: -0.015em;
+    --text-h3: clamp(1.25rem, 1.16rem + 0.38vw, 1.5rem);          /* 20 → 24 */
+    --text-h3--line-height: 1.25;
+    --text-lead: clamp(1.125rem, 1.08rem + 0.19vw, 1.25rem);      /* 18 → 20 */
+    --text-lead--line-height: 1.55;
+    --text-body: 1.0625rem;                                        /* 17 */
+    --text-body--line-height: 1.65;
+    --text-small: 0.9375rem;                                       /* 15 */
+    --text-small--line-height: 1.5;
+    --text-caption: 0.8125rem;                                     /* 13 */
+    --text-caption--line-height: 1.4;
+
+    /* Rythme vertical — 4 niveaux */
+    --spacing-section: clamp(3.5rem, 2.66rem + 3.43vw, 5.5rem);   /* 56 → 88 : entre deux sections */
+    --spacing-block: clamp(1.75rem, 1.43rem + 1.33vw, 2.5rem);    /* 28 → 40 : titre ↔ contenu, colonnes */
+    --spacing-group: clamp(1rem, 0.84rem + 0.67vw, 1.5rem);       /* 16 → 24 : entre éléments d'un groupe */
+    --spacing-item: 0.75rem;                                       /* 12 : à l'intérieur d'un élément */
+
+    /* Largeurs */
+    --container-page: 75rem;   /* 1200 */
+    --container-text: 42.5rem; /* 680 : lecture */
+}
+
+/* Gouttière latérale : 20 px (mobile) → 32 px (tablette) → 48 px (ordinateur). */
+:root { --gutter: 1.25rem; }
+@media (min-width: 40rem) { :root { --gutter: 2rem; } }
+@media (min-width: 64rem) { :root { --gutter: 3rem; } }
+
+/* Distance entre le bord du contenu et le bord de l'écran. */
+@utility px-gutter { padding-inline: var(--gutter); }
+@utility bleed-r { margin-right: calc(-1 * (var(--gutter) + max(0px, (100vw - var(--container-page)) / 2))); }
+@utility pl-edge { padding-left: calc(var(--gutter) + max(0px, (100vw - var(--container-page)) / 2)); }
+@utility pr-edge { padding-right: calc(var(--gutter) + max(0px, (100vw - var(--container-page)) / 2)); }
+
 :root {
     --background: #f7f3ee;
     --foreground: #1e2d4a;
@@ -109,15 +158,15 @@
     --chart-3: #2b4c7e;
     --chart-4: #d97706;
     --chart-5: #1e2d4a;
-    --radius: 0.375rem;
-    --sidebar: #fdfaf7;
-    --sidebar-foreground: #1e2d4a;
-    --sidebar-primary: #15803d;
-    --sidebar-primary-foreground: #fdfaf7;
-    --sidebar-accent: #f7f3ee;
-    --sidebar-accent-foreground: #1e2d4a;
-    --sidebar-border: #e8e2d9;
-    --sidebar-ring: #2b4c7e;
+    --radius: 0.1875rem;
+    --sidebar: #141e33;
+    --sidebar-foreground: #fdfaf7;
+    --sidebar-primary: #c9952a;
+    --sidebar-primary-foreground: #141e33;
+    --sidebar-accent: #1e2d4a;
+    --sidebar-accent-foreground: #fdfaf7;
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: #c9952a;
 }
 
 .dark {
@@ -163,10 +212,42 @@
     }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+    text-wrap: balance;
+    }
+  p, li {
+    text-wrap: pretty;
+    }
+  ::selection {
+    background: var(--color-gold-tint);
+    color: var(--color-navy);
+    }
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
     }
 }
 
+/* Zones éditables de l'éditeur d'article : repère quand elles sont vides. */
+.editable:empty::before {
+  content: attr(data-placeholder);
+  color: var(--color-ink-faint);
+  pointer-events: none;
+}
+/* Comme Medium : le repère n'apparaît que sur la ligne active (ou si c'est la seule). */
+.editable:not(:focus):not([data-solo]):empty::before {
+  content: none;
+}
+.editable a {
+  color: var(--color-gehmit);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 @layer utilities {
+  /* Libellé discret de section ou de colonne (remplace l'étiquette mono). */
+  .eyebrow {
+    @apply text-[12.5px] font-semibold text-ink-muted;
+  }
   .tnum {
     font-variant-numeric: tabular-nums;
   }

@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type MouseEvent } from "react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 
 /* ─── Helpers ─── */
 

@@ -249,18 +249,18 @@ export function NewsletterPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-group">
       <div className="flex flex-col gap-1">
         <h1 className="font-heading text-3xl font-semibold tracking-[-0.01em]">
           Newsletter
         </h1>
-        <p className="text-[15px] text-ink-muted">
+        <p className="text-small text-ink-muted">
           {activeCount} abonné(s) actif(s). Chaque e-mail emporte un lien de
           désinscription signé.
         </p>
       </div>
       {error && (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-[15px]">
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-5 py-4 text-small">
           {error}
         </div>
       )}
@@ -293,7 +293,7 @@ export function NewsletterPage() {
             <CardContent className="flex flex-col gap-4">
               {/* Audience */}
               <div className="flex flex-col gap-2.5 rounded-lg border p-4">
-                <Label className="text-[14px]">Destinataires</Label>
+                <Label className="text-small">Destinataires</Label>
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -344,7 +344,7 @@ export function NewsletterPage() {
                     ))}
                   </div>
                 )}
-                <span className="text-[12.5px] text-ink-faint">
+                <span className="text-caption text-ink-faint">
                   {targetCount} destinataire{targetCount > 1 ? "s" : ""} recevra{targetCount > 1 ? "ont" : ""} cette campagne.
                 </span>
               </div>
@@ -385,7 +385,7 @@ export function NewsletterPage() {
                     value=""
                     onValueChange={(v) => v && insertAt(`{{${v}}}`)}
                   >
-                    <SelectTrigger className="h-7 w-auto gap-1.5 border-0 bg-transparent text-[12.5px] shadow-none">
+                    <SelectTrigger className="h-7 w-auto gap-1.5 border-0 bg-transparent text-caption shadow-none">
                       <TypeIcon className="size-3.5" />
                       <SelectValue placeholder="Variable" />
                     </SelectTrigger>
@@ -401,7 +401,7 @@ export function NewsletterPage() {
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                   placeholder={"Bonjour {{prenom}},\n\n## Titre de section\n\nVoici les nouvelles de Gehmit…\n\n- Premier point\n- Deuxième point\n\n[[Découvrir]](https://gehmit.org)"}
-                  className="min-h-[220px] rounded-t-none border-t-0 font-mono text-[13.5px]"
+                  className="min-h-[220px] rounded-t-none border-t-0 font-mono text-caption"
                 />
               </div>
               <div className="flex flex-wrap gap-2">
@@ -451,7 +451,7 @@ export function NewsletterPage() {
             <CardContent className="flex flex-col gap-3">
               {campaigns.length === 0 && (
                 <div className="flex flex-col items-start gap-3 py-8">
-                  <p className="text-[14px] text-muted-foreground">
+                  <p className="text-small text-muted-foreground">
                     Aucune campagne pour le moment.
                   </p>
                   <Button variant="outline" size="sm" onClick={() => setTab("compose")}>
@@ -465,10 +465,10 @@ export function NewsletterPage() {
                   <div key={c.id} className="group flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors hover:border-primary/40">
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="truncate text-[15px] font-semibold">{c.subject}</span>
+                        <span className="truncate text-small font-semibold">{c.subject}</span>
                         <Badge variant={st.variant}>{st.label}</Badge>
                       </div>
-                      <span className="truncate text-[13px] text-muted-foreground">
+                      <span className="truncate text-caption text-muted-foreground">
                         {c.status === "draft"
                           ? `Créée le ${new Date(c.createdAt).toLocaleString("fr-FR")}`
                           : `${c.sentAt ? new Date(c.sentAt).toLocaleString("fr-FR") : "—"} — ${c.recipientCount} destinataire(s)`}

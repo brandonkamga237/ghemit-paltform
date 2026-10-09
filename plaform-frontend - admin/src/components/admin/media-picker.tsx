@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { FolderIcon, ImageIcon, LoaderCircleIcon, UploadIcon } from "lucide-react"
-import { cn } from "cn"
+import { cn } from "@/lib/cn"
 import { API_URL, api } from "@/lib/api"
 import type { MediaFile } from "@/lib/types"
 import { toast } from "@/components/ui/toast"
@@ -128,11 +128,11 @@ export function MediaPicker({
             </div>
 
             {loading ? (
-              <div className="flex justify-center py-12">
+              <div className="flex justify-center py-block">
                 <LoaderCircleIcon className="size-6 animate-spin text-muted-foreground" />
               </div>
             ) : visible.length === 0 ? (
-              <p className="rounded-lg border border-dashed px-5 py-10 text-center text-sm text-muted-foreground">
+              <p className="rounded-lg border border-dashed px-5 py-block text-center text-sm text-muted-foreground">
                 Aucune image dans ce dossier — utilisez l'onglet « Depuis ma machine ».
               </p>
             ) : (
@@ -155,7 +155,7 @@ export function MediaPicker({
                         loading="lazy"
                       />
                     </span>
-                    <span className="truncate px-2 pb-1.5 text-[12px] text-muted-foreground" title={m.filename}>
+                    <span className="truncate px-2 pb-1.5 text-caption text-muted-foreground" title={m.filename}>
                       {m.filename}
                     </span>
                   </button>
@@ -195,7 +195,7 @@ export function MediaPicker({
             <Label
               htmlFor="media-picker-file"
               className={cn(
-                "flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-dashed px-5 py-10 text-center transition-colors hover:border-primary",
+                "flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-dashed px-5 py-block text-center transition-colors hover:border-primary",
                 uploading && "pointer-events-none opacity-60"
               )}
             >
@@ -243,7 +243,7 @@ function Chip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[13px] transition-colors",
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-caption transition-colors",
         active
           ? "border-primary bg-primary text-primary-foreground"
           : "border-input bg-background hover:border-primary/60"
@@ -272,7 +272,7 @@ export function ImageField({
   const [open, setOpen] = useState(false)
   return (
     <div className="flex flex-col gap-1.5">
-      <Label className="text-[14px] font-semibold">{label}</Label>
+      <Label className="text-small font-semibold">{label}</Label>
       <div className="flex items-center gap-3">
         <span className="flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-muted">
           {value ? (
@@ -292,7 +292,7 @@ export function ImageField({
           )}
         </div>
       </div>
-      {hint && <span className="text-[13px] text-muted-foreground">{hint}</span>}
+      {hint && <span className="text-caption text-muted-foreground">{hint}</span>}
       <MediaPicker open={open} onOpenChange={setOpen} onSelect={(img) => onChange(img.url)} />
     </div>
   )
