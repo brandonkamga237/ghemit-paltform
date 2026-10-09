@@ -7,15 +7,15 @@ export function PartnerLogos({ title }: { title: string }) {
   const partners = usePartners()
   if (partners.length === 0) return null
   return (
-    <section className="border-t border-sand bg-surface">
-      <Container className="flex flex-col gap-6 py-12">
-        <span className="mono-label">{title}</span>
-        <ul className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
+    <section className="bg-surface">
+      <Container className="flex flex-col gap-8 py-14">
+        <h2 className="text-[15px] font-semibold text-ink-muted">{title}</h2>
+        <ul className="grid grid-cols-2 gap-px bg-sand sm:grid-cols-3 lg:grid-cols-6">
           {partners.map((p) => (
             <li
               key={p.name}
               title={p.description ?? p.name}
-              className="flex h-[72px] items-center justify-center overflow-hidden rounded-lg border border-sand bg-cream px-3"
+              className="flex h-24 items-center justify-center bg-surface px-4"
             >
               {p.logoUrl ? (
                 <img
@@ -25,10 +25,10 @@ export function PartnerLogos({ title }: { title: string }) {
                   height={56}
                   loading="lazy"
                   decoding="async"
-                  className="max-h-14 w-auto object-contain"
+                  className="max-h-12 w-auto object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
                 />
               ) : (
-                <span className="text-center text-[14px] font-semibold text-navy">{p.name}</span>
+                <span className="text-center font-heading text-[17px] font-semibold text-navy">{p.name}</span>
               )}
             </li>
           ))}

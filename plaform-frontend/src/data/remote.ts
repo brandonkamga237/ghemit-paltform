@@ -102,15 +102,21 @@ export function usePrograms(): Program[] {
 }
 
 export function useArticleSummaries(): ArticleSummary[] | null {
-  return useRemoteContent()?.articles ?? null
+  const remote = useRemoteContent()
+  // null = chargement en cours ; liste vide si l'API a répondu sans données ou est injoignable.
+  return remote ? (remote.articles ?? []) : null
 }
 
 export function useEvents(): EventItem[] | null {
-  return useRemoteContent()?.events ?? null
+  const remote = useRemoteContent()
+  // null = chargement en cours ; liste vide si l'API a répondu sans données ou est injoignable.
+  return remote ? (remote.events ?? []) : null
 }
 
 export function useFormations(): Formation[] | null {
-  return useRemoteContent()?.formations ?? null
+  const remote = useRemoteContent()
+  // null = chargement en cours ; liste vide si l'API a répondu sans données ou est injoignable.
+  return remote ? (remote.formations ?? []) : null
 }
 
 export function usePartners(): Partner[] {

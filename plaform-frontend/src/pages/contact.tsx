@@ -1,31 +1,30 @@
-import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
-import { motion } from "motion/react"
+import { useSearchParams } from "react-router"
 import { MessageCircleIcon } from "lucide-react"
 import { contact, faq, whatsappUrl } from "@/data/content"
 import { apiPost } from "@/lib/api"
-import { Photo } from "@/components/site/photo"
-import { Button } from "@/components/ui/button"
+import { usePageMeta } from "@/lib/seo"
+import { Container } from "@/components/site/bands"
+import { PageHero } from "@/components/site/page-header"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  ChoiceGroup,
+  Field,
+  FormFooter,
+  FormPanel,
+  FormSuccess,
+  inputCls,
+  submitCls,
+  textareaCls,
+} from "@/components/site/form"
+import { emailOk } from "@/lib/validation"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
-const ease = [0.22, 1, 0.36, 1] as const
-const inputCls =
-  "h-12 rounded-md border-sand-dark bg-white px-3.5 text-[15.5px] placeholder:text-ink-faint focus-visible:border-focus focus-visible:ring-focus/20"
 
 const sujets = [
   "Une question sur un programme",
@@ -36,166 +35,126 @@ const sujets = [
 ]
 
 export function ContactPage() {
-  usePageMeta("Contact", "Écrivez à l'équipe Gehmit : question sur un programme, un partenariat ou une caravane.")
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState(false)
-  const [sending, setSending] = useState(false)
-  const [subject, setSubject] = useState(sujets[0])
+  usePageMeta("Contact", "Écrivez à l'équipe Gehmit : question sur un programme, mentorat, partenariat ou presse.")
+  const [params] = useSearchParams()
+  const initialSubject = params.get("objet")
+  const [subject, setSubject] = useState(
+    initialSubject && sujets.includes(initialSubject) ? initialSubject : sujets[0]
+  )
+  const [form, setForm] = useState({ name: "", email: "", message: params.get("message") ?? "" })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle")
+
+  const set = (k: keyof typeof form, v: string) => {
+    setForm((f) => ({ ...f, [k]: v }))
+    setErrors((e) => ({ ...e, [k]: "" }))
+  }
+
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const errs: Record<string, string> = {}
+    if (!form.name.trim()) errs.name = "Indiquez votre nom."
+    if (!emailOk(form.email)) errs.email = "Indiquez une adresse e-mail valide, ex. prenom@exemple.com."
+    if (!form.message.trim()) errs.message = "Écrivez votre message."
+    setErrors(errs)
+    if (Object.keys(errs).length > 0) return
+    setState("sending")
+    try {
+      await apiPost("/api/public/contact", { name: form.name, email: form.email, subject, message: form.message })
+      setState("sent")
+    } catch {
+      setState("error")
+    }
+  }
 
   return (
-    <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
-      {/* Formulaire */}
-      <motion.section
-        className="flex flex-col gap-7 bg-cream px-6 py-16 sm:px-11"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, ease }}
-      >
-        <div className="flex flex-col gap-3.5">
-          <h1 className="font-heading text-4xl leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[44px]">
-            Nous écrire
-          </h1>
-          <p className="text-lg leading-relaxed text-ink-muted">
-            Réponse sous 48 heures ouvrées.
-          </p>
-        </div>
+    <div className="flex flex-col">
+      <PageHero
+        trail={[{ label: "Accueil", to: "/" }, { label: "Contact" }]}
+        title={<>Écrivez-<span className="accent-word">nous</span>.</>}
+        lede="Une personne de l'équipe vous répond sous 48 heures ouvrées. Pour une réponse rapide, WhatsApp reste le plus direct."
+      />
 
-        {sent ? (
-          <div className="flex max-w-[560px] flex-col gap-2 rounded-lg border border-gehmit bg-open-bg p-6">
-            <span className="text-base font-semibold text-open-text">Message envoyé</span>
-            <span className="text-[15px] leading-relaxed text-open-text">
-              Nous revenons vers vous sous 48 heures ouvrées.
-            </span>
-          </div>
-        ) : (
-          <form
-            className="flex max-w-[560px] flex-col gap-5"
-            onSubmit={async (e) => {
-              e.preventDefault()
-              const fd = new FormData(e.currentTarget)
-              setSending(true)
-              setError(false)
-              try {
-                await apiPost("/api/public/contact", {
-                  name: fd.get("name"),
-                  email: fd.get("email"),
-                  subject,
-                  message: fd.get("message"),
-                })
-                setSent(true)
-              } catch {
-                setError(true)
-              } finally {
-                setSending(false)
-              }
-            }}
-          >
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="flex flex-col gap-2">
-                <Label className="text-[15px] font-semibold">Nom complet</Label>
-                <Input required name="name" placeholder="Votre nom" className={inputCls} />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label className="text-[15px] font-semibold">Adresse e-mail</Label>
-                <Input required name="email" type="email" placeholder="votre@email.com" className={inputCls} />
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label className="text-[15px] font-semibold">Objet</Label>
-              <Select value={subject} onValueChange={(v) => setSubject(v as string)}>
-                <SelectTrigger className="h-12 w-full justify-between rounded-md border-sand-dark bg-white px-3.5 text-[15.5px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {sujets.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label className="text-[15px] font-semibold">Message</Label>
-              <Textarea
-                required
-                name="message"
-                placeholder="Votre message"
-                className="min-h-[150px] rounded-md border-sand-dark bg-white p-3.5 text-[15.5px] placeholder:text-ink-faint focus-visible:border-focus focus-visible:ring-focus/20"
-              />
-            </div>
-            {error && (
-              <span className="text-[14px] text-soon-text">
-                Envoi impossible pour le moment. Réessayez ou écrivez-nous à {contact.email}.
-              </span>
+      <section className="bg-surface">
+        <Container className="grid items-start gap-12 py-12 lg:grid-cols-12 lg:gap-10 lg:py-16">
+          <div className="lg:col-span-7">
+            {state === "sent" ? (
+              <FormSuccess title="Message envoyé">
+                Merci {form.name.split(" ")[0]}. Nous vous répondons à {form.email} sous 48 heures ouvrées.
+              </FormSuccess>
+            ) : (
+              <FormPanel onSubmit={submit}>
+                <Field label="Objet" as="div">
+                  <ChoiceGroup options={sujets} value={subject} onChange={setSubject} />
+                </Field>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field label="Nom complet" error={errors.name}>
+                    <Input value={form.name} onChange={(e) => set("name", e.target.value)} autoComplete="name" aria-invalid={!!errors.name} className={inputCls} />
+                  </Field>
+                  <Field label="Adresse e-mail" error={errors.email}>
+                    <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" placeholder="votre@email.com" aria-invalid={!!errors.email} className={inputCls} />
+                  </Field>
+                </div>
+                <Field label="Message" error={errors.message}>
+                  <Textarea value={form.message} onChange={(e) => set("message", e.target.value)} aria-invalid={!!errors.message} className={textareaCls} />
+                </Field>
+                <FormFooter note="Réponse sous 48 heures ouvrées" error={state === "error"}>
+                  <button type="submit" disabled={state === "sending"} className={submitCls}>
+                    {state === "sending" ? "Envoi…" : "Envoyer le message"}
+                  </button>
+                </FormFooter>
+              </FormPanel>
             )}
-            <Button
-              type="submit"
-              disabled={sending}
-              className="h-12 self-start rounded-md bg-gehmit px-7 text-[15px] font-semibold text-surface hover:bg-gehmit-hover"
-            >
-              {sending ? "Envoi…" : "Envoyer"}
-            </Button>
-          </form>
-        )}
-      </motion.section>
+          </div>
 
-      {/* Panneau navy — photo de bandeau + coordonnées */}
-      <motion.aside
-        className="flex flex-col gap-9 bg-navy px-6 py-16 sm:px-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.5, ease }}
-      >
-        <div className="relative -mx-6 -mt-16 mb-2 h-44 overflow-hidden sm:-mx-10">
-          <Photo
-            photo="seminaire-echange"
-            alt="Échanges entre participants lors d'un événement Gehmit"
-            className="h-full"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/30 to-navy/5" />
-        </div>
-        <div className="flex flex-col gap-3">
-          <span className="font-mono text-[11px] tracking-[0.12em] text-gold uppercase">
-            Coordonnées
-          </span>
-          <a href={`mailto:${contact.email}`} className="text-[17px] text-surface hover:underline">
-            {contact.email}
-          </a>
-          <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="text-[17px] text-surface hover:underline">
-            {contact.phone}
-          </a>
-          <span className="text-[17px] text-surface/75">{contact.city}</span>
-        </div>
+          <aside className="flex flex-col gap-10 lg:sticky lg:top-24 lg:col-span-5">
+            <div className="flex flex-col gap-4">
+              <h2 className="font-heading text-[24px] font-semibold text-navy">Directement</h2>
+              <dl className="flex flex-col border-t border-sand-dark">
+                <Row label="E-mail">
+                  <a href={`mailto:${contact.email}`} className="hover:text-gehmit">{contact.email}</a>
+                </Row>
+                <Row label="Téléphone">
+                  <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-gehmit">{contact.phone}</a>
+                </Row>
+                <Row label="Adresse">{contact.city}</Row>
+              </dl>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-navy text-[15.5px] font-semibold text-surface transition-colors hover:bg-navy-light"
+              >
+                <MessageCircleIcon className="size-5 text-gold" strokeWidth={1.8} />
+                Écrire sur WhatsApp
+              </a>
+            </div>
 
-        <div className="flex flex-col gap-3">
-          <span className="font-mono text-[11px] tracking-[0.12em] text-gold uppercase">
-            Questions fréquentes
-          </span>
-          <Accordion>
-            {faq.map((f, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="border-white/12">
-                <AccordionTrigger className="py-3.5 text-base text-surface hover:no-underline">
-                  {f.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-[15px] leading-relaxed text-surface/70">
-                  {f.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
+            <div className="flex flex-col gap-2">
+              <h2 className="font-heading text-[24px] font-semibold text-navy">Questions fréquentes</h2>
+              <Accordion>
+                {faq.map((f, i) => (
+                  <AccordionItem key={i} value={`faq-${i}`} className="border-sand-dark">
+                    <AccordionTrigger className="py-4 text-left text-[16.5px] font-semibold text-navy hover:no-underline">
+                      {f.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-[16px] leading-relaxed text-ink-muted">{f.a}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </aside>
+        </Container>
+      </section>
+    </div>
+  )
+}
 
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-lg bg-white/8 px-4.5 py-4 transition-colors hover:bg-white/12"
-        >
-          <MessageCircleIcon className="size-5 shrink-0 text-gold" strokeWidth={1.8} />
-          <span className="text-[15px] leading-normal text-surface/85">
-            Une réponse rapide ? Écrivez-nous directement sur WhatsApp.
-          </span>
-        </a>
-      </motion.aside>
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-sand py-3.5">
+      <dt className="text-[14.5px] text-ink-muted">{label}</dt>
+      <dd className="text-right text-[16.5px] font-semibold text-navy">{children}</dd>
     </div>
   )
 }

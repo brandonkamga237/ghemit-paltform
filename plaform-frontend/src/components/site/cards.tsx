@@ -1,150 +1,51 @@
 import { Link } from "react-router"
-import { ArrowRightIcon } from "lucide-react"
 import { cn } from "cn"
-import type { ArticleSummary, Program } from "@/data/content"
+import type { ArticleSummary } from "@/data/content"
 import { articleDate } from "@/data/remote"
-import { mediaUrl } from "@/lib/api"
-import { Photo, imageSrcSet } from "./photo"
-import { StatusPill } from "./status-pill"
-import { Button } from "@/components/ui/button"
+import { mediaUrl, imageSrcSet } from "@/lib/api"
 
-const cardBase =
-  "group overflow-hidden rounded-lg border border-sand-dark bg-surface shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04)] transition-[box-shadow,border-color] duration-200 hover:border-gold hover:shadow-[0_4px_12px_rgba(0,0,0,0.10),0_1px_3px_rgba(0,0,0,0.06)]"
-
-/** Carte programme — image, titre, statut, une ligne, un lien. */
-export function ProgramCard({ program }: { program: Program }) {
-  const to = program.slug === "formations" ? "/formations" : `/programmes/${program.slug}`
-  return (
-    <Link to={to} className={cn(cardBase, "flex flex-col")}>
-      <div className="h-[220px] overflow-hidden">
-        <Photo
-          photo={program.photo}
-          alt={program.photoAlt}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="h-full transition-transform duration-200 group-hover:scale-[1.02]"
-        />
-      </div>
-      <div className="flex flex-col gap-2.5 p-5">
-        <div className="flex items-center gap-2.5">
-          <span className="font-heading text-[22px] font-semibold">{program.name}</span>
-          <StatusPill status={program.status} label={program.statusLabel} />
-        </div>
-        <p className="text-[15.5px] leading-[1.55] text-ink-muted">{program.cardDescription}</p>
-        <span className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-gehmit">
-          {program.cardLink}
-          <ArrowRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </span>
-      </div>
-    </Link>
-  )
-}
-
-/** Rangée programme de la liste — photo à gauche, détails et actions à droite. */
-export function ProgramRow({ program }: { program: Program }) {
-  const to = program.slug === "formations" ? "/formations" : `/programmes/${program.slug}`
-  const closed = program.status === "closed"
-  return (
-    <div
-      className={cn(
-        "grid overflow-hidden rounded-lg border border-sand-dark bg-surface md:grid-cols-[minmax(0,380px)_1fr] lg:grid-cols-[440px_1fr]",
-        closed && "opacity-[0.72]"
-      )}
-    >
-      <div className="h-[220px] md:h-full md:min-h-[260px]">
-        <Photo
-          photo={program.photo}
-          alt={program.photoAlt}
-          sizes="(min-width: 1024px) 440px, (min-width: 768px) 380px, 100vw"
-        />
-      </div>
-      <div className="flex flex-col justify-center gap-4 p-7 md:px-9">
-        <div className="flex flex-wrap items-center gap-3">
-          <Link to={to} className="font-heading text-[28px] font-semibold transition-colors hover:text-gehmit">
-            {program.name}
-          </Link>
-          <StatusPill status={program.status} label={program.statusLabel} />
-        </div>
-        <p className="max-w-[560px] text-[16.5px] leading-[1.65] text-ink-muted">
-          {program.description}
-        </p>
-        <div className="flex flex-wrap gap-x-7 gap-y-1 text-[15px] text-ink-faint">
-          {program.meta.map((m) => (
-            <span key={m}>{m}</span>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-3 pt-1">
-          {program.primaryCta.disabled ? (
-            <Button disabled className="h-12 rounded-md px-6 text-[15px] font-semibold">
-              {program.primaryCta.label}
-            </Button>
-          ) : (
-            <Button
-              render={<Link to={program.primaryCta.to} />}
-              className="h-12 rounded-md bg-gehmit px-6 text-[15px] font-semibold text-surface hover:bg-gehmit-hover"
-            >
-              {program.primaryCta.label}
-            </Button>
-          )}
-          {program.secondaryCta ? (
-            <Button
-              variant="outline"
-              render={<Link to={program.secondaryCta.to} />}
-              className="h-12 rounded-md border-navy px-6 text-[15px] font-semibold text-navy hover:bg-navy hover:text-surface"
-            >
-              {program.secondaryCta.label}
-            </Button>
-          ) : null}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/** Carte article de blog. */
-export function ArticleCard({ article, large = false }: { article: ArticleSummary; large?: boolean }) {
+/**
+ * Article de blog, à la manière d'une page de magazine : image, date et
+ * rubrique, titre, chapô. `lead` = mise en avant sur deux colonnes.
+ */
+export function ArticleCard({ article, lead = false }: { article: ArticleSummary; lead?: boolean }) {
   return (
     <Link
       to={`/blog/${article.slug}`}
-      className={cn(cardBase, "flex flex-col")}
+      className={cn("group grid gap-5", lead && "lg:grid-cols-12 lg:items-center lg:gap-10")}
     >
-      <div className={cn("overflow-hidden", large ? "h-[280px]" : "h-[190px]")}>
+      <div className={cn("aspect-[4/3] overflow-hidden bg-sand", lead && "lg:col-span-7 lg:aspect-[16/10]")}>
         {article.imageUrl ? (
           <img
             src={mediaUrl(article.imageUrl)}
             srcSet={imageSrcSet(mediaUrl(article.imageUrl))}
-            sizes={large ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+            sizes={lead ? "(min-width: 1024px) 60vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
             alt={article.imageAlt ?? article.title}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           />
         ) : (
-          <Photo
-            label={article.photoLabel ?? article.title}
-            className="h-full transition-transform duration-200 group-hover:scale-[1.02]"
-          />
+          <div className="flex h-full items-end bg-navy p-6">
+            <span className="font-heading text-[22px] leading-snug text-surface/80 italic">{article.category || "Gehmit"}</span>
+          </div>
         )}
       </div>
-      <div className="flex flex-col gap-2.5 p-5">
-        <span className="font-mono text-[11.5px] tracking-[0.12em] text-ink-faint uppercase">
-          {articleDate(article)}
-          {article.category ? ` · ${article.category}` : ""}
+      <div className={cn("flex flex-col gap-3", lead && "lg:col-span-5")}>
+        <span className="text-[14px] text-ink-muted">
+          {[articleDate(article), article.category, `${article.readingMinutes} min`].filter(Boolean).join(" · ")}
         </span>
         <span
           className={cn(
-            "font-heading leading-[1.3] font-semibold",
-            large ? "text-2xl" : "text-xl"
+            "font-heading leading-[1.2] font-semibold text-navy decoration-1 underline-offset-4 group-hover:underline",
+            lead ? "text-[30px] sm:text-[38px]" : "text-[23px]"
           )}
         >
           {article.title}
         </span>
-        {large ? (
-          <p className="text-[16.5px] leading-[1.65] text-ink-muted">{article.excerpt}</p>
-        ) : null}
-        <span className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-gehmit">
-          {large ? "Lire l'article" : "Lire"}
-          <ArrowRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </span>
+        <p className={cn("leading-relaxed text-navy/70", lead ? "text-[18px]" : "line-clamp-3 text-[16px]")}>
+          {article.excerpt}
+        </p>
       </div>
     </Link>
   )

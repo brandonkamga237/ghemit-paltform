@@ -6,6 +6,11 @@ export const API_URL: string =
 /** Préfixe les URLs relatives de la médiathèque par l'origine de l'API. */
 export const mediaUrl = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url)
 
+/** `srcset` d'une image de la médiathèque, redimensionnée par l'API (`?w=`). */
+export function imageSrcSet(src: string, widths = [320, 640, 960, 1280, 1920]): string {
+  return widths.map((w) => `${src}?w=${w} ${w}w`).join(", ")
+}
+
 /** Article complet par slug (corps compris) ; null si absent, brouillon ou API injoignable. */
 export async function fetchArticle(slug: string): Promise<Article | null> {
   try {

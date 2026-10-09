@@ -1,21 +1,27 @@
-import { usePageMeta } from "@/lib/seo"
 import { useState } from "react"
-import { Link } from "react-router"
-import { motion } from "motion/react"
 import { cn } from "cn"
 import { useFormations } from "@/data/remote"
-import { PageHeader } from "@/components/site/page-header"
+import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
-import { Reveal } from "@/components/site/reveal"
-import { StatusPill } from "@/components/site/status-pill"
-import { Button } from "@/components/ui/button"
+import { CtaLink } from "@/components/site/cta"
+import { PageHero, StageLine } from "@/components/site/page-header"
+import { StatusDot } from "@/components/site/status-pill"
 
 const filters = ["Toutes", "Data", "Développement", "IA", "En ligne", "Douala"]
+
+/** Lien d'inscription : formulaire de contact prérempli avec la session. */
+function inscriptionLink(name: string, session: string) {
+  const q = new URLSearchParams({
+    objet: "Une question sur un programme",
+    message: `Bonjour, je souhaite m'inscrire à la formation « ${name} » (session du ${session}).`,
+  })
+  return `/contact?${q}`
+}
 
 export function FormationsPage() {
   const [filter, setFilter] = useState("Toutes")
   const formations = useFormations()
-  usePageMeta("Formations", "Le catalogue des formations Gehmit : courtes, intensives, en ligne ou en présentiel.")
+  usePageMeta("Formations", "Le catalogue des formations Gehmit : data, développement web et IA appliquée, en ligne ou à Douala.")
 
   const rows = (formations ?? []).filter((f) => {
     if (filter === "Toutes") return true
@@ -25,109 +31,111 @@ export function FormationsPage() {
 
   return (
     <div className="flex flex-col">
-      <Container>
-        <PageHeader
-          trail={[
-            { label: "Programmes", to: "/programmes" },
-            { label: "Formations" },
-          ]}
-          title="Catalogue des formations"
-          lede="Durées, tarifs et dates réelles, mis à jour par l'équipe."
-        />
-      </Container>
+      <PageHero
+        trail={[{ label: "Programmes", to: "/programmes" }, { label: "Formations" }]}
+        kicker={<StageLine offer="formations" />}
+        title={<>Des sessions courtes, <span className="accent-word">des dates réelles</span>.</>}
+        lede="Data, développement web et IA appliquée. Durées, tarifs et calendrier mis à jour par l'équipe ; jamais plus de 25 000 FCFA."
+      />
 
-      {/* Filtres */}
-      <Container className="flex flex-wrap items-center gap-2.5 pb-6">
-        {filters.map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={cn(
-              "h-11 rounded-full px-4.5 text-[14.5px] transition-colors duration-150",
-              filter === f
-                ? "bg-navy font-semibold text-surface"
-                : "border border-sand-dark bg-surface hover:border-navy"
-            )}
-          >
-            {f}
-          </button>
-        ))}
-      </Container>
-
-      {/* Tableau */}
-      <Container className="pb-12">
-        <Reveal className="overflow-hidden rounded-lg border border-sand-dark bg-surface">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-left">
-              <thead>
-                <tr className="border-b border-sand-dark bg-cream">
-                  {["Formation", "Prochaine session", "Durée", "Format", "Tarif"].map((h) => (
-                    <th
-                      key={h}
-                      className="px-5 py-3.5 font-mono text-[11px] font-medium tracking-[0.1em] text-ink-faint uppercase"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                  <th className="px-5 py-3.5 text-right font-mono text-[11px] font-medium tracking-[0.1em] text-ink-faint uppercase">
-                    État
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((f, i) => {
-                  const done = f.status === "closed"
-                  return (
-                    <motion.tr
-                      key={f.name}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.05, duration: 0.3 }}
-                      className={cn(
-                        "border-b border-sand last:border-0",
-                        i % 2 === 1 && "bg-cream/60"
-                      )}
-                    >
-                      <td className={cn("px-5 py-5 text-[17px] font-semibold", done && "text-ink-faint")}>
-                        {f.name}
-                      </td>
-                      <td className={cn("tnum px-3 py-5 text-[15.5px]", done ? "text-ink-faint" : "text-ink-muted")}>
-                        {f.session}
-                      </td>
-                      <td className={cn("px-3 py-5 text-[15.5px]", done ? "text-ink-faint" : "text-ink-muted")}>
-                        {f.duration}
-                      </td>
-                      <td className={cn("px-3 py-5 text-[15.5px]", done ? "text-ink-faint" : "text-ink-muted")}>
-                        {f.format}
-                      </td>
-                      <td className={cn("px-3 py-5 text-[15.5px]", done ? "text-ink-faint" : "text-ink-muted")}>
-                        {f.price}
-                      </td>
-                      <td className="px-5 py-5 text-right">
-                        {f.status === "open" ? (
-                          <Button
-                            render={<Link to="/contact" />}
-                            className="h-10 rounded-md bg-gehmit px-4.5 text-[14.5px] font-semibold text-surface hover:bg-gehmit-hover"
-                          >
-                            S'inscrire
-                          </Button>
-                        ) : (
-                          <StatusPill status={f.status} label={f.statusLabel} />
-                        )}
-                      </td>
-                    </motion.tr>
-                  )
-                })}
-              </tbody>
-            </table>
+      <section className="bg-surface">
+        <Container className="flex flex-col gap-8 py-12 lg:py-16">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrer les formations">
+            {filters.map((f) => (
+              <button
+                key={f}
+                type="button"
+                aria-pressed={filter === f}
+                onClick={() => setFilter(f)}
+                className={cn(
+                  "h-11 rounded-sm border px-4 text-[15px] transition-colors",
+                  filter === f
+                    ? "border-navy bg-navy font-semibold text-surface"
+                    : "border-sand-dark bg-white text-navy hover:border-navy"
+                )}
+              >
+                {f}
+              </button>
+            ))}
           </div>
-        </Reveal>
-        {rows.length === 0 && formations !== null && (
-          <p className="py-10 text-center text-[15.5px] text-ink-muted">
-            Aucune session programmée pour le moment.
-          </p>
-        )}
-      </Container>
+
+          {formations === null ? (
+            <div className="flex flex-col gap-px" aria-busy="true">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-24 animate-pulse bg-cream" />
+              ))}
+            </div>
+          ) : rows.length === 0 ? (
+            <div className="flex flex-col items-start gap-3 border-t border-sand-dark py-10">
+              <p className="font-heading text-[24px] text-navy">Aucune session programmée pour ce filtre.</p>
+              <p className="text-[16px] text-ink-muted">
+                Les prochaines dates sont annoncées dans la lettre mensuelle (en bas de page).
+              </p>
+            </div>
+          ) : (
+            <ul className="flex flex-col border-t border-sand-dark">
+              {/* En-têtes de colonnes (grand écran) */}
+              <li
+                aria-hidden
+                className="hidden grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] gap-6 border-b border-sand-dark py-3 text-[13.5px] text-ink-muted lg:grid"
+              >
+                <span>Formation</span>
+                <span>Prochaine session</span>
+                <span>Durée</span>
+                <span>Format</span>
+                <span>Tarif</span>
+                <span className="text-right">Inscription</span>
+              </li>
+              {rows.map((f) => {
+                const done = f.status === "closed"
+                return (
+                  <li
+                    key={f.name}
+                    className={cn(
+                      "grid gap-x-6 gap-y-3 border-b border-sand py-6 lg:grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] lg:items-center",
+                      done && "text-ink-muted"
+                    )}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className={cn("font-heading text-[22px] leading-snug font-semibold", done ? "text-ink-muted" : "text-navy")}>
+                        {f.name}
+                      </span>
+                      <span className="text-[14px] text-ink-muted">{f.category}</span>
+                    </div>
+                    <dl className="contents text-[16px]">
+                      <Cell label="Prochaine session" value={f.session} />
+                      <Cell label="Durée" value={f.duration} />
+                      <Cell label="Format" value={f.format} />
+                      <Cell label="Tarif" value={f.price} />
+                    </dl>
+                    <div className="lg:text-right">
+                      {f.status === "open" ? (
+                        <CtaLink to={inscriptionLink(f.name, f.session)} className="h-11 px-5 text-[15px]">
+                          S'inscrire
+                        </CtaLink>
+                      ) : (
+                        <span className="inline-flex items-center gap-2 text-[14.5px] font-semibold">
+                          <StatusDot status={f.status} />
+                          {f.statusLabel}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </Container>
+      </section>
+    </div>
+  )
+}
+
+function Cell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 lg:block">
+      <dt className="text-[14px] text-ink-muted lg:sr-only">{label}</dt>
+      <dd className="tnum">{value}</dd>
     </div>
   )
 }

@@ -109,7 +109,7 @@
     --chart-3: #2b4c7e;
     --chart-4: #d97706;
     --chart-5: #1e2d4a;
-    --radius: 0.375rem;
+    --radius: 0.1875rem;
     --sidebar: #fdfaf7;
     --sidebar-foreground: #1e2d4a;
     --sidebar-primary: #15803d;
@@ -163,10 +163,36 @@
     }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+    text-wrap: balance;
+    }
+  p, li, figcaption {
+    text-wrap: pretty;
+    }
+  ::selection {
+    background: var(--color-gold-tint);
+    color: var(--color-navy);
+    }
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
     }
 }
 
 @layer utilities {
+  /* Filet de rubrique : trait court + intitulé, remplace l'étiquette mono. */
+  .rubric {
+    @apply flex items-center gap-3 text-[13px] font-semibold tracking-[0.02em] text-gehmit;
+  }
+  .rubric::before {
+    content: "";
+    @apply h-px w-8 bg-current;
+  }
+  /* Italique éditoriale pour le mot-clé d'un titre. */
+  .accent-word {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-gehmit);
+  }
   .tnum {
     font-variant-numeric: tabular-nums;
   }

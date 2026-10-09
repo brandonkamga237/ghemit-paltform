@@ -4,14 +4,13 @@ import { useEffect, useState, type ReactNode } from "react"
 import { InfoIcon, CheckCircle2Icon, AlertTriangleIcon } from "lucide-react"
 import type { Article, Block } from "@/data/content"
 import { articleDate } from "@/data/remote"
-import { fetchArticle, mediaUrl } from "@/lib/api"
+import { fetchArticle, mediaUrl, imageSrcSet } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
 import { cn } from "cn"
 import { Container } from "@/components/site/bands"
-import { imageSrcSet, Photo } from "@/components/site/photo"
-import { Reveal } from "@/components/site/reveal"
+import { Photo } from "@/components/site/photo"
 import { Breadcrumb } from "@/components/site/page-header"
-import { Button } from "@/components/ui/button"
+import { CtaLink } from "@/components/site/cta"
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -65,12 +64,12 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
   const [head, ...body] = rows
   return (
     <figure className="flex flex-col gap-2">
-      <div className="overflow-x-auto rounded-lg border border-sand-dark">
+      <div className="overflow-x-auto border-y border-sand-dark">
         <table className="w-full min-w-[480px] text-left">
           <thead>
             <tr className="border-b border-sand-dark bg-cream">
               {head.map((c, i) => (
-                <th key={i} className="px-4 py-3 font-mono text-[12px] font-medium tracking-[0.08em] text-ink-faint uppercase">
+                <th key={i} className="px-4 py-3 text-[14px] font-semibold text-navy">
                   {richText(c)}
                 </th>
               ))}
@@ -90,32 +89,32 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
         </table>
       </div>
       {caption ? (
-        <figcaption className="text-center text-sm text-ink-faint">{caption}</figcaption>
+        <figcaption className="text-[14px] text-ink-muted">{caption}</figcaption>
       ) : null}
     </figure>
   )
 }
 
 const CALLOUT_TONES = {
-  info: { icon: InfoIcon, className: "border-gehmit bg-gehmit/5" },
-  success: { icon: CheckCircle2Icon, className: "border-gold bg-cream" },
-  warning: { icon: AlertTriangleIcon, className: "border-amber-500 bg-amber-50" },
+  info: { icon: InfoIcon, className: "bg-open-bg" },
+  success: { icon: CheckCircle2Icon, className: "bg-gold-tint" },
+  warning: { icon: AlertTriangleIcon, className: "bg-soon-bg" },
 } as const
 
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "h2":
-      return <h2 className="font-heading text-[28px] font-semibold">{richText(block.text)}</h2>
+      return <h2 className="pt-4 font-heading text-[30px] leading-tight font-semibold text-navy">{richText(block.text)}</h2>
     case "h3":
-      return <h3 className="font-heading text-[24px] font-semibold">{richText(block.text)}</h3>
+      return <h3 className="pt-2 font-heading text-[24px] leading-snug font-semibold text-navy">{richText(block.text)}</h3>
     case "quote":
       return (
-        <blockquote className="rounded-r-lg border-l-[3px] border-gold bg-cream px-7 py-6">
-          <p className="font-heading text-[22px] leading-[1.5] text-navy italic">
+        <blockquote className="my-4 flex flex-col gap-3 border-y border-sand-dark py-8">
+          <p className="font-heading text-[26px] leading-[1.45] text-navy italic sm:text-[30px]">
             {richText(block.text)}
           </p>
           {block.cite ? (
-            <cite className="mt-3 block text-sm not-italic text-ink-faint">— {block.cite}</cite>
+            <cite className="block text-[15px] font-semibold not-italic text-ink-muted">{block.cite}</cite>
           ) : null}
         </blockquote>
       )
@@ -130,10 +129,10 @@ function BlockView({ block }: { block: Block }) {
             loading="lazy"
             decoding="async"
             fetchPriority="low"
-            className="w-full rounded-lg object-cover"
+            className="w-full object-cover"
           />
           {block.text ? (
-            <figcaption className="text-center text-sm text-ink-faint">{block.text}</figcaption>
+            <figcaption className="text-[14px] text-ink-muted">{block.text}</figcaption>
           ) : null}
         </figure>
       )
@@ -142,7 +141,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <figure className="flex flex-col gap-2">
           {embed ? (
-            <div className="aspect-video w-full overflow-hidden rounded-lg bg-navy">
+            <div className="aspect-video w-full overflow-hidden bg-navy">
               <iframe
                 src={embed}
                 title={block.text ?? "Vidéo"}
@@ -157,11 +156,11 @@ function BlockView({ block }: { block: Block }) {
               src={mediaUrl(block.url)}
               controls
               preload="metadata"
-              className="w-full rounded-lg"
+              className="w-full"
             />
           )}
           {block.text ? (
-            <figcaption className="text-center text-sm text-ink-faint">{block.text}</figcaption>
+            <figcaption className="text-[14px] text-ink-muted">{block.text}</figcaption>
           ) : null}
         </figure>
       )
@@ -172,7 +171,7 @@ function BlockView({ block }: { block: Block }) {
       const tone = CALLOUT_TONES[block.tone ?? "info"]
       const Icon = tone.icon
       return (
-        <aside className={cn("flex gap-3.5 rounded-lg border-l-[3px] px-6 py-5", tone.className)}>
+        <aside className={cn("flex gap-3.5 px-6 py-5", tone.className)}>
           <Icon className="mt-0.5 size-5 shrink-0 text-navy" />
           <p className="text-[17px] leading-[1.7] text-navy">{richText(block.text)}</p>
         </aside>
@@ -182,7 +181,7 @@ function BlockView({ block }: { block: Block }) {
       return <hr className="border-t border-sand" />
     case "ul":
       return (
-        <ul className="list-disc space-y-2 pl-6 text-lg leading-[1.8] text-ink-muted">
+        <ul className="list-disc space-y-2 pl-6 text-[19px] leading-[1.75] text-navy/80 marker:text-gehmit">
           {block.text.split("\n").filter((l) => l.trim() !== "").map((line, idx) => (
             <li key={idx}>{richText(line)}</li>
           ))}
@@ -190,7 +189,7 @@ function BlockView({ block }: { block: Block }) {
       )
     case "ol":
       return (
-        <ol className="list-decimal space-y-2 pl-6 text-lg leading-[1.8] text-ink-muted">
+        <ol className="list-decimal space-y-2 pl-6 text-[19px] leading-[1.75] text-navy/80 marker:font-semibold marker:text-gehmit">
           {block.text.split("\n").filter((l) => l.trim() !== "").map((line, idx) => (
             <li key={idx}>{richText(line)}</li>
           ))}
@@ -198,12 +197,12 @@ function BlockView({ block }: { block: Block }) {
       )
     case "code":
       return (
-        <pre className="overflow-x-auto rounded-lg bg-cream p-4">
-          <code className="font-mono text-sm text-navy">{block.text}</code>
+        <pre className="overflow-x-auto bg-navy p-5">
+          <code className="font-mono text-[14px] text-surface">{block.text}</code>
         </pre>
       )
     default:
-      return <p className="text-lg leading-[1.8] text-ink-muted">{richText(block.text)}</p>
+      return <p className="text-[19px] leading-[1.75] text-navy/80">{richText(block.text)}</p>
   }
 }
 
@@ -245,7 +244,7 @@ export function ArticlePage() {
           </div>
         </Container>
         <Container className="flex justify-center pb-12">
-          <div className="h-[240px] w-full max-w-[1040px] animate-pulse rounded-lg bg-sand sm:h-[460px]" />
+          <div className="h-[240px] w-full max-w-[1040px] animate-pulse bg-sand sm:h-[460px]" />
         </Container>
       </div>
     )
@@ -266,13 +265,13 @@ export function ArticlePage() {
               { label: article.category },
             ]}
           />
-          <div className="font-mono text-xs tracking-[0.14em] text-ink-faint uppercase">
+          <p className="text-[15px] text-ink-muted">
             {articleDate(article)} · {article.readingMinutes} min de lecture
-          </div>
-          <h1 className="font-heading text-4xl leading-[1.14] font-semibold tracking-[-0.015em] text-balance sm:text-[44px]">
+          </p>
+          <h1 className="font-heading text-[38px] leading-[1.1] font-semibold tracking-[-0.02em] text-navy sm:text-[52px]">
             {article.title}
           </h1>
-          <p className="text-xl leading-relaxed text-ink-muted">{article.excerpt}</p>
+          <p className="text-[21px] leading-relaxed text-navy/75">{article.excerpt}</p>
         </motion.div>
       </Container>
 
@@ -286,12 +285,12 @@ export function ArticlePage() {
             loading="eager"
             decoding="async"
             fetchPriority="high"
-            className="h-[240px] w-full max-w-[1040px] rounded-lg object-cover sm:h-[460px]"
+            className="h-[240px] w-full max-w-[1040px] object-cover sm:h-[480px]"
           />
         ) : article.photoLabel ? (
           <Photo
             label={article.photoLabel}
-            className="h-[240px] w-full max-w-[1040px] rounded-lg sm:h-[460px]"
+            className="h-[240px] w-full max-w-[1040px] sm:h-[480px]"
           />
         ) : null}
       </Container>
@@ -299,26 +298,21 @@ export function ArticlePage() {
       <Container className="flex flex-col items-center pb-16">
         <article className="flex w-full max-w-[680px] flex-col gap-6">
           {article.body.map((block, i) => (
-            <Reveal key={i}>
-              <BlockView block={block} />
-            </Reveal>
+            <BlockView key={i} block={block} />
           ))}
         </article>
       </Container>
 
       {article.cta ? (
-        <section className="border-t border-sand bg-cream">
-          <Container className="flex flex-wrap items-center justify-between gap-8 py-10">
-            <div className="flex flex-col gap-1.5">
-              <span className="font-heading text-2xl font-semibold">{article.cta.title}</span>
-              <span className="text-base text-ink-muted">{article.cta.text}</span>
+        <section className="bg-navy text-surface">
+          <Container className="flex flex-wrap items-center justify-between gap-8 py-14">
+            <div className="flex flex-col gap-2">
+              <span className="font-heading text-[28px] leading-tight font-semibold">{article.cta.title}</span>
+              <span className="text-[17px] text-surface/70">{article.cta.text}</span>
             </div>
-            <Button
-              render={<Link to={article.cta.to} />}
-              className="h-12 rounded-md bg-gehmit px-7 text-base font-semibold whitespace-nowrap text-surface hover:bg-gehmit-hover"
-            >
+            <CtaLink to={article.cta.to} arrow>
               {article.cta.label}
-            </Button>
+            </CtaLink>
           </Container>
         </section>
       ) : null}

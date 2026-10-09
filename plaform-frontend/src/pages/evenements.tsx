@@ -1,110 +1,69 @@
-import { Link } from "react-router"
-import { CalendarDaysIcon, ClockIcon, MapPinIcon } from "lucide-react"
 import { cn } from "cn"
 import type { EventItem } from "@/data/content"
 import { useEvents } from "@/data/remote"
-import { mediaUrl } from "@/lib/api"
+import { mediaUrl, imageSrcSet } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { imageSrcSet } from "@/components/site/photo"
-import { PageHeader } from "@/components/site/page-header"
 import { Container } from "@/components/site/bands"
-import { Reveal } from "@/components/site/reveal"
-import { Button } from "@/components/ui/button"
+import { CtaLink } from "@/components/site/cta"
+import { PageHero } from "@/components/site/page-header"
 
-const MONTHS_SHORT = [
-  "janv.", "févr.", "mars", "avr.", "mai", "juin",
-  "juil.", "août", "sept.", "oct.", "nov.", "déc.",
+const MONTHS = [
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
 ]
 
-function dateParts(iso: string): { day: string; month: string; year: string } | null {
+function dateParts(iso: string) {
   const m = iso?.match(/^(\d{4})-(\d{2})-(\d{2})/)
-  return m ? { day: String(Number(m[3])), month: MONTHS_SHORT[Number(m[2]) - 1], year: m[1] } : null
+  return m ? { day: String(Number(m[3])), month: MONTHS[Number(m[2]) - 1], year: m[1] } : null
 }
 
-function longDate(iso: string): string {
-  const p = dateParts(iso)
-  return p ? `${p.day} ${p.month} ${p.year}` : iso
-}
-
-/** Carte d'un événement à venir : badge date, visuel éventuel, détails, action. */
-function EventCard({ event }: { event: EventItem }) {
+function EventRow({ event }: { event: EventItem }) {
   const d = dateParts(event.date)
   const cancelled = event.cancelled === true
+  const external = event.registerUrl && !event.registerUrl.startsWith("/")
   return (
-    <div
-      className={cn(
-        "grid overflow-hidden rounded-lg border border-sand-dark bg-surface sm:grid-cols-[88px_1fr]",
-        cancelled && "opacity-[0.72]"
-      )}
-    >
-      <div className="flex items-center gap-2 border-b border-sand bg-cream px-5 py-4 sm:flex-col sm:items-start sm:justify-center sm:border-r sm:border-b-0 sm:px-0 sm:py-0 sm:text-center">
-        <div className="flex w-full flex-col items-center gap-0.5">
-          <span className="font-heading text-3xl leading-none font-semibold text-navy">{d?.day ?? "—"}</span>
-          <span className="font-mono text-[11px] tracking-[0.1em] text-ink-faint uppercase">
-            {d ? `${d.month} ${d.year}` : "—"}
-          </span>
-        </div>
+    <article className={cn("grid gap-6 border-t border-sand-dark py-10 lg:grid-cols-12 lg:gap-10", cancelled && "opacity-70")}>
+      <div className="flex items-baseline gap-3 lg:col-span-2 lg:flex-col lg:gap-1">
+        <span className="tnum font-heading text-[56px] leading-none font-semibold text-gehmit">{d?.day ?? "—"}</span>
+        <span className="text-[15px] text-navy">
+          {d ? `${d.month} ${d.year}` : ""}
+        </span>
       </div>
-      <div className="flex flex-col gap-3 p-6 sm:px-8">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 className="font-heading text-[24px] font-semibold">{event.title}</h2>
-          {cancelled ? (
-            <span className="rounded-full border border-sand-dark px-3 py-0.5 font-mono text-[11px] tracking-[0.08em] text-ink-faint uppercase">
-              Annulé
-            </span>
-          ) : null}
+      <div className={cn("flex flex-col gap-4", event.imageUrl ? "lg:col-span-5" : "lg:col-span-8")}>
+        <div className="flex flex-col gap-2">
+          {cancelled && (
+            <span className="w-fit bg-sand px-2.5 py-1 text-[13px] font-semibold text-navy">Annulé</span>
+          )}
+          <h2 className={cn("font-heading text-[28px] leading-snug font-semibold text-navy", cancelled && "line-through decoration-1")}>
+            {event.title}
+          </h2>
+          <p className="text-[16px] text-ink-muted">{[event.time, event.location].filter(Boolean).join(" · ")}</p>
         </div>
-        <div className="flex flex-wrap gap-x-6 gap-y-1.5 text-[15px] text-ink-muted">
-          {event.time ? (
-            <span className="inline-flex items-center gap-1.5">
-              <ClockIcon className="size-4 text-ink-faint" />
-              {event.time}
-            </span>
-          ) : null}
-          {event.location ? (
-            <span className="inline-flex items-center gap-1.5">
-              <MapPinIcon className="size-4 text-ink-faint" />
-              {event.location}
-            </span>
-          ) : null}
-        </div>
-        {event.imageUrl ? (
+        {event.description ? (
+          <p className="max-w-[620px] text-[17px] leading-relaxed text-navy/75">{event.description}</p>
+        ) : null}
+        {!cancelled && event.registerUrl ? (
+          external ? (
+            <CtaLink href={event.registerUrl} arrow className="self-start">S'inscrire</CtaLink>
+          ) : (
+            <CtaLink to={event.registerUrl} arrow className="self-start">S'inscrire</CtaLink>
+          )
+        ) : null}
+      </div>
+      {event.imageUrl ? (
+        <div className="aspect-[16/10] overflow-hidden bg-sand lg:col-span-5">
           <img
             src={mediaUrl(event.imageUrl)}
             srcSet={imageSrcSet(mediaUrl(event.imageUrl))}
-            sizes="(max-width: 640px) 100vw, 760px"
+            sizes="(min-width: 1024px) 40vw, 100vw"
             alt={event.title}
             loading="lazy"
             decoding="async"
-            className="max-h-[280px] w-full rounded-lg object-cover"
+            className="h-full w-full object-cover"
           />
-        ) : null}
-        {event.description ? (
-          <p className="max-w-[640px] text-[16px] leading-[1.65] text-ink-muted">
-            {event.description}
-          </p>
-        ) : null}
-        {!cancelled && event.registerUrl ? (
-          <div className="pt-1">
-            {event.registerUrl.startsWith("/") ? (
-              <Button
-                render={<Link to={event.registerUrl} />}
-                className="h-11 rounded-md bg-gehmit px-6 text-[15px] font-semibold text-surface hover:bg-gehmit-hover"
-              >
-                S'inscrire
-              </Button>
-            ) : (
-              <Button
-                render={<a href={event.registerUrl} target="_blank" rel="noreferrer" />}
-                className="h-11 rounded-md bg-gehmit px-6 text-[15px] font-semibold text-surface hover:bg-gehmit-hover"
-              >
-                S'inscrire
-              </Button>
-            )}
-          </div>
-        ) : null}
-      </div>
-    </div>
+        </div>
+      ) : null}
+    </article>
   )
 }
 
@@ -116,63 +75,55 @@ export function EvenementsPage() {
 
   return (
     <div className="flex flex-col">
-      <Container>
-        <PageHeader
-          trail={[{ label: "Accueil", to: "/" }, { label: "Événements" }]}
-          title="L'agenda Gehmit"
-          lede="Forums, ateliers et rencontres organisés par l'équipe et ses partenaires."
-        />
-      </Container>
+      <PageHero
+        trail={[{ label: "Accueil", to: "/" }, { label: "Événements" }]}
+        title={<>L'agenda, <span className="accent-word">en vrai</span>.</>}
+        lede="Forums, ateliers, caravanes et rencontres organisés par l'équipe et ses partenaires, à Douala et en ligne."
+      />
 
-      <Container className="flex flex-col gap-6 pb-16">
-        {events === null ? (
-          <div className="flex flex-col gap-6" aria-busy="true">
-            {[0, 1].map((i) => (
-              <div key={i} className="h-[160px] animate-pulse rounded-lg border border-sand-dark bg-surface" />
-            ))}
-          </div>
-        ) : upcoming.length > 0 ? (
-          upcoming.map((e, i) => (
-            <Reveal key={`${e.title}-${e.date}`} delay={i * 0.06}>
-              <EventCard event={e} />
-            </Reveal>
-          ))
-        ) : (
-          <div className="flex flex-col items-start gap-4 rounded-lg border border-dashed border-sand-dark bg-surface px-7 py-10">
-            <span className="inline-flex items-center gap-2 text-[16px] font-semibold text-navy">
-              <CalendarDaysIcon className="size-5" />
-              Aucun événement à venir pour le moment
-            </span>
-            <p className="max-w-[520px] text-[15.5px] leading-relaxed text-ink-muted">
-              Les prochains rendez-vous seront annoncés ici et sur le blog.
-            </p>
-          </div>
-        )}
-
-        {past.length > 0 ? (
-          <div className="flex flex-col gap-4 pt-6">
-            <span className="font-mono text-[12px] tracking-[0.12em] text-ink-faint uppercase">
-              Événements passés
-            </span>
-            <ul className="flex flex-col divide-y divide-sand rounded-lg border border-sand-dark bg-surface">
-              {past.map((e) => (
-                <li
-                  key={`${e.title}-${e.date}`}
-                  className="flex flex-wrap items-baseline gap-x-6 gap-y-1 px-6 py-4"
-                >
-                  <span className="tnum w-[110px] shrink-0 font-mono text-[13px] text-ink-faint">
-                    {longDate(e.date)}
-                  </span>
-                  <span className="text-[15.5px] font-semibold text-navy">{e.title}</span>
-                  {e.location ? (
-                    <span className="text-[14px] text-ink-faint">{e.location}</span>
-                  ) : null}
-                </li>
+      <section className="bg-surface">
+        <Container className="flex flex-col pt-4 pb-16 lg:pb-24">
+          {events === null ? (
+            <div className="flex flex-col gap-px pt-10" aria-busy="true">
+              {[0, 1].map((i) => (
+                <div key={i} className="h-40 animate-pulse bg-cream" />
               ))}
-            </ul>
-          </div>
-        ) : null}
-      </Container>
+            </div>
+          ) : upcoming.length > 0 ? (
+            <div className="border-b border-sand-dark">
+              {upcoming.map((e) => (
+                <EventRow key={`${e.title}-${e.date}`} event={e} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-start gap-3 border-y border-sand-dark py-14">
+              <p className="font-heading text-[30px] leading-tight text-navy">Aucun rendez-vous annoncé pour l'instant.</p>
+              <p className="max-w-[540px] text-[17px] leading-relaxed text-ink-muted">
+                Les prochaines dates sont publiées ici et dans la lettre mensuelle : inscrivez-vous en
+                bas de page pour ne rien manquer.
+              </p>
+            </div>
+          )}
+
+          {past.length > 0 ? (
+            <div className="flex flex-col gap-5 pt-16">
+              <h2 className="font-heading text-[26px] font-semibold text-navy">Ils ont eu lieu</h2>
+              <ul className="flex flex-col border-t border-sand-dark">
+                {past.map((e) => {
+                  const d = dateParts(e.date)
+                  return (
+                    <li key={`${e.title}-${e.date}`} className="grid gap-1 border-b border-sand py-4 sm:grid-cols-[180px_1fr_auto] sm:gap-6">
+                      <span className="tnum text-[15px] text-ink-muted">{d ? `${d.day} ${d.month} ${d.year}` : e.date}</span>
+                      <span className="text-[16.5px] font-semibold text-navy">{e.title}</span>
+                      {e.location ? <span className="text-[15px] text-ink-muted">{e.location}</span> : null}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ) : null}
+        </Container>
+      </section>
     </div>
   )
 }

@@ -1,181 +1,146 @@
 import { useState } from "react"
 import { Link } from "react-router"
 import { contact } from "@/data/content"
-import { usePrograms } from "@/data/remote"
+import { forCompanies, parcours } from "@/data/parcours"
 import { apiPost } from "@/lib/api"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import logoWhiteUrl from "@/assets/logo-gehmit-blanc.webp"
 
+const orgLinks = [
+  { label: "À propos", to: "/a-propos" },
+  { label: "Notre impact", to: "/notre-impact" },
+  { label: "Événements", to: "/evenements" },
+  { label: "Blog", to: "/blog" },
+  { label: "Contact", to: "/contact" },
+  { label: "Faire un don", to: "/don" },
+]
+
 export function Footer() {
-  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState(false)
-  const programs = usePrograms()
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle")
 
   return (
-    <footer className="bg-navy">
-      <div className="mx-auto flex max-w-[1240px] flex-col gap-11 px-5 pt-14 pb-8 sm:px-10">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
-          <div className="flex flex-col gap-4">
-            <Link to="/" aria-label="Gehmit — accueil">
-              <img
-                src={logoWhiteUrl}
-                alt="Gehmit"
-                width={472}
-                height={192}
-                className="h-12 w-auto"
-              />
-            </Link>
-            <p className="max-w-[300px] text-[15.5px] leading-relaxed text-surface/70">
-              Recevez les sessions et appels à candidature, une fois par mois.
+    <footer className="bg-navy-deep text-surface">
+      {/* Newsletter */}
+      <div className="border-b border-white/10">
+        <div className="mx-auto grid max-w-[1240px] gap-8 px-5 py-14 sm:px-10 lg:grid-cols-2 lg:items-end lg:gap-16">
+          <div className="flex flex-col gap-3">
+            <h2 className="font-heading text-[28px] leading-[1.15] font-semibold sm:text-[34px]">
+              Ne manquez plus un appel à candidature.
+            </h2>
+            <p className="text-[16px] text-surface/65">
+              Les sessions, les dates limites et les événements. Une lettre par mois.
             </p>
-            {sent ? (
-              <p className="text-[15px] text-surface/85">
-                Inscription confirmée. Merci.
-              </p>
-            ) : (
-              <form
-                className="flex flex-col gap-2"
-                onSubmit={async (e) => {
-                  e.preventDefault()
-                  if (!email.trim()) return
-                  try {
-                    await apiPost("/api/public/newsletter/subscribe", {
-                      name: name.trim() || undefined,
-                      email,
-                      source: "newsletter",
-                    })
-                    setSent(true)
-                  } catch {
-                    setError(true)
-                  }
-                }}
-              >
-                <div className="flex gap-2.5">
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Nom"
-                  aria-label="Nom"
-                  className="h-[46px] flex-1 rounded-md border-0 bg-white px-3.5 text-[15px] text-navy placeholder:text-ink-faint"
-                />
-                <Input
+          </div>
+          {state === "sent" ? (
+            <p className="text-[16px] text-surface/85">Inscription confirmée. À très bientôt.</p>
+          ) : (
+            <form
+              className="flex flex-col gap-2"
+              onSubmit={async (e) => {
+                e.preventDefault()
+                if (!email.trim()) return
+                setState("sending")
+                try {
+                  await apiPost("/api/public/newsletter/subscribe", { email, source: "newsletter" })
+                  setState("sent")
+                } catch {
+                  setState("error")
+                }
+              }}
+            >
+              <label htmlFor="newsletter-email" className="sr-only">
+                Adresse e-mail
+              </label>
+              <div className="flex border-b border-surface/40 focus-within:border-gold">
+                <input
+                  id="newsletter-email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email"
-                  className="h-[46px] flex-1 rounded-md border-0 bg-white px-3.5 text-[15px] text-navy placeholder:text-ink-faint"
+                  placeholder="votre@email.com"
+                  className="h-14 min-w-0 flex-1 bg-transparent text-[17px] text-surface outline-none placeholder:text-surface/40"
                 />
-                <Button
+                <button
                   type="submit"
-                  className="h-[46px] rounded-md bg-gehmit px-5 text-[15px] font-semibold text-surface hover:bg-gehmit-hover"
+                  disabled={state === "sending"}
+                  className="shrink-0 px-1 text-[15.5px] font-semibold text-gold transition-colors hover:text-surface disabled:opacity-60"
                 >
-                  S'inscrire
-                </Button>
-                </div>
-                {error && (
-                  <span className="text-[13.5px] text-soon-text">
-                    Inscription impossible pour le moment. Réessayez plus tard.
-                  </span>
-                )}
-              </form>
-            )}
+                  {state === "sending" ? "Envoi…" : "S'inscrire →"}
+                </button>
+              </div>
+              {state === "error" && (
+                <span className="text-[14px] text-gold-tint">
+                  Inscription impossible pour le moment. Réessayez plus tard.
+                </span>
+              )}
+            </form>
+          )}
+        </div>
+      </div>
+
+      <div className="mx-auto flex max-w-[1240px] flex-col gap-12 px-5 pt-14 pb-24 sm:px-10 sm:pb-10">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+          <div className="flex flex-col gap-5">
+            <Link to="/" aria-label="Gehmit — accueil">
+              <img src={logoWhiteUrl} alt="Gehmit" width={472} height={192} className="h-12 w-auto" />
+            </Link>
+            <div className="flex flex-col gap-1.5 text-[15px] text-surface/70">
+              <a href={`mailto:${contact.email}`} className="hover:text-surface">
+                {contact.email}
+              </a>
+              <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-surface">
+                {contact.phone}
+              </a>
+              <span>{contact.city}</span>
+            </div>
           </div>
 
-          <FooterCol
-            title="Programmes"
-            links={programs.map((p) => ({
-              label: p.name,
-              to: p.slug === "formations" ? "/formations" : `/programmes/${p.slug}`,
-            }))}
-          />
-          <FooterCol
-            title="Organisation"
-            links={[
-              { label: "À propos", to: "/a-propos" },
-              { label: "Notre impact", to: "/notre-impact" },
-              { label: "Événements", to: "/evenements" },
-              { label: "Blog", to: "/blog" },
-              { label: "Contact", to: "/contact" },
-              { label: "Devenir partenaire", to: "/partenaire" },
-            ]}
-          />
-          <FooterCol
-            title="Communauté"
-            links={[
-              { label: "Junior Builders", to: "/junior-builders" },
-              { label: "Louer un développeur", to: "/louer-developpeur" },
-              { label: "Caravanes", to: "/caravanes" },
-              { label: "Rencontre Challenge", to: "/rencontre-challenge" },
-            ]}
-          />
-          <div className="flex flex-col gap-3">
-            <span className="font-mono text-[11px] tracking-[0.12em] text-gold uppercase">
-              Contact
-            </span>
-            <FooterLink href={`mailto:${contact.email}`}>{contact.email}</FooterLink>
-            <FooterLink href={`tel:${contact.phone.replace(/\s/g, "")}`}>{contact.phone}</FooterLink>
-            <span className="text-[15px] text-surface/75">{contact.city}</span>
-          </div>
+          <FooterCol title="Le parcours">
+            {parcours.flatMap((s) => s.offers).map((o) => (
+              <FooterLink key={o.name} to={o.to}>
+                {o.name}
+              </FooterLink>
+            ))}
+          </FooterCol>
+          <FooterCol title="Entreprises">
+            {forCompanies.map((o) => (
+              <FooterLink key={o.name} to={o.to}>
+                {o.name}
+              </FooterLink>
+            ))}
+          </FooterCol>
+          <FooterCol title="Gehmit">
+            {orgLinks.map((o) => (
+              <FooterLink key={o.to} to={o.to}>
+                {o.label}
+              </FooterLink>
+            ))}
+          </FooterCol>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/12 pt-6">
-          <span className="text-sm text-surface/50">© 2026 Gehmit</span>
-          <div className="flex gap-5 text-sm text-surface/50">
-            <span className="cursor-pointer transition-colors hover:text-surface/80">
-              Mentions légales
-            </span>
-            <span className="cursor-pointer transition-colors hover:text-surface/80">
-              Politique de confidentialité
-            </span>
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-[14px] text-surface/45">
+          <span>© 2026 Gehmit · Ensemble vers l'excellence numérique</span>
+          <span>Mentions légales · Politique de confidentialité</span>
         </div>
       </div>
     </footer>
   )
 }
 
-function FooterCol({
-  title,
-  links,
-}: {
-  title: string
-  links: { label: string; to: string }[]
-}) {
+function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-3">
-      <span className="font-mono text-[11px] tracking-[0.12em] text-gold uppercase">
-        {title}
-      </span>
-      {links.map((l) => (
-        <FooterLink key={l.to} to={l.to}>
-          {l.label}
-        </FooterLink>
-      ))}
+    <div className="flex flex-col gap-2.5">
+      <span className="pb-1 font-heading text-[15px] text-gold italic">{title}</span>
+      {children}
     </div>
   )
 }
 
-function FooterLink({
-  to,
-  href,
-  children,
-}: {
-  to?: string
-  href?: string
-  children: string
-}) {
-  const cls = "text-[15px] text-surface/75 transition-colors hover:text-surface"
-  return to ? (
-    <Link to={to} className={cls}>
+function FooterLink({ to, children }: { to: string; children: string }) {
+  return (
+    <Link to={to} className="text-[15px] text-surface/75 transition-colors hover:text-surface">
       {children}
     </Link>
-  ) : (
-    <a href={href} className={cls}>
-      {children}
-    </a>
   )
 }

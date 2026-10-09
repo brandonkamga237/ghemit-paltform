@@ -29,3 +29,27 @@ export function StatusPill({
     </span>
   )
 }
+
+const dotStyles: Record<ProgramStatus, string> = {
+  open: "bg-gehmit",
+  soon: "bg-soon-border",
+  closed: "bg-ink-faint",
+  archived: "bg-archived-border",
+}
+
+const dotLabels: Record<ProgramStatus, string> = {
+  open: "Candidatures ouvertes",
+  soon: "Bientôt",
+  closed: "Fermé",
+  archived: "Archivé",
+}
+
+/** Pastille d'état discrète, avec son libellé pour les lecteurs d'écran. */
+export function StatusDot({ status, className }: { status: ProgramStatus; className?: string }) {
+  return (
+    <span className={cn("relative inline-flex size-2 shrink-0", className)} title={dotLabels[status]}>
+      <span className={cn("relative size-2 rounded-full", dotStyles[status])} />
+      <span className="sr-only">{dotLabels[status]}</span>
+    </span>
+  )
+}

@@ -1,14 +1,9 @@
 import { usePageMeta } from "@/lib/seo"
-import { Link } from "react-router"
-import { motion } from "motion/react"
-import { ArrowRightIcon } from "lucide-react"
 import { techpathUrl } from "@/data/content"
-import { Photo } from "@/components/site/photo"
-import { Reveal } from "@/components/site/reveal"
 import { Container } from "@/components/site/bands"
-import { Button } from "@/components/ui/button"
-
-const ease = [0.22, 1, 0.36, 1] as const
+import { ArrowLink, CtaLink } from "@/components/site/cta"
+import { InfoRows, PageHero, StageLine } from "@/components/site/page-header"
+import { NextStep } from "@/components/site/parcours"
 
 const steps = [
   {
@@ -26,124 +21,77 @@ const steps = [
 ]
 
 export function TechPathPage() {
-  usePageMeta("Nos solutions", "TechPath : les solutions numériques développées par Gehmit pour les organisations.")
+  usePageMeta("TechPath", "TechPath, le coach d'orientation de Gehmit : un métier, une école et un programme recommandés en quelques questions.")
   return (
     <div className="flex flex-col">
-      {/* Héros navy — bannière compacte (page secondaire) */}
-      <section className="grid bg-navy lg:grid-cols-2">
-        <motion.div
-          className="flex flex-col justify-center gap-4 px-6 py-10 sm:px-11"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease }}
-        >
-          <span className="font-mono text-xs tracking-[0.16em] text-gold uppercase">
-            Solutions / TechPath
-          </span>
-          <motion.h1
-            className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.02em] text-balance text-surface sm:text-4xl"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5, ease }}
-          >
-            Un coach d'orientation, disponible à toute heure.
-          </motion.h1>
-          <motion.p
-            className="max-w-[460px] text-lg leading-[1.65] text-surface/80"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.5, ease }}
-          >
-            Quelques questions sur votre profil, une recommandation de métier, d'école et de programme Gehmit.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.5, ease }}
-          >
-            <Button
-              render={<a href={techpathUrl} target="_blank" rel="noopener noreferrer" />}
-              className="h-12 self-start rounded-md bg-gehmit px-7 text-base font-semibold text-surface hover:bg-gehmit-hover"
-            >
-              Démarrer avec TechPath
-            </Button>
-          </motion.div>
-        </motion.div>
-        <div className="min-h-[200px] lg:min-h-[260px]">
-          <Photo
-            photo="seminaire-intervenant"
-            alt="Intervenant présentant un outil numérique au séminaire Gehmit"
-            dark
-            className="h-full"
-          />
-        </div>
-      </section>
+      <PageHero
+        trail={[{ label: "Accueil", to: "/" }, { label: "Solutions" }]}
+        kicker={<StageLine offer="TechPath" />}
+        title={<>Un coach d'orientation, <span className="accent-word">à toute heure</span>.</>}
+        lede="Quelques questions sur votre profil, puis une recommandation de métier, d'école et de programme Gehmit. Gratuit, sans inscription."
+        actions={
+          <CtaLink href={techpathUrl} arrow>
+            Démarrer avec TechPath
+          </CtaLink>
+        }
+        below={
+          <Container>
+            <ol className="grid border-t border-sand-dark md:grid-cols-3">
+              {steps.map((s, i) => (
+                <li
+                  key={s.title}
+                  className="flex flex-col gap-2 border-sand-dark py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
+                >
+                  <span className="tnum text-[14px] font-semibold text-gold">{i + 1}</span>
+                  <span className="font-heading text-[22px] leading-snug font-semibold text-navy">{s.title}</span>
+                  <span className="text-[16px] leading-relaxed text-ink-muted">{s.text}</span>
+                </li>
+              ))}
+            </ol>
+          </Container>
+        }
+      />
 
-      {/* Étapes */}
       <section className="bg-surface">
-        <Container className="flex flex-col gap-8 py-16">
-          <Reveal>
-            <h2 className="font-heading text-3xl font-semibold">Comment ça marche</h2>
-          </Reveal>
-          <div className="grid gap-8 md:grid-cols-3">
-            {steps.map((s, i) => (
-              <Reveal
-                key={s.title}
-                delay={i * 0.09}
-                className={
-                  "flex flex-col gap-3 border-t-2 pt-5 " +
-                  (i === 0 ? "border-gehmit" : "border-sand")
-                }
-              >
-                <span className="font-mono text-sm text-gold">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="font-heading text-[22px] font-semibold">{s.title}</span>
-                <p className="text-base leading-[1.65] text-ink-muted">{s.text}</p>
-              </Reveal>
-            ))}
-          </div>
-        </Container>
-
-        <Container className="grid gap-6 pb-16 md:grid-cols-2">
-          <Reveal>
-            <div className="flex h-full flex-col gap-3.5 rounded-lg border border-sand-dark bg-cream p-8">
-              <span className="font-heading text-2xl font-semibold">Annuaire des écoles</span>
-              <p className="text-base leading-[1.65] text-ink-muted">
-                Établissements de la sous-région, filières, durées et coûts,
-                consultables sans inscription.
-              </p>
-              <a
-                href={techpathUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[15.5px] font-semibold text-gehmit hover:underline"
-              >
-                Consulter l'annuaire
-                <ArrowRightIcon className="size-4" />
-              </a>
-            </div>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <div className="flex h-full flex-col gap-3.5 rounded-lg border border-sand-dark bg-cream p-8">
-              <span className="font-heading text-2xl font-semibold">
-                Après la recommandation
-              </span>
-              <p className="text-base leading-[1.65] text-ink-muted">
-                TechPath ne s'arrête pas au conseil : il ouvre la page du programme
-                et le formulaire de candidature.
-              </p>
-              <Link
-                to="/programmes"
-                className="inline-flex items-center gap-1.5 text-[15.5px] font-semibold text-gehmit hover:underline"
-              >
-                Voir les programmes
-                <ArrowRightIcon className="size-4" />
-              </Link>
-            </div>
-          </Reveal>
+        <Container className="flex flex-col gap-10 py-16 lg:py-24">
+          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold tracking-[-0.02em] text-navy sm:text-[40px]">
+            Ce que TechPath vous apporte
+          </h2>
+          <InfoRows
+            rows={[
+              {
+                title: "L'annuaire des écoles",
+                text: (
+                  <span className="flex flex-col items-start gap-3">
+                    Établissements de la sous-région, filières, durées et coûts, consultables sans
+                    inscription.
+                    <a
+                      href={techpathUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-gehmit underline-offset-4 hover:underline"
+                    >
+                      Consulter l'annuaire →
+                    </a>
+                  </span>
+                ),
+              },
+              {
+                title: "Une suite concrète",
+                text: (
+                  <span className="flex flex-col items-start gap-3">
+                    TechPath ne s'arrête pas au conseil : il ouvre la page du programme recommandé et
+                    son formulaire de candidature.
+                    <ArrowLink to="/programmes">Voir les programmes</ArrowLink>
+                  </span>
+                ),
+              },
+            ]}
+          />
         </Container>
       </section>
+
+      <NextStep offer="TechPath" />
     </div>
   )
 }

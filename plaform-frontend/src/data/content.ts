@@ -13,6 +13,8 @@ export interface Program {
   /** Photo de la fiche (embarquée dans le build). */
   photo: PhotoName
   photoAlt: string
+  /** Point focal du recadrage (object-position), pour garder le sujet visible. */
+  photoPosition?: string
   meta: string[]
   primaryCta: { label: string; to: string; disabled?: boolean }
   secondaryCta?: { label: string; to: string }
@@ -178,8 +180,9 @@ export const programs: Program[] = [
     statusLabel: "Candidatures closes",
     description:
       "Placement en entreprise partenaire à l'issue d'un programme de formation ou de mentorat.",
-    photo: "paei-2026-salle",
-    photoAlt: "Participants en salle de travail",
+    photo: "paei-2026-entretien",
+    photoAlt: "Entretien individuel pendant le programme PAEI 2026",
+    photoPosition: "50% 38%",
     meta: ["3 à 6 mois", "Réouverture en janvier 2027"],
     primaryCta: { label: "Candidater", to: "/candidature/stage", disabled: true },
     secondaryCta: { label: "M'avertir à l'ouverture", to: "/contact" },
@@ -388,11 +391,30 @@ export const stats = [
   { value: "50+", label: "Formations", gold: true },
 ]
 
+/** Ce que finance un don (repris sur l'accueil et la page Don). */
+export const donationEquivalences = [
+  { amount: "10 000 F", text: "Une séance de mentorat" },
+  { amount: "50 000 F", text: "Une place en formation" },
+  { amount: "200 000 F", text: "Un séminaire d'orientation" },
+]
+
+/** Témoignages réels de bénéficiaires. */
+export const testimonials = [
+  {
+    quote:
+      "Lors d'une période difficile, j'ai eu la chance de bénéficier des conseils avisés de Gehmit, qui m'ont permis de mieux orienter mes études en informatique.",
+    name: "Michelle Gouet",
+    place: "Cameroun",
+  },
+]
+
 export interface Achievement {
   date: string
   title: string
   text: string
   figure: string
+  /** Photo de l'événement, si elle existe. */
+  photo?: PhotoName
 }
 
 export const achievements: Achievement[] = [
@@ -401,18 +423,21 @@ export const achievements: Achievement[] = [
     title: "Séminaire « De la recherche à l'innovation »",
     text: "IA comme levier de développement, cinq intervenants.",
     figure: "120 participants",
+    photo: "seminaire-presentation",
   },
   {
     date: "Juillet 2026",
     title: "Lancement de GLab Sisters",
     text: "Programme dédié aux femmes dans le numérique.",
     figure: "40 participantes",
+    photo: "glab-echanges",
   },
   {
     date: "Août 2026",
     title: "Table ronde #TechSisters",
     text: "Défis des femmes dans la tech et solutions collectives.",
     figure: "18 intervenantes",
+    photo: "glab-table-ronde",
   },
 ]
 

@@ -1,127 +1,123 @@
 import { Link } from "react-router"
-import { motion } from "motion/react"
-import { Photo } from "@/components/site/photo"
-import { Reveal } from "@/components/site/reveal"
-import { Container, CtaBand } from "@/components/site/bands"
-import { Breadcrumb } from "@/components/site/page-header"
+import { ArrowRightIcon } from "lucide-react"
+import { contact } from "@/data/content"
+import { Figure } from "@/components/site/photo"
+import { Container } from "@/components/site/bands"
+import { CtaLink } from "@/components/site/cta"
+import { PageHero } from "@/components/site/page-header"
 import { usePageMeta } from "@/lib/seo"
-import { Button } from "@/components/ui/button"
 
+/** Les trois verbes de Gehmit, tels qu'ils figurent sur ses supports. */
 const missions = [
   {
-    title: "Informer",
-    text: "Rendre lisibles les métiers, les formations et les débouchés réels du secteur.",
+    verb: "Former",
+    text: "Des sessions courtes et pratiques, animées par des professionnels en exercice : data, développement web, IA appliquée.",
   },
   {
-    title: "Former",
-    text: "Des sessions courtes et pratiques, animées par des professionnels en exercice.",
+    verb: "Inspirer",
+    text: "Rendre lisibles les métiers, les formations et les débouchés réels, en faisant entrer les jeunes dans les entreprises.",
   },
   {
-    title: "Insérer",
-    text: "Mentorat, stages et mise en relation avec les entreprises partenaires.",
+    verb: "Connecter",
+    text: "Mentorat, stages et mise en relation directe avec les entreprises partenaires, jusqu'au premier emploi.",
   },
 ]
 
 export function AboutPage() {
-  usePageMeta("À propos", "Qui est Gehmit : mission, équipe et programmes au service des carrières numériques.")
+  usePageMeta("À propos", "Qui est Gehmit : mission, méthode et programmes au service des carrières numériques au Cameroun.")
   return (
     <div className="flex flex-col">
-      {/* En-tête éditorial */}
-      <section className="bg-cream">
-        <Container className="grid items-end gap-8 pt-10 pb-8 lg:grid-cols-2 lg:gap-12">
-          <motion.div
-            className="flex flex-col gap-5"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Breadcrumb
-              trail={[{ label: "Accueil", to: "/" }, { label: "À propos" }]}
-            />
-            <h1 className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.02em] text-balance sm:text-4xl">
-              Réduire la part de hasard dans une carrière tech.
-            </h1>
-          </motion.div>
-          <motion.p
-            className="border-l-2 border-gold pl-6 text-lg leading-[1.7] text-ink-muted"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            Gehmit est une organisation à but non lucratif. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique, et nous facilitons leur insertion.
-          </motion.p>
-        </Container>
-      </section>
-
-      {/* Photo panoramique */}
-      <Photo
-        photo="seminaire-salle"
-        sizes="100vw"
-        alt="Salle comble pendant le séminaire Gehmit de septembre 2025"
-        className="h-[180px] sm:h-[260px]"
+      <PageHero
+        trail={[{ label: "Accueil", to: "/" }, { label: "À propos" }]}
+        title={<>Réduire la part de <span className="accent-word">hasard</span> dans une carrière tech.</>}
+        lede="Gehmit est une organisation à but non lucratif basée à Douala. Nous informons, formons et orientons les jeunes et les professionnels qui veulent construire une carrière dans le numérique, et nous facilitons leur insertion."
+        aside={
+          <Figure
+            photo="seminaire-salle"
+            alt="Salle comble pendant le séminaire Gehmit de septembre 2025"
+            priority
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            frameClassName="aspect-[4/3] lg:aspect-auto lg:h-[460px]"
+          />
+        }
       />
 
       {/* Pourquoi */}
       <section className="bg-surface">
-        <Container className="grid gap-10 py-16 lg:grid-cols-[280px_1fr] lg:gap-14">
-          <Reveal className="flex flex-col gap-2.5">
-            <h2 className="font-heading text-[28px] font-semibold">Pourquoi</h2>
-            <span className="h-0.5 w-12 bg-gold" />
-          </Reveal>
-          <Reveal delay={0.1} className="flex max-w-[680px] flex-col gap-5">
-            <p className="text-[17px] leading-[1.75] text-ink-muted">
-              Le numérique crée des emplois plus vite qu'il ne crée de repères. En
-              Afrique centrale, un étudiant qui s'y intéresse découvre rarement
-              l'étendue réelle des métiers, et ceux qui ont un objectif précis
-              avancent souvent seuls.
+        <Container className="grid gap-8 py-20 lg:grid-cols-12 lg:gap-10 lg:py-28">
+          <h2 className="font-heading text-[30px] leading-[1.1] font-semibold text-navy sm:text-[40px] lg:col-span-4">
+            Pourquoi Gehmit existe
+          </h2>
+          <div className="flex max-w-[680px] flex-col gap-6 lg:col-span-8">
+            <p className="font-heading text-[24px] leading-[1.5] text-navy sm:text-[28px]">
+              Le numérique crée des emplois plus vite qu'il ne crée de repères.
             </p>
-            <p className="text-[17px] leading-[1.75] text-ink-muted">
-              Nous mettons en face de ces personnes des professionnels
-              expérimentés, un cadre de formation et un réseau d'entreprises. Le
-              reste dépend d'elles.
+            <p className="text-[18px] leading-[1.75] text-navy/75">
+              En Afrique centrale, un étudiant qui s'y intéresse découvre rarement l'étendue réelle
+              des métiers, et ceux qui ont un objectif précis avancent souvent seuls.
             </p>
-          </Reveal>
+            <p className="text-[18px] leading-[1.75] text-navy/75">
+              Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de
+              formation et un réseau d'entreprises. Le reste dépend d'elles.
+            </p>
+          </div>
         </Container>
+      </section>
 
-        {/* Missions */}
-        <Container className="grid gap-6 pb-16 sm:grid-cols-3">
+      {/* Former. Inspirer. Connecter. */}
+      <section className="bg-navy text-surface">
+        <Container className="grid gap-12 py-20 md:grid-cols-3 md:gap-8 lg:py-28">
           {missions.map((m, i) => (
-            <Reveal key={m.title} delay={i * 0.08}>
-              <div className="flex h-full flex-col gap-2.5 rounded-lg border border-sand bg-cream p-7">
-                <span className="font-heading text-[22px] font-semibold">{m.title}</span>
-                <p className="text-[15.5px] leading-relaxed text-ink-muted">{m.text}</p>
-              </div>
-            </Reveal>
+            <div key={m.verb} className="flex flex-col gap-4 border-t border-white/15 pt-6">
+              <span className="tnum text-[14px] font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-heading text-[44px] leading-none font-normal italic sm:text-[52px]">
+                {m.verb}.
+              </span>
+              <p className="max-w-[340px] text-[16.5px] leading-relaxed text-surface/70">{m.text}</p>
+            </div>
           ))}
         </Container>
       </section>
 
-      <CtaBand
-        title="Une question sur nos programmes ?"
-        ctaLabel="Nous écrire"
-        ctaTo="/contact"
-        tone="gehmit"
-      />
-
-      {/* Lien partenaires */}
+      {/* Suite logique */}
       <section className="bg-cream">
-        <Container className="flex flex-wrap items-center justify-between gap-6 py-12">
-          <div className="flex flex-col gap-2">
-            <h2 className="font-heading text-2xl font-semibold">
+        <Container>
+          <div className="grid gap-px bg-sand-dark md:grid-cols-2">
+          <div className="flex flex-col gap-5 bg-cream py-16 md:pr-10">
+            <h2 className="font-heading text-[28px] leading-tight font-semibold text-navy sm:text-[32px]">
+              Vous cherchez votre voie ?
+            </h2>
+            <p className="max-w-[440px] text-[17px] leading-relaxed text-ink-muted">
+              Le parcours Gehmit commence où vous en êtes : orientation, formation, accompagnement
+              ou insertion.
+            </p>
+            <CtaLink to="/programmes" arrow className="self-start">
+              Voir le parcours
+            </CtaLink>
+          </div>
+          <div className="flex flex-col gap-5 bg-cream py-16 md:pl-10">
+            <h2 className="font-heading text-[28px] leading-tight font-semibold text-navy sm:text-[32px]">
               Entreprises et institutions
             </h2>
-            <p className="max-w-[520px] text-base leading-relaxed text-ink-muted">
-              Stages, mécénat de compétences, matériel ou salles : quatre façons de
-              contribuer, aucune n'exige un budget.
+            <p className="max-w-[440px] text-[17px] leading-relaxed text-ink-muted">
+              Stages, mécénat de compétences, matériel ou salles : quatre façons de contribuer,
+              aucune n'exige un budget.
+            </p>
+            <Link
+              to="/partenaire"
+              className="group inline-flex items-center gap-2 text-[15.5px] font-semibold text-gehmit underline-offset-4 hover:underline"
+            >
+              Devenir partenaire
+              <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <p className="pt-2 text-[15px] text-ink-muted">
+              Ou écrivez-nous :{" "}
+              <a href={`mailto:${contact.email}`} className="font-semibold text-navy hover:text-gehmit">
+                {contact.email}
+              </a>
             </p>
           </div>
-          <Button
-            variant="outline"
-            render={<Link to="/partenaire" />}
-            className="h-12 rounded-md border-navy px-7 text-base font-semibold text-navy hover:bg-navy hover:text-surface"
-          >
-            Devenir partenaire
-          </Button>
+          </div>
         </Container>
       </section>
     </div>

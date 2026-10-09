@@ -1,12 +1,7 @@
 import { cn } from "cn"
-import { staticPhoto, type PhotoName } from "@/data/photos"
+import { photoCaptions, staticPhoto, type PhotoName } from "@/data/photos"
+import { imageSrcSet } from "@/lib/api"
 
-const DEFAULT_WIDTHS = [320, 640, 960, 1280, 1920]
-
-/** `srcset` d'une image de la médiathèque, redimensionnée par l'API (`?w=`). */
-export function imageSrcSet(src: string, widths = DEFAULT_WIDTHS): string {
-  return widths.map((w) => `${src}?w=${w} ${w}w`).join(", ")
-}
 
 /**
  * Image couvrante.
@@ -94,5 +89,54 @@ export function Photo({
         </span>
       ) : null}
     </div>
+  )
+}
+
+/**
+ * Photo légendée : l'image et son contexte (événement, lieu, date).
+ * `frameClassName` fixe le cadrage (hauteur, ratio) ; `position` règle le
+ * point focal pour garder les visages dans le cadre.
+ */
+export function Figure({
+  photo,
+  alt,
+  caption,
+  className,
+  frameClassName,
+  position,
+  sizes,
+  priority,
+  tone = "light",
+}: {
+  photo: PhotoName
+  alt: string
+  caption?: string
+  className?: string
+  frameClassName?: string
+  position?: string
+  sizes?: string
+  priority?: boolean
+  tone?: "light" | "dark"
+}) {
+  return (
+    <figure className={cn("flex flex-col gap-3", className)}>
+      <div className={cn("overflow-hidden bg-sand", frameClassName)} style={position ? { ["--pos" as string]: position } : undefined}>
+        <Photo
+          photo={photo}
+          alt={alt}
+          sizes={sizes}
+          priority={priority}
+          className={cn(position && "[object-position:var(--pos)]")}
+        />
+      </div>
+      <figcaption
+        className={cn(
+          "text-[13px] leading-snug",
+          tone === "dark" ? "text-surface/60" : "text-ink-muted"
+        )}
+      >
+        {caption ?? photoCaptions[photo]}
+      </figcaption>
+    </figure>
   )
 }
