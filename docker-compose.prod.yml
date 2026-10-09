@@ -1,6 +1,9 @@
 name: gehmit
 
 # ── Déploiement production derrière Traefik ─────────────────────────────────
+# Images construites par GitHub Actions (.github/workflows/deploy.yml) et
+# publiées sur Docker Hub ; le serveur ne compile rien, il tire et redémarre.
+# Secrets d'exécution : /root/gehmit-platform/.env (jamais dans le dépôt).
 # Réseau externe partagé : traefik-public (voir /root/traefik/docker-compose.yml)
 # Domaines :
 #   gehmit.org + www.gehmit.org  → frontend public
@@ -82,7 +85,7 @@ services:
       - traefik.http.services.gehmit-kc.loadbalancer.server.port=8080
 
   backend:
-    build: ./platform-backend/platform
+    image: ${BACKEND_IMAGE:-brandoniscoding/gehmit-backend}:${IMAGE_TAG:-latest}
     container_name: gehmit-backend
     restart: unless-stopped
     environment:
@@ -130,10 +133,8 @@ services:
         condition: service_started
 
   web-public:
-    build:
-      context: ./plaform-frontend
-      args:
-        VITE_API_URL: https://api.gehmit.org
+    # VITE_API_URL=https://api.gehmit.org est fixé au build (workflow).
+    image: ${FRONTEND_IMAGE:-brandoniscoding/gehmit-frontend}:${IMAGE_TAG:-latest}
     container_name: gehmit-frontend-public
     restart: unless-stopped
     networks:
@@ -152,13 +153,8 @@ services:
       - traefik.http.middlewares.gehmit-https-redirect.redirectscheme.permanent=true
 
   web-admin:
-    build:
-      context: "plaform-frontend - admin"
-      args:
-        VITE_API_URL: https://api.gehmit.org
-        VITE_KEYCLOAK_URL: https://auth.gehmit.org
-        VITE_KEYCLOAK_REALM: gehmit
-        VITE_KEYCLOAK_CLIENT: admin-frontend
+    # Variables VITE_* (API, Keycloak) fixées au build (workflow).
+    image: ${ADMIN_IMAGE:-brandoniscoding/gehmit-admin}:${IMAGE_TAG:-latest}
     container_name: gehmit-frontend-admin
     restart: unless-stopped
     networks:

@@ -1,0 +1,264 @@
+# =============================================================================
+# Gehmit Platform — CI/CD
+# =============================================================================
+#
+# Déclencheurs :
+#   - push master         -> tests + build + push Docker Hub + déploiement prod
+#   - pull_request master -> tests + build (sans push ni déploiement)
+#   - workflow_dispatch   -> déploiement manuel (choix du service)
+#
+# Secrets GitHub requis :
+#   DOCKER_USERNAME   Compte Docker Hub
+#   DOCKER_TOKEN      Jeton d'accès Docker Hub
+#   VPS_HOST          IP du serveur
+#   VPS_USER          Utilisateur SSH (root)
+#   VPS_SSH_KEY       Clé privée de déploiement (dédiée, révocable)
+#
+# Les secrets d'exécution (BDD, MinIO, Keycloak, SMTP…) restent dans
+# /root/gehmit-platform/.env sur le serveur, jamais dans GitHub.
+# =============================================================================
+
+name: CI/CD — Gehmit Platform
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Service à reconstruire"
+        required: false
+        default: "all"
+        type: choice
+        options: [all, backend, frontend, admin]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  BACKEND_IMAGE:  brandoniscoding/gehmit-backend
+  FRONTEND_IMAGE: brandoniscoding/gehmit-frontend
+  ADMIN_IMAGE:    brandoniscoding/gehmit-admin
+  DEPLOY_PATH:    /root/gehmit-platform
+  PUSH: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/master') }}
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Services modifiés
+  # ---------------------------------------------------------------------------
+  changes:
+    name: Détection des changements
+    runs-on: ubuntu-latest
+    outputs:
+      backend:  ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      admin:    ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'platform-backend/**'
+              - '.github/workflows/deploy.yml'
+            frontend:
+              - 'plaform-frontend/**'
+              - '.github/workflows/deploy.yml'
+            admin:
+              - 'plaform-frontend - admin/**'
+              - '.github/workflows/deploy.yml'
+
+  # ---------------------------------------------------------------------------
+  # Backend — tests (aucune infrastructure requise) puis image
+  # ---------------------------------------------------------------------------
+  build-backend:
+    name: Backend (tests + image)
+    runs-on: ubuntu-latest
+    needs: changes
+    if: |
+      needs.changes.outputs.backend == 'true' ||
+      (github.event_name == 'workflow_dispatch' && contains(fromJSON('["all","backend"]'), github.event.inputs.service))
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+          cache-dependency-path: platform-backend/platform/**/*.gradle
+
+      - name: Tests
+        working-directory: platform-backend/platform
+        run: chmod +x gradlew && ./gradlew build --no-daemon
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        if: env.PUSH == 'true'
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./platform-backend/platform
+          push: ${{ env.PUSH == 'true' }}
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:latest
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=backend
+          cache-to:   type=gha,scope=backend,mode=max
+
+  # ---------------------------------------------------------------------------
+  # Site public — Vite + nginx
+  # ---------------------------------------------------------------------------
+  build-frontend:
+    name: Site public (image)
+    runs-on: ubuntu-latest
+    needs: changes
+    if: |
+      needs.changes.outputs.frontend == 'true' ||
+      (github.event_name == 'workflow_dispatch' && contains(fromJSON('["all","frontend"]'), github.event.inputs.service))
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        if: env.PUSH == 'true'
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./plaform-frontend
+          build-args: |
+            VITE_API_URL=https://api.gehmit.org
+          push: ${{ env.PUSH == 'true' }}
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=frontend
+          cache-to:   type=gha,scope=frontend,mode=max
+
+  # ---------------------------------------------------------------------------
+  # Back office — Vite + nginx (Keycloak)
+  # ---------------------------------------------------------------------------
+  build-admin:
+    name: Back office (image)
+    runs-on: ubuntu-latest
+    needs: changes
+    if: |
+      needs.changes.outputs.admin == 'true' ||
+      (github.event_name == 'workflow_dispatch' && contains(fromJSON('["all","admin"]'), github.event.inputs.service))
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        if: env.PUSH == 'true'
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: "./plaform-frontend - admin"
+          build-args: |
+            VITE_API_URL=https://api.gehmit.org
+            VITE_KEYCLOAK_URL=https://auth.gehmit.org
+            VITE_KEYCLOAK_REALM=gehmit
+            VITE_KEYCLOAK_CLIENT=admin-frontend
+          push: ${{ env.PUSH == 'true' }}
+          tags: |
+            ${{ env.ADMIN_IMAGE }}:latest
+            ${{ env.ADMIN_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=admin
+          cache-to:   type=gha,scope=admin,mode=max
+
+  # ---------------------------------------------------------------------------
+  # Déploiement — SSH vers le VPS
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Déploiement production
+    runs-on: ubuntu-latest
+    needs: [changes, build-backend, build-frontend, build-admin]
+    if: |
+      always() &&
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/master' &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      contains(needs.*.result, 'success')
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Envoi de la configuration (compose + realm Keycloak)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host:      ${{ secrets.VPS_HOST }}
+          username:  ${{ secrets.VPS_USER }}
+          key:       ${{ secrets.VPS_SSH_KEY }}
+          source:    "docker-compose.prod.yml,keycloak/realm-gehmit.json"
+          target:    ${{ env.DEPLOY_PATH }}
+          overwrite: true
+
+      - name: Mise à jour des services
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_TOKEN }}
+        with:
+          host:            ${{ secrets.VPS_HOST }}
+          username:        ${{ secrets.VPS_USER }}
+          key:             ${{ secrets.VPS_SSH_KEY }}
+          envs:            DOCKER_USERNAME,DOCKER_PASSWORD
+          timeout:         60s
+          command_timeout: 20m
+          script: |
+            set -euo pipefail
+            cd ${{ env.DEPLOY_PATH }}
+            COMPOSE="docker compose -f docker-compose.prod.yml"
+
+            echo "══ Gehmit — déploiement ${{ github.sha }} ($(date -u '+%F %T UTC'))"
+
+            echo "→ [1/4] Réseau traefik-public"
+            docker network inspect traefik-public >/dev/null 2>&1 || docker network create traefik-public
+
+            echo "→ [2/4] Docker Hub + téléchargement des images"
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            $COMPOSE pull backend web-public web-admin
+
+            echo "→ [3/4] Infrastructure (inchangée si déjà démarrée)"
+            $COMPOSE up -d --no-recreate postgres minio keycloak
+
+            echo "→ [4/4] Applications (recréées seulement si l'image a changé)"
+            $COMPOSE up -d backend web-public web-admin
+
+            echo "→ Vérification de l'API (max 5 min)"
+            for i in $(seq 1 30); do
+              if curl -fsS -o /dev/null https://api.gehmit.org/api/public/content; then
+                echo "  API OK (tentative $i)"
+                break
+              fi
+              if [ "$i" -eq 30 ]; then
+                echo "══ ERREUR : l'API ne répond pas après 5 min"
+                docker logs --tail=100 gehmit-backend 2>&1 || true
+                exit 1
+              fi
+              sleep 10
+            done
+            curl -fsS -o /dev/null https://gehmit.org/ && echo "  Site public OK"
+            curl -fsS -o /dev/null https://admin.gehmit.org/ && echo "  Back office OK"
+
+            docker image prune -f --filter "until=24h" >/dev/null 2>&1 || true
+            $COMPOSE ps
+            echo "══ Déploiement terminé ($(date -u '+%T UTC'))"

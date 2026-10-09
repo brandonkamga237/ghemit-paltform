@@ -50,3 +50,16 @@ pnpm build                     # vérification (tsc + vite build)
 ## Infrastructure locale
 
 `docker compose up -d` à la racine : PostgreSQL 16, MinIO, Mailhog, Keycloak 26.
+
+## Déploiement
+
+Push sur `master` → `.github/workflows/deploy.yml` : tests backend, images
+Docker Hub (`brandoniscoding/gehmit-{backend,frontend,admin}`, construites
+seulement si leur dossier a changé), puis déploiement SSH sur le VPS dans
+`/root/gehmit-platform` (même serveur que LesCracks, derrière Traefik).
+
+- Secrets GitHub : `DOCKER_USERNAME`, `DOCKER_TOKEN`, `VPS_HOST`, `VPS_USER`,
+  `VPS_SSH_KEY` (clé de déploiement dédiée, commentaire `github-actions-gehmit-deploy`
+  dans `~/.ssh/authorized_keys` du serveur).
+- Secrets d'exécution : `/root/gehmit-platform/.env` sur le serveur uniquement.
+- Redéploiement manuel : onglet Actions → « Run workflow » (choix du service).
