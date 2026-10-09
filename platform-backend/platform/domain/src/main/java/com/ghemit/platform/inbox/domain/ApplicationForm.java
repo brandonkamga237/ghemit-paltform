@@ -1,5 +1,6 @@
 package com.ghemit.platform.inbox.domain;
 
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 import com.ghemit.platform.shared.domain.EmailAddress;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -29,8 +30,43 @@ public final class ApplicationForm {
 		return EMPTY;
 	}
 
+	/** Nombre maximal de champs d'un formulaire déposé. */
+	public static final int MAX_FIELDS = 40;
+	/** Longueur maximale d'un nom de champ. */
+	public static final int MAX_KEY_LENGTH = 64;
+	/** Longueur maximale d'une réponse texte. */
+	public static final int MAX_TEXT_LENGTH = 5000;
+
+	/** Reconstitution (stockage) : aucune limite n'est rejouée sur les données existantes. */
 	public static ApplicationForm of(Map<String, Object> fields) {
 		return fields == null || fields.isEmpty() ? EMPTY : new ApplicationForm(fields);
+	}
+
+	/**
+	 * Formulaire envoyé depuis le site public : borné en nombre de champs et en
+	 * longueur, réponses plates uniquement (texte, nombre, booléen). Protège la
+	 * base contre un envoi volumineux ou malformé.
+	 */
+	public static ApplicationForm fromSubmission(Map<String, Object> fields) {
+		if (fields == null || fields.isEmpty()) {
+			return EMPTY;
+		}
+		if (fields.size() > MAX_FIELDS) {
+			throw new BusinessRuleViolationException("Formulaire trop long (" + MAX_FIELDS + " champs au plus)");
+		}
+		fields.forEach((key, value) -> {
+			if (key == null || key.isBlank() || key.length() > MAX_KEY_LENGTH) {
+				throw new BusinessRuleViolationException("Nom de champ invalide");
+			}
+			if (value instanceof String text && text.length() > MAX_TEXT_LENGTH) {
+				throw new BusinessRuleViolationException(
+						"Réponse trop longue pour « " + key + " » (" + MAX_TEXT_LENGTH + " caractères au plus)");
+			}
+			if (value != null && !(value instanceof String || value instanceof Number || value instanceof Boolean)) {
+				throw new BusinessRuleViolationException("Réponse non prise en charge pour « " + key + " »");
+			}
+		});
+		return new ApplicationForm(fields);
 	}
 
 	public Map<String, Object> asMap() {

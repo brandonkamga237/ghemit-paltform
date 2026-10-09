@@ -25,7 +25,7 @@ public class ContentItemRepositoryAdapter implements ContentItemRepository {
 
 	@Override
 	public Optional<ContentItem> findByTypeAndSlug(ContentType type, String slug) {
-		return jpaRepository.findByTypeAndSlug(ContentTypeCode.of(type), slug)
+		return jpaRepository.findFirstByTypeAndSlugOrderByUpdatedAtDesc(ContentTypeCode.of(type), slug)
 				.map(ContentItemMapper::toDomain);
 	}
 

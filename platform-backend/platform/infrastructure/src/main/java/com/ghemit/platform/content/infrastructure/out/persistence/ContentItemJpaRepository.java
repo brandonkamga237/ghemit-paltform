@@ -9,5 +9,6 @@ interface ContentItemJpaRepository extends JpaRepository<ContentItemJpaEntity, U
 
 	List<ContentItemJpaEntity> findByTypeOrderByPositionAsc(ContentTypeCode type);
 
-	Optional<ContentItemJpaEntity> findByTypeAndSlug(ContentTypeCode type, String slug);
+	/** Le plus récent si des doublons historiques existent (le service les refuse désormais). */
+	Optional<ContentItemJpaEntity> findFirstByTypeAndSlugOrderByUpdatedAtDesc(ContentTypeCode type, String slug);
 }

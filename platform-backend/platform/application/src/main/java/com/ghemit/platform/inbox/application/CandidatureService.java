@@ -37,8 +37,8 @@ public class CandidatureService
 	@Override
 	@Transactional
 	public Candidature submit(SubmitCandidatureCommand command) {
-		ProgramCode program = ProgramCode.of(command.program());
-		ApplicationForm form = ApplicationForm.of(command.form());
+		ProgramCode program = ProgramCode.submitted(command.program());
+		ApplicationForm form = ApplicationForm.fromSubmission(command.form());
 		Candidature saved = repository.save(Candidature.submit(program, form));
 		form.candidateEmail().ifPresent(email -> newsletterEnrollment.enroll(
 				email, form.candidateFullName().orElse(null), ENROLLMENT_SOURCE_PREFIX + program.value()));

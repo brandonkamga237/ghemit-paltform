@@ -273,6 +273,19 @@ deux sites ; toute autre route est refusée (`denyAll`).
 | 8 | Basse | Schéma géré par `ddl-auto=update`, sans migrations : un renommage de colonne supprime silencieusement des données. | `application.properties` | Adopter Flyway dès le prochain changement de schéma (point déjà noté dans AGENTS.md). |
 | 9 | Basse | Aucune trace de qui a modifié quoi (contenu, statut de candidature) ; un seul rôle `admin`. | Agrégats `ContentItem`, `Candidature` | Enregistrer `updatedBy` (claim `preferred_username`), journal d'activité sur les candidatures. |
 
+### Suivi des corrections
+
+| # | État | Correction |
+|---|---|---|
+| 1 | Corrigé | `?w=` arrondi au palier supérieur parmi 160, 320, 640, 960, 1280, 1920 ; jamais d'agrandissement ; seuls JPEG, PNG et GIF sont redimensionnés (`PublicMediaController`). |
+| 2 | Corrigé en partie | `POST /api/public/**` limité par IP (20 envois / 10 min, réglable par `PUBLIC_WRITES_MAX` et `PUBLIC_WRITES_WINDOW`), réponse 429 avec `Retry-After` ; formulaire de candidature borné (40 champs, 5 000 caractères, réponses plates) ; tailles maximales sur le contact. Reste : champ piège anti-robot côté site. |
+| 3 | Ouvert | Keycloak en `start-dev` : à basculer en `start` avec l'équipe, car cela touche la connexion au back office. |
+| 4 | Ouvert | Consentement à la newsletter : demande une case sur les formulaires du site et un champ dans l'API. |
+| 5 | Corrigé | Clés de stockage normalisées (`/`, `./`, `//` retirés ; `..` refusé) avant le test `cv/` (`ObjectKey`). |
+| 6 | Corrigé | Slug refusé s'il est déjà pris pour le même type ; la lecture tolère les doublons historiques (le plus récent). |
+| 7 | Corrigé | Code programme d'une nouvelle candidature au format strict (`ProgramCode.submitted`) ; les données existantes restent lisibles. |
+| 8, 9 | Ouverts | Migrations Flyway, traçabilité des modifications. |
+
 ### Ce qui manque fonctionnellement
 
 - **Rédaction** : pas de publication programmée (`publishedAt` futur), pas

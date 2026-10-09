@@ -11,11 +11,24 @@ public record ObjectKey(String value) {
 
 	private static final String CV_PREFIX = "cv/";
 
+	/**
+	 * La clé est normalisée (« / » et « ./ » de tête retirés) et ne peut pas
+	 * remonter l'arborescence : sans cela, « /cv/… » ou « ./cv/… » échapperait
+	 * au test {@link #isCv()} tout en désignant le même objet.
+	 */
 	public ObjectKey {
 		if (value == null || value.isBlank()) {
 			throw new BusinessRuleViolationException("La clé de stockage est obligatoire");
 		}
-		value = value.trim();
+		value = value.trim().replace('\\', '/');
+		while (value.startsWith("/") || value.startsWith("./")) {
+			value = value.startsWith("/") ? value.substring(1) : value.substring(2);
+		}
+		value = value.replaceAll("/(\\./)+", "/").replaceAll("/{2,}", "/");
+		if (value.isEmpty() || value.equals("..") || value.startsWith("../") || value.contains("/../")
+				|| value.endsWith("/..")) {
+			throw new BusinessRuleViolationException("Clé de stockage invalide");
+		}
 	}
 
 	public static ObjectKey of(String value) {

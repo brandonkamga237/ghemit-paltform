@@ -1,6 +1,9 @@
 package com.ghemit.platform.media.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,5 +28,21 @@ class ObjectKeyTest {
 	@Test
 	void deux_cles_generees_pour_le_meme_fichier_sont_distinctes() {
 		assertThat(ObjectKey.forLibrary("logo.svg")).isNotEqualTo(ObjectKey.forLibrary("logo.svg"));
+	}
+
+	@Test
+	void normalise_les_prefixes_qui_contourneraient_la_protection_des_cv() {
+		assertThat(ObjectKey.of("/cv/abc.pdf").isCv()).isTrue();
+		assertThat(ObjectKey.of("//cv/abc.pdf").isCv()).isTrue();
+		assertThat(ObjectKey.of("./cv/abc.pdf").isCv()).isTrue();
+		assertThat(ObjectKey.of("/./cv//abc.pdf").value()).isEqualTo("cv/abc.pdf");
+	}
+
+	@Test
+	void refuse_une_cle_qui_remonte_l_arborescence() {
+		assertThatThrownBy(() -> ObjectKey.of("images/../cv/abc.pdf"))
+				.isInstanceOf(BusinessRuleViolationException.class);
+		assertThatThrownBy(() -> ObjectKey.of("../secret"))
+				.isInstanceOf(BusinessRuleViolationException.class);
 	}
 }

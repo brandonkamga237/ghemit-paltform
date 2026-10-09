@@ -1,7 +1,11 @@
 package com.ghemit.platform.inbox.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -41,5 +45,45 @@ class ApplicationFormTest {
 		source.put("nom", "Modifié");
 
 		assertThat(form.text("nom")).contains("Ngo");
+	}
+
+	@Test
+	void accepte_un_formulaire_depose_ordinaire() {
+		ApplicationForm form = ApplicationForm.fromSubmission(Map.of("prenom", "Awa", "consentement", true, "age", 21));
+
+		assertThat(form.text("prenom")).contains("Awa");
+	}
+
+	@Test
+	void refuse_un_formulaire_depose_avec_trop_de_champs() {
+		Map<String, Object> fields = new HashMap<>();
+		for (int i = 0; i <= ApplicationForm.MAX_FIELDS; i++) {
+			fields.put("champ" + i, "x");
+		}
+
+		assertThatThrownBy(() -> ApplicationForm.fromSubmission(fields))
+				.isInstanceOf(BusinessRuleViolationException.class);
+	}
+
+	@Test
+	void refuse_une_reponse_trop_longue() {
+		String longText = "x".repeat(ApplicationForm.MAX_TEXT_LENGTH + 1);
+
+		assertThatThrownBy(() -> ApplicationForm.fromSubmission(Map.of("motivation", longText)))
+				.isInstanceOf(BusinessRuleViolationException.class)
+				.hasMessageContaining("motivation");
+	}
+
+	@Test
+	void refuse_une_reponse_imbriquee() {
+		assertThatThrownBy(() -> ApplicationForm.fromSubmission(Map.of("liste", List.of("a", "b"))))
+				.isInstanceOf(BusinessRuleViolationException.class);
+	}
+
+	@Test
+	void la_reconstitution_ne_rejoue_pas_les_limites() {
+		String longText = "x".repeat(ApplicationForm.MAX_TEXT_LENGTH + 1);
+
+		assertThat(ApplicationForm.of(Map.of("motivation", longText)).text("motivation")).isPresent();
 	}
 }

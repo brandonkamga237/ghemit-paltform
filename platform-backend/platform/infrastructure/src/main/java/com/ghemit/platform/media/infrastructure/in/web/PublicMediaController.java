@@ -10,6 +10,10 @@ import com.ghemit.platform.shared.application.BinaryContent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.http.MediaType;
@@ -55,11 +59,14 @@ public class PublicMediaController {
 			byte[] original = object.stream().readAllBytes();
 			byte[] payload;
 			String outContentType;
-			if (width == null) {
+			Integer target = width == null || !isResizable(download.contentType()) ? null : snapWidth(width);
+			Integer originalWidth = target == null ? null : imageWidth(original);
+			if (target == null || originalWidth == null || target >= originalWidth) {
+				// Jamais d'agrandissement : l'original suffit.
 				payload = original;
 				outContentType = download.contentType();
 			} else {
-				payload = resize(original, width, download.contentType());
+				payload = resize(original, target, download.contentType());
 				outContentType = isPng(download.contentType()) ? "image/png" : "image/jpeg";
 			}
 			return ResponseEntity.ok()
@@ -70,6 +77,49 @@ public class PublicMediaController {
 		} catch (IOException e) {
 			throw new StorageUnavailableException("Échec de la lecture ou du redimensionnement du média", e);
 		}
+	}
+
+	/**
+	 * Largeurs servies : celles que demandent les sites (srcset), rien d'autre.
+	 * Une largeur quelconque est arrondie au palier supérieur, plafonnée au
+	 * dernier : un appel « ?w=20000 » ne peut plus faire agrandir une image en
+	 * mémoire, et chaque image n'a que six variantes possibles en cache.
+	 */
+	static final int[] WIDTHS = {160, 320, 640, 960, 1280, 1920};
+
+	static int snapWidth(int requested) {
+		for (int w : WIDTHS) {
+			if (requested <= w) {
+				return w;
+			}
+		}
+		return WIDTHS[WIDTHS.length - 1];
+	}
+
+	/** Largeur réelle de l'image, lue dans l'en-tête sans décoder les pixels ; null si illisible. */
+	private static Integer imageWidth(byte[] bytes) throws IOException {
+		try (ImageInputStream in = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
+			Iterator<ImageReader> readers = in == null ? null : ImageIO.getImageReaders(in);
+			if (readers == null || !readers.hasNext()) {
+				return null;
+			}
+			ImageReader reader = readers.next();
+			try {
+				reader.setInput(in);
+				return reader.getWidth(0);
+			} finally {
+				reader.dispose();
+			}
+		}
+	}
+
+	/** Seuls les formats matriciels lus par ImageIO sont redimensionnés (pas les SVG, PDF…). */
+	private static boolean isResizable(String contentType) {
+		if (contentType == null) {
+			return false;
+		}
+		String type = contentType.toLowerCase();
+		return type.contains("jpeg") || type.contains("jpg") || type.contains("png") || type.contains("gif");
 	}
 
 	private byte[] resize(byte[] original, int width, String contentType) throws IOException {

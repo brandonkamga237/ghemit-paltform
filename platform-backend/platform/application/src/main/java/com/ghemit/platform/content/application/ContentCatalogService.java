@@ -8,6 +8,7 @@ import com.ghemit.platform.content.domain.ContentItem;
 import com.ghemit.platform.content.domain.ContentItemId;
 import com.ghemit.platform.content.domain.ContentItemRepository;
 import com.ghemit.platform.content.domain.ContentType;
+import com.ghemit.platform.shared.domain.BusinessRuleViolationException;
 import com.ghemit.platform.shared.domain.EntityNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,6 +42,7 @@ public class ContentCatalogService implements ContentCatalogQuery, ManageContent
 	@Transactional
 	public ContentItem create(CreateContentItemCommand command) {
 		int position = command.position() != null ? command.position() : nextPosition(command.type());
+		requireFreeSlug(command.type(), command.slug(), null);
 		return repository.save(
 				ContentItem.create(command.type(), command.slug(), position, command.payload()));
 	}
@@ -49,6 +51,7 @@ public class ContentCatalogService implements ContentCatalogQuery, ManageContent
 	@Transactional
 	public ContentItem update(UpdateContentItemCommand command) {
 		ContentItem item = require(command.id());
+		requireFreeSlug(item.type(), command.slug(), item.id());
 		if (command.slug() != null) {
 			item.changeSlug(command.slug());
 		}
@@ -65,6 +68,18 @@ public class ContentCatalogService implements ContentCatalogQuery, ManageContent
 	@Transactional
 	public void delete(ContentItemId id) {
 		repository.delete(require(id));
+	}
+
+	/** Un slug identifie une page publique : il est unique au sein d'un type de contenu. */
+	private void requireFreeSlug(ContentType type, String slug, ContentItemId self) {
+		if (slug == null || slug.isBlank()) {
+			return;
+		}
+		repository.findByTypeAndSlug(type, slug.trim())
+				.filter(other -> !other.id().equals(self))
+				.ifPresent(other -> {
+					throw new BusinessRuleViolationException("Le slug « " + slug.trim() + " » est déjà utilisé");
+				});
 	}
 
 	private ContentItem require(ContentItemId id) {
