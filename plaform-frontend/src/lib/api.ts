@@ -13,6 +13,11 @@ export function imageSrcSet(src: string, widths = [320, 640, 960, 1280, 1920]): 
 
 /** Article complet par slug (corps compris) ; null si absent, brouillon ou API injoignable. */
 export async function fetchArticle(slug: string): Promise<Article | null> {
+  if (import.meta.env.DEV) {
+    const { devDataset } = await import("@/dev/dataset")
+    const set = devDataset()
+    if (set) return (await import("@/dev/fixtures")).devArticle(set, slug)
+  }
   try {
     const res = await fetch(`${API_URL}/api/public/articles/${encodeURIComponent(slug)}`)
     if (!res.ok) return null

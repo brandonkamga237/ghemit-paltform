@@ -52,6 +52,21 @@ function getSnapshot(): RemoteContent | null {
 
 /** Lance (une fois) le chargement du contenu administré. À appeler au démarrage. */
 export function loadRemoteContent(): void {
+  // Développement : jeu de données imposé (?data=worst…), sans appel réseau.
+  if (import.meta.env.DEV) {
+    void import("@/dev/dataset").then(async ({ devDataset }) => {
+      const set = devDataset()
+      if (!set) return fetchRemoteContent()
+      const { devContent } = await import("@/dev/fixtures")
+      content = devContent(set)
+      listeners.forEach((fn) => fn())
+    })
+    return
+  }
+  fetchRemoteContent()
+}
+
+function fetchRemoteContent(): void {
   void fetch(`${API_URL}/api/public/content`)
     .then((res) => (res.ok ? (res.json() as Promise<RemoteContent>) : null))
     .then((data) => {

@@ -12,3 +12,12 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+
+// Développement uniquement : sélecteur de jeu de données (break-ui).
+if (import.meta.env.DEV) {
+  void import("./dev/data-toggle").then(({ DataToggle }) => {
+    const host = document.createElement("div")
+    document.body.appendChild(host)
+    createRoot(host).render(<DataToggle />)
+  })
+}
