@@ -36,6 +36,7 @@ const programsConfig: CrudConfig = {
       name: "statusLabel",
       label: "Libellé affiché",
       placeholder: "Ex. Candidatures ouvertes, Clôture le 30 sept.",
+      maxLength: 60,
       hint: "« closed » ou « archived » désactive le bouton Candidater.",
     },
   ],
@@ -53,7 +54,7 @@ const formationsConfig: CrudConfig = {
     { key: "status", label: "Statut", render: (i) => <StatusBadge value={i.payload.status} /> },
   ],
   fields: [
-    { name: "name", label: "Nom" },
+    { name: "name", label: "Nom", maxLength: 140 },
     {
       name: "category",
       label: "Catégorie",
@@ -63,9 +64,15 @@ const formationsConfig: CrudConfig = {
     { name: "session", label: "Session", placeholder: "Ex. 14 sept. 2026" },
     { name: "duration", label: "Durée", placeholder: "Ex. 4 semaines" },
     { name: "format", label: "Format", kind: "select", options: ["En ligne", "Douala"] },
-    { name: "price", label: "Tarif", placeholder: "Ex. Gratuit, 25 000 FCFA" },
+    {
+      name: "price",
+      label: "Tarif",
+      placeholder: "Ex. Gratuit, 25 000 FCFA",
+      maxLength: 60,
+      validate: (v) => (/^\s*0+([.,]0+)?\s*(f|fcfa)?\s*$/i.test(v) ? "écrivez « Gratuit » plutôt que 0." : null),
+    },
     statusField,
-    { name: "statusLabel", label: "Libellé du statut" },
+    { name: "statusLabel", label: "Libellé du statut", maxLength: 60 },
   ],
 }
 
@@ -91,7 +98,7 @@ const eventsConfig: CrudConfig = {
     },
   ],
   fields: [
-    { name: "title", label: "Titre" },
+    { name: "title", label: "Titre", maxLength: 140 },
     {
       name: "date",
       label: "Date",
@@ -99,8 +106,8 @@ const eventsConfig: CrudConfig = {
       hint: "Format ISO, ex. 2026-11-14.",
     },
     { name: "time", label: "Horaire", placeholder: "Ex. 9h – 16h" },
-    { name: "location", label: "Lieu", placeholder: "Ex. Douala, siège Gehmit" },
-    { name: "description", label: "Description", kind: "textarea" },
+    { name: "location", label: "Lieu", placeholder: "Ex. Douala, siège Gehmit", maxLength: 120 },
+    { name: "description", label: "Description", kind: "textarea", maxLength: 600 },
     {
       name: "status",
       label: "Statut",
@@ -137,7 +144,7 @@ const partnersConfig: CrudConfig = {
     },
   ],
   fields: [
-    { name: "name", label: "Nom du partenaire" },
+    { name: "name", label: "Nom du partenaire", maxLength: 120 },
     {
       name: "description",
       label: "Description",

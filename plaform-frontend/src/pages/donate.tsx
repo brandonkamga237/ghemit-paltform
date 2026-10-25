@@ -64,7 +64,7 @@ export function DonatePage() {
 
           {/* Intention de don */}
           <div className="flex flex-col gap-group bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9 lg:sticky lg:top-24 lg:col-span-5 lg:col-start-8">
-            <p className="bg-gold-tint px-4 py-3 text-small text-navy/80">
+            <p className="bg-gehmit-tint px-4 py-3 text-small text-navy/80">
               Le paiement en ligne arrive bientôt. En attendant, choisissez votre don : l'équipe vous
               envoie les coordonnées de paiement et votre reçu.
             </p>

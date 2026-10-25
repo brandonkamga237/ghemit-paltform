@@ -389,6 +389,7 @@ export function ArticleEditorPage() {
             }}
             placeholder="Titre"
             aria-label="Titre de l'article"
+            maxLength={140}
             rows={1}
             autoFocus={!item}
             className="w-full resize-none bg-transparent font-heading text-display font-semibold text-navy outline-none [field-sizing:content] placeholder:text-sand-dark"
@@ -410,6 +411,7 @@ export function ArticleEditorPage() {
             }}
             placeholder="Chapô : une ou deux phrases qui donnent envie de lire (aussi affichées sur le blog)"
             aria-label="Chapô"
+            maxLength={300}
             rows={1}
             className="mt-4 mb-10 w-full resize-none bg-transparent text-lead text-navy/75 outline-none [field-sizing:content] placeholder:text-ink-faint"
           />
@@ -432,7 +434,20 @@ export function ArticleEditorPage() {
       <MediaPicker
         open={coverPicker}
         onOpenChange={setCoverPicker}
-        onSelect={(img) => change({ imageUrl: img.url })}
+        onSelect={(img) => {
+          change({ imageUrl: img.url })
+          // Couverture affichée jusqu'à 1 040 px : prévenir si elle sera montrée petite.
+          const probe = new Image()
+          probe.onload = () => {
+            if (probe.naturalWidth < 1200) {
+              toast.add({
+                title: "Image de faible définition",
+                description: `${probe.naturalWidth} px de large : elle sera affichée entière, sans agrandissement. Préférez une image d'au moins 1 200 px.`,
+              })
+            }
+          }
+          probe.src = mediaSrc(img.url)
+        }}
       />
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>

@@ -1,6 +1,7 @@
+import { useState, type ReactNode } from "react"
 import { cn } from "@/lib/cn"
 import { photoCaptions, staticPhoto, type PhotoName } from "@/data/photos"
-import { imageSrcSet } from "@/lib/api"
+import { imageSrcSet, mediaUrl } from "@/lib/api"
 
 
 /**
@@ -139,4 +140,60 @@ export function Figure({
       </figcaption>
     </figure>
   )
+}
+
+/**
+ * Image de la médiathèque (articles, événements, logos), robuste aux données
+ * réelles : si le fichier a été supprimé, `fallback` remplace l'image (rien par
+ * défaut) au lieu du texte alternatif ; si l'image est plus petite que son
+ * cadre, elle est montrée entière sur fond sable plutôt qu'agrandie et floue.
+ */
+export function MediaImage({
+  src,
+  alt,
+  sizes,
+  frame,
+  className,
+  fallback = null,
+  priority = false,
+  onFail,
+}: {
+  src: string
+  alt: string
+  sizes: string
+  /** Cadre (ratio, fond) : rendu autour de l'image, et du remplacement le cas échéant. */
+  frame?: string
+  className?: string
+  fallback?: ReactNode
+  priority?: boolean
+  /** Prévenu quand le fichier est introuvable (pour retirer aussi la légende…). */
+  onFail?: () => void
+}) {
+  const [state, setState] = useState<"ok" | "small" | "failed">("ok")
+  if (state === "failed") {
+    if (fallback === null) return null
+    return frame ? <div className={frame}>{fallback}</div> : <>{fallback}</>
+  }
+  const url = mediaUrl(src)
+  const img = (
+    <img
+      src={url}
+      srcSet={imageSrcSet(url)}
+      sizes={sizes}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
+      onError={() => {
+        setState("failed")
+        onFail?.()
+      }}
+      onLoad={(e) => {
+        const el = e.currentTarget
+        if (el.naturalWidth > 0 && el.naturalWidth < el.clientWidth * 0.9) setState("small")
+      }}
+      className={cn("h-full w-full object-cover", className, state === "small" && "object-contain")}
+    />
+  )
+  return frame ? <div className={cn(frame, state === "small" && "bg-sand")}>{img}</div> : img
 }

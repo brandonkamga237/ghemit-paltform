@@ -21,7 +21,7 @@ export function ProgrammeDetailPage() {
     return <Navigate to="/programmes" replace />
   }
   const d = program.detail
-  const closed = program.status === "closed"
+  const closed = program.status === "closed" || program.status === "archived"
   const applyTo = closed ? "/contact" : `/candidature/${program.slug}`
   const applyLabel = closed ? "M'avertir à l'ouverture" : "Candidater"
   const secondaryTo = program.slug === "glab-sisters" ? "/partenaire" : "/contact"

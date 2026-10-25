@@ -67,10 +67,23 @@ export function FormationsPage() {
             </div>
           ) : rows.length === 0 ? (
             <div className="flex flex-col items-start gap-3 border-t border-sand-dark py-block">
-              <p className="font-heading text-h3 text-navy">Aucune session programmée pour ce filtre.</p>
+              <p className="font-heading text-h3 text-navy">
+                {formations.length === 0
+                  ? "Aucune session programmée pour le moment."
+                  : `Aucune session « ${filter} » pour le moment.`}
+              </p>
               <p className="text-body text-ink-muted">
                 Les prochaines dates sont annoncées dans la lettre mensuelle (en bas de page).
               </p>
+              {formations.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setFilter("Toutes")}
+                  className="text-small font-semibold text-gehmit underline-offset-4 hover:underline"
+                >
+                  Voir toutes les formations
+                </button>
+              )}
             </div>
           ) : (
             <ul className="flex flex-col border-t border-sand-dark">
@@ -108,14 +121,14 @@ export function FormationsPage() {
                       <Cell label="Format" value={f.format} />
                       <Cell label="Tarif" value={f.price} />
                     </dl>
-                    <div className="lg:text-right">
+                    <div className="lg:flex lg:justify-end">
                       {f.status === "open" ? (
                         <CtaLink to={inscriptionLink(f.name, f.session)} className="h-11 px-5 text-small">
                           S'inscrire
                         </CtaLink>
                       ) : (
-                        <span className="inline-flex items-center gap-2 text-small font-semibold">
-                          <StatusDot status={f.status} />
+                        <span className="inline-flex max-w-[260px] items-start gap-2 text-left text-small font-semibold">
+                          <StatusDot status={f.status} className="mt-[0.45em]" />
                           {f.statusLabel}
                         </span>
                       )}

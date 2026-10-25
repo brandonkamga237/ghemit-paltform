@@ -84,7 +84,17 @@ export interface FieldDef {
   placeholder?: string
   hint?: string
   required?: boolean
+  /** Longueur maximale (texte) : au-delà, la mise en page du site se dégrade. */
+  maxLength?: number
+  /** Contrôle avant enregistrement ; renvoie le message d'erreur, ou null. */
+  validate?: (value: string) => string | null
 }
+
+/** Aide du champ, complétée par le compteur quand une longueur maximale existe. */
+const hintOf = (field: FieldDef, value: unknown) =>
+  field.maxLength
+    ? [field.hint, `${String(value ?? "").length} / ${field.maxLength} caractères`].filter(Boolean).join(" · ")
+    : field.hint
 
 export interface ColumnDef {
   key: string
@@ -265,6 +275,13 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   }
 
   const save = async () => {
+    for (const f of config.fields) {
+      const error = f.validate?.(String(draft[f.name] ?? ""))
+      if (error) {
+        setFormError(`${f.label} : ${error}`)
+        return
+      }
+    }
     const payload = toPayload(config.fields, draft)
     if (config.hasSlug) payload.slug = slug
     setSaving(true)
@@ -531,11 +548,12 @@ function FieldInput({
   switch (kind) {
     case "textarea":
       return (
-        <FieldWrap label={field.label} hint={field.hint}>
+        <FieldWrap label={field.label} hint={hintOf(field, value)}>
           <Textarea
             value={String(value ?? "")}
             onChange={(e) => set(field.name, e.target.value)}
             placeholder={field.placeholder}
+            maxLength={field.maxLength}
             className="min-h-[90px]"
           />
         </FieldWrap>
@@ -608,12 +626,13 @@ function FieldInput({
       return (
         <FieldWrap
           label={field.label}
-          hint={field.hint ?? (kind === "tags" ? "Séparées par des virgules" : undefined)}
+          hint={hintOf(field, value) ?? (kind === "tags" ? "Séparées par des virgules" : undefined)}
         >
           <Input
             value={String(value ?? "")}
             onChange={(e) => set(field.name, e.target.value)}
             placeholder={field.placeholder}
+            maxLength={field.maxLength}
           />
         </FieldWrap>
       )

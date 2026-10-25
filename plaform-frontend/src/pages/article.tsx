@@ -1,18 +1,16 @@
 import { Link, Navigate, useParams } from "react-router"
-import { motion } from "motion/react"
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { InfoIcon, CheckCircle2Icon, AlertTriangleIcon } from "lucide-react"
 import type { Article, Block } from "@/data/content"
 import { articleDate } from "@/data/remote"
-import { fetchArticle, mediaUrl, imageSrcSet } from "@/lib/api"
+import { fetchArticle, mediaUrl } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
 import { cn } from "@/lib/cn"
 import { Container } from "@/components/site/bands"
-import { Photo } from "@/components/site/photo"
+import { MediaImage, Photo } from "@/components/site/photo"
 import { Breadcrumb } from "@/components/site/page-header"
 import { CtaLink } from "@/components/site/cta"
 
-const ease = [0.22, 1, 0.36, 1] as const
 
 /** Transforme le markdown léger du rédacteur en éléments React. */
 function richText(text: string): ReactNode[] {
@@ -53,6 +51,9 @@ function youtubeEmbed(url: string): string | null {
   return m ? `https://www.youtube-nocookie.com/embed/${m[1]}` : null
 }
 
+/** Cellule purement numérique (« 1 204 », « 12,5 % ») : jamais coupée sur ses espaces. */
+const NUMERIC = /^[\d\s.,%+\-–]+$/
+
 /** Une ligne `a | b | c` → cellules ; la première ligne sert d'en-tête. */
 function TableBlock({ text, caption }: { text: string; caption?: string }) {
   const rows = text
@@ -60,16 +61,27 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
     .map((l) => l.trim())
     .filter((l) => l !== "" && !/^\|?[\s:-]+\|[\s:|-]*$/.test(l))
     .map((l) => l.replace(/^\||\|$/g, "").split("|").map((c) => c.trim()))
+  const scroller = useRef<HTMLDivElement>(null)
+  const [scrollable, setScrollable] = useState(false)
+  useEffect(() => {
+    const el = scroller.current
+    if (!el) return
+    const check = () => setScrollable(el.scrollWidth > el.clientWidth + 1)
+    check()
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
   if (rows.length === 0) return null
   const [head, ...body] = rows
   return (
     <figure className="flex flex-col gap-2">
-      <div className="overflow-x-auto border-y border-sand-dark">
-        <table className="w-full min-w-[480px] text-left">
+      <div ref={scroller} className="overflow-x-auto border-y border-sand-dark">
+        <table className="w-full min-w-[480px] text-left [overflow-wrap:normal]">
           <thead>
             <tr className="border-b border-sand-dark bg-cream">
               {head.map((c, i) => (
-                <th key={i} className="px-4 py-3 text-small font-semibold text-navy">
+                <th key={i} className={cn("px-4 py-3 text-small font-semibold text-navy", NUMERIC.test(c) && "whitespace-nowrap")}>
                   {richText(c)}
                 </th>
               ))}
@@ -79,7 +91,7 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
             {body.map((row, i) => (
               <tr key={i} className="border-b border-sand last:border-0">
                 {row.map((c, j) => (
-                  <td key={j} className="px-4 py-3 text-small text-ink-muted">
+                  <td key={j} className={cn("px-4 py-3 text-small text-ink-muted", NUMERIC.test(c) && "tnum whitespace-nowrap")}>
                     {richText(c)}
                   </td>
                 ))}
@@ -88,6 +100,11 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
           </tbody>
         </table>
       </div>
+      {scrollable && (
+        <p className="text-caption text-ink-muted" aria-hidden>
+          Faites défiler le tableau horizontalement →
+        </p>
+      )}
       {caption ? (
         <figcaption className="text-small text-ink-muted">{caption}</figcaption>
       ) : null}
@@ -95,9 +112,28 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
   )
 }
 
+/** Image d'un article : retirée avec sa légende si le fichier a disparu. */
+function ImageBlock({ url, text, alt }: { url: string; text?: string; alt?: string }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) return null
+  return (
+    <figure className="flex flex-col gap-2">
+      <MediaImage
+        src={url}
+        alt={alt ?? text ?? ""}
+        sizes="(max-width: 680px) 100vw, 680px"
+        className="h-auto"
+        onFail={() => setFailed(true)}
+      />
+      {text ? <figcaption className="text-small text-ink-muted">{text}</figcaption> : null}
+    </figure>
+  )
+}
+
+
 const CALLOUT_TONES = {
   info: { icon: InfoIcon, className: "bg-open-bg" },
-  success: { icon: CheckCircle2Icon, className: "bg-gold-tint" },
+  success: { icon: CheckCircle2Icon, className: "bg-gehmit-tint" },
   warning: { icon: AlertTriangleIcon, className: "bg-soon-bg" },
 } as const
 
@@ -119,23 +155,7 @@ function BlockView({ block }: { block: Block }) {
         </blockquote>
       )
     case "image":
-      return (
-        <figure className="flex flex-col gap-2">
-          <img
-            src={mediaUrl(block.url)}
-            srcSet={imageSrcSet(mediaUrl(block.url))}
-            sizes="(max-width: 680px) 100vw, 680px"
-            alt={block.alt ?? block.text ?? ""}
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-            className="w-full object-cover"
-          />
-          {block.text ? (
-            <figcaption className="text-small text-ink-muted">{block.text}</figcaption>
-          ) : null}
-        </figure>
-      )
+      return <ImageBlock url={block.url} text={block.text} alt={block.alt} />
     case "video": {
       const embed = youtubeEmbed(block.url)
       return (
@@ -253,12 +273,8 @@ export function ArticlePage() {
   return (
     <div className="flex flex-col bg-surface">
       <Container className="flex flex-col items-center pt-section pb-block">
-        <motion.div
-          className="flex w-full max-w-[680px] flex-col gap-5"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease }}
-        >
+        <div
+          className="flex w-full max-w-[680px] flex-col gap-5">
           <Breadcrumb
             trail={[
               { label: "Blog", to: "/blog" },
@@ -272,20 +288,17 @@ export function ArticlePage() {
             {article.title}
           </h1>
           <p className="text-lead text-navy/75">{article.excerpt}</p>
-        </motion.div>
+        </div>
       </Container>
 
       <Container className="flex justify-center pb-block">
         {article.imageUrl ? (
-          <img
-            src={mediaUrl(article.imageUrl)}
-            srcSet={imageSrcSet(mediaUrl(article.imageUrl))}
-            sizes="(max-width: 640px) 100vw, 1040px"
+          <MediaImage
+            src={article.imageUrl}
             alt={article.imageAlt ?? article.title}
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-            className="h-[240px] w-full max-w-[1040px] object-cover sm:h-[480px]"
+            sizes="(max-width: 640px) 100vw, 1040px"
+            frame="h-[240px] w-full max-w-[1040px] sm:h-[480px]"
+            priority
           />
         ) : article.photoLabel ? (
           <Photo
@@ -296,7 +309,7 @@ export function ArticlePage() {
       </Container>
 
       <Container className="flex flex-col items-center pb-section">
-        <article className="flex w-full max-w-[680px] flex-col gap-group">
+        <article className="flex w-full max-w-[680px] flex-col gap-group [overflow-wrap:anywhere]">
           {article.body.map((block, i) => (
             <BlockView key={i} block={block} />
           ))}

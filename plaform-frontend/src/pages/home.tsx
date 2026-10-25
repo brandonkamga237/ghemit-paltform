@@ -3,8 +3,7 @@ import { ArrowRightIcon } from "lucide-react"
 import { achievements, donationEquivalences, stats, testimonials } from "@/data/content"
 import { forCompanies, parcours, programStatus } from "@/data/parcours"
 import { articleDate, useArticleSummaries, useEvents, usePrograms } from "@/data/remote"
-import { mediaUrl, imageSrcSet } from "@/lib/api"
-import { Photo } from "@/components/site/photo"
+import { MediaImage, Photo } from "@/components/site/photo"
 import { PartnerLogos } from "@/components/site/partner-logos"
 import { StatusDot } from "@/components/site/status-pill"
 import { Ledger } from "@/components/site/page-header"
@@ -43,9 +42,6 @@ export function HomePage() {
         </div>
 
         <Container className="flex min-h-[min(78svh,700px)] flex-col justify-end gap-group pt-section pb-block">
-          <p className="text-small font-semibold text-surface/75">
-            Association à but non lucratif · Douala, Cameroun
-          </p>
           <h1 className="max-w-[16ch] font-heading text-display font-semibold">
             Former, inspirer, <span className="font-normal text-gold italic">connecter</span> les talents du numérique.
           </h1>
@@ -196,14 +192,16 @@ export function HomePage() {
                     return (
                       <li key={`${e.title}-${e.date}`} className="border-b border-sand">
                         <Link to="/evenements" className="group grid grid-cols-[64px_1fr] gap-4 py-5">
-                          <span className="flex flex-col">
-                            <span className="tnum font-heading text-h2 leading-none font-semibold text-gehmit">
-                              {m ? Number(m[3]) : "—"}
+                          {m ? (
+                            <span className="flex flex-col">
+                              <span className="tnum font-heading text-h2 leading-none font-semibold text-gehmit">
+                                {Number(m[3])}
+                              </span>
+                              <span className="pt-1 text-caption text-ink-muted">{MONTHS[Number(m[2]) - 1]}</span>
                             </span>
-                            <span className="pt-1 text-caption text-ink-muted">
-                              {m ? MONTHS[Number(m[2]) - 1] : ""}
-                            </span>
-                          </span>
+                          ) : (
+                            <span className="text-caption font-semibold text-gehmit">Date à confirmer</span>
+                          )}
                           <span className="flex flex-col gap-1">
                             <span className="text-body font-semibold text-navy group-hover:text-gehmit">
                               {e.title}
@@ -228,17 +226,13 @@ export function HomePage() {
                 </div>
                 <Link to={`/blog/${lead.slug}`} className="group grid gap-5 border-t border-sand-dark pt-6 sm:grid-cols-[1.1fr_1fr]">
                   {lead.imageUrl ? (
-                    <div className="aspect-[4/3] overflow-hidden bg-sand">
-                      <img
-                        src={mediaUrl(lead.imageUrl)}
-                        srcSet={imageSrcSet(mediaUrl(lead.imageUrl))}
-                        sizes="(min-width: 1024px) 30vw, 100vw"
-                        alt={lead.imageAlt ?? lead.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                      />
-                    </div>
+                    <MediaImage
+                      src={lead.imageUrl}
+                      alt={lead.imageAlt ?? lead.title}
+                      sizes="(min-width: 1024px) 30vw, 100vw"
+                      frame="aspect-[4/3] overflow-hidden bg-sand"
+                      className="transition-transform duration-500 group-hover:scale-[1.02]"
+                    />
                   ) : null}
                   <div className="flex flex-col gap-3">
                     <span className="text-caption text-ink-muted">
@@ -294,7 +288,7 @@ export function HomePage() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-group bg-gold-tint px-gutter py-section lg:pr-edge">
+        <div className="flex flex-col gap-group bg-gehmit-tint px-gutter py-section lg:pr-edge">
           <div className="flex flex-col gap-3">
             <h2 className="font-heading text-h2 font-semibold text-navy">
               Un don finance un accompagnement.
@@ -303,15 +297,15 @@ export function HomePage() {
               Mobile Money, carte ou virement, une fois ou chaque mois.
             </p>
           </div>
-          <dl className="flex max-w-[480px] flex-col border-t border-gold/40">
+          <dl className="flex max-w-[480px] flex-col border-t border-gehmit/30">
             {donationEquivalences.map((e) => (
-              <div key={e.amount} className="flex items-baseline justify-between gap-4 border-b border-gold/25 py-4">
+              <div key={e.amount} className="flex items-baseline justify-between gap-4 border-b border-gehmit/20 py-4">
                 <dt className="text-body text-navy">{e.text}</dt>
                 <dd className="tnum font-heading text-h3 font-semibold text-navy">{e.amount}</dd>
               </div>
             ))}
           </dl>
-          <CtaLink to="/don" variant="gold" arrow className="self-start">
+          <CtaLink to="/don" arrow className="self-start">
             Faire un don
           </CtaLink>
         </div>

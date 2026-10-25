@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { usePartners } from "@/data/remote"
 import { mediaUrl } from "@/lib/api"
 import { Container } from "@/components/site/bands"
@@ -15,25 +16,37 @@ export function PartnerLogos({ title }: { title: string }) {
             <li
               key={p.name}
               title={p.description ?? p.name}
-              className="flex h-24 items-center justify-center bg-surface px-4"
+              className="flex min-h-24 items-center justify-center bg-surface px-4 py-4"
             >
-              {p.logoUrl ? (
-                <img
-                  src={`${mediaUrl(p.logoUrl)}?w=320`}
-                  alt={p.name}
-                  width={160}
-                  height={56}
-                  loading="lazy"
-                  decoding="async"
-                  className="max-h-12 w-auto object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
-                />
-              ) : (
-                <span className="text-center font-heading text-body font-semibold text-navy">{p.name}</span>
-              )}
+              <PartnerMark name={p.name} logoUrl={p.logoUrl} />
             </li>
           ))}
         </ul>
       </Container>
     </section>
+  )
+}
+
+/** Logo du partenaire ; son nom (sur trois lignes au plus) si le logo manque ou a disparu. */
+function PartnerMark({ name, logoUrl }: { name: string; logoUrl?: string }) {
+  const [failed, setFailed] = useState(false)
+  if (logoUrl && !failed) {
+    return (
+      <img
+        src={`${mediaUrl(logoUrl)}?w=320`}
+        alt={name}
+        width={160}
+        height={56}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+        className="max-h-12 w-auto object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+      />
+    )
+  }
+  return (
+    <span className="line-clamp-3 text-center font-heading text-small font-semibold text-navy [overflow-wrap:anywhere]">
+      {name}
+    </span>
   )
 }

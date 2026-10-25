@@ -19,7 +19,7 @@ export function Footer() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle")
 
   return (
-    <footer className="bg-navy-deep text-surface">
+    <footer className="bg-gehmit text-surface">
       {/* Newsletter */}
       <div className="border-b border-white/10">
         <div className="mx-auto grid max-w-page gap-block px-gutter py-block lg:grid-cols-2 lg:items-end">
@@ -51,7 +51,7 @@ export function Footer() {
               <label htmlFor="newsletter-email" className="sr-only">
                 Adresse e-mail
               </label>
-              <div className="flex border-b border-surface/40 focus-within:border-gold">
+              <div className="flex border-b border-surface/40 focus-within:border-surface">
                 <input
                   id="newsletter-email"
                   type="email"
@@ -64,13 +64,13 @@ export function Footer() {
                 <button
                   type="submit"
                   disabled={state === "sending"}
-                  className="shrink-0 px-1 text-small font-semibold text-gold transition-colors hover:text-surface disabled:opacity-60"
+                  className="shrink-0 px-1 text-small font-semibold text-surface underline-offset-4 hover:underline disabled:opacity-60"
                 >
                   {state === "sending" ? "Envoi…" : "S'inscrire →"}
                 </button>
               </div>
               {state === "error" && (
-                <span className="text-small text-gold-tint">
+                <span className="text-small text-surface">
                   Inscription impossible pour le moment. Réessayez plus tard.
                 </span>
               )}
@@ -131,7 +131,7 @@ export function Footer() {
 function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <span className="pb-1 font-heading text-small text-gold italic">{title}</span>
+      <span className="pb-1 font-heading text-small font-semibold text-surface italic">{title}</span>
       {children}
     </div>
   )

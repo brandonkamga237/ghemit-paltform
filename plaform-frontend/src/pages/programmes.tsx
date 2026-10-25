@@ -56,7 +56,7 @@ export function ProgrammesPage() {
             <ul className="flex flex-col border-t border-sand-dark lg:col-span-8">
               {stage.offers.map((o) => {
                 const p = programs.find((x) => x.slug === o.programSlug)
-                const closed = p?.status === "closed"
+                const closed = p?.status === "closed" || p?.status === "archived"
                 return (
                   <li key={o.name} className="flex flex-col gap-4 border-b border-sand-dark py-8">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">

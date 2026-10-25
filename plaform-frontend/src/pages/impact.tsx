@@ -75,7 +75,7 @@ export function ImpactPage() {
       )}
 
       {/* Suite */}
-      <section className="bg-gold-tint">
+      <section className="bg-gehmit-tint">
         <Container className="flex flex-wrap items-center justify-between gap-group py-block">
           <div className="flex flex-col gap-2">
             <h2 className="font-heading text-h2 font-semibold text-navy">
@@ -83,7 +83,7 @@ export function ImpactPage() {
             </h2>
             <p className="text-body text-navy/75">Chaque don finance directement l'accompagnement d'un jeune.</p>
           </div>
-          <CtaLink to="/don" variant="gold" arrow>
+          <CtaLink to="/don" arrow>
             Faire un don
           </CtaLink>
         </Container>

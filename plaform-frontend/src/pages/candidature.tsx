@@ -55,7 +55,7 @@ export function CandidaturePage() {
   const [cvFile, setCvFile] = useState<File | null>(null)
   usePageMeta(program ? `Candidature — ${program.name}` : "Candidature")
 
-  if (!program || program.status === "closed") {
+  if (!program || program.status === "closed" || program.status === "archived") {
     return <Navigate to="/programmes" replace />
   }
 

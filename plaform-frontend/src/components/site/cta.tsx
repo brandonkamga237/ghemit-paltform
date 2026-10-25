@@ -30,7 +30,7 @@ export function CtaLink({
   children: ReactNode
 }) {
   const cls = cn(
-    "group inline-flex h-12 items-center justify-center gap-2.5 rounded-sm px-6 text-small font-semibold whitespace-nowrap transition-colors duration-150",
+    "group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-sm px-6 py-2.5 text-center text-small font-semibold text-balance transition-colors duration-150 [&>svg]:shrink-0",
     variants[variant],
     className
   )
