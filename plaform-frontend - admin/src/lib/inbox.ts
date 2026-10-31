@@ -126,6 +126,16 @@ export const fmtDateTime = (iso: string) =>
     minute: "2-digit",
   })
 
+/** Ancienneté relative (« il y a 3 h ») ; au-delà de 30 jours, la date courte. */
+export function timeAgo(iso: string): string {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000
+  if (s < 60) return "à l'instant"
+  if (s < 3600) return `il y a ${Math.floor(s / 60)} min`
+  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`
+  if (s < 86400 * 30) return `il y a ${Math.floor(s / 86400)} j`
+  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+}
+
 /** Recherche avec délai (évite un appel API par frappe). */
 export function useDebounced<T>(value: T, delay = 350): T {
   const [v, setV] = useState(value)

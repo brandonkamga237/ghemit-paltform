@@ -28,7 +28,7 @@ import type {
   Page,
   Subscriber,
 } from "@/lib/types"
-import { candidateName, programLabel, STATUS_META, STATUS_ORDER } from "@/lib/inbox"
+import { candidateName, programLabel, STATUS_META, STATUS_ORDER, timeAgo } from "@/lib/inbox"
 import { useAuth } from "@/lib/auth"
 import { AreaChart, DistributionBars, Sparkline } from "@/components/admin/charts"
 import { MetricCard } from "@/components/admin/metric"
@@ -37,6 +37,7 @@ import { Button } from "@gehmit/ui/components/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@gehmit/ui/components/card"
 import { Skeleton } from "@gehmit/ui/components/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gehmit/ui/components/tabs"
+import { SegmentedControl } from "@gehmit/ui/components/segmented-control"
 
 /* ─── Data ─── */
 
@@ -51,15 +52,6 @@ interface Data {
   candidatures: Candidature[]
   content: Record<string, ContentItem[]>
   media: MediaFile[]
-}
-
-const timeAgo = (iso: string) => {
-  const s = (Date.now() - new Date(iso).getTime()) / 1000
-  if (s < 60) return "à l'instant"
-  if (s < 3600) return `il y a ${Math.floor(s / 60)} min`
-  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`
-  if (s < 86400 * 30) return `il y a ${Math.floor(s / 86400)} j`
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
 }
 
 const deltaOf = (series: number[], span: number): number | null => {
@@ -281,23 +273,12 @@ export function DashboardPage() {
                 Candidatures et messages reçus chaque jour
               </CardDescription>
             </div>
-            <div className="flex rounded-lg border p-0.5">
-              {CHART_PERIODS.map((p) => (
-                <button
-                  key={p.days}
-                  type="button"
-                  onClick={() => setPeriod(p.days)}
-                  className={cn(
-                    "rounded-md px-3 py-1 text-caption font-medium transition-colors",
-                    period === p.days
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
+            <SegmentedControl
+              label="Période du graphique"
+              value={period}
+              onChange={setPeriod}
+              options={CHART_PERIODS.map((p) => ({ value: p.days, label: p.label }))}
+            />
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {!data ? (

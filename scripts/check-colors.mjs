@@ -18,7 +18,7 @@ const dirs = ["plaform-frontend/src", "plaform-frontend - admin/src", "packages/
 
 /** Seuls fichiers où l'or est permis. */
 const goldAllowed = new Set([
-  "plaform-frontend/src/components/site/cta.tsx", // variante « donate »
+  "plaform-frontend/src/components/site/cta-variants.ts", // variante « donate »
   "plaform-frontend/src/components/site/header.tsx", // bouton « Faire un don »
   "plaform-frontend/src/pages/donate.tsx", // validation du don
   "plaform-frontend/src/pages/partner.tsx", // lien « Faire un don »

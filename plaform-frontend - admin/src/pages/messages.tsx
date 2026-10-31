@@ -14,7 +14,7 @@ import { cn } from "@gehmit/ui/cn"
 import { PageHeader } from "@/components/admin/page-header"
 import { api } from "@/lib/api"
 import type { ContactMessage, MessagesSummary, Page } from "@/lib/types"
-import { fmtDateTime, useDebounced } from "@/lib/inbox"
+import { fmtDateTime, useDebounced, timeAgo } from "@/lib/inbox"
 import { Pagination } from "@/components/admin/pagination"
 import { toast } from "@gehmit/ui/components/toast"
 import { Button } from "@gehmit/ui/components/button"
@@ -31,20 +31,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@gehmit/ui/components/alert-dialog"
+import { SegmentedControl } from "@gehmit/ui/components/segmented-control"
 
 const READ_TABS = [
   { value: "all", label: "Tous" },
   { value: "unread", label: "Non lus" },
   { value: "read", label: "Lus" },
 ]
-
-const timeAgo = (iso: string) => {
-  const s = (Date.now() - new Date(iso).getTime()) / 1000
-  if (s < 3600) return `il y a ${Math.max(1, Math.floor(s / 60))} min`
-  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`
-  if (s < 86400 * 30) return `il y a ${Math.floor(s / 86400)} j`
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
-}
 
 export function MessagesPage() {
   const [page, setPage] = useState<Page<ContactMessage> | null>(null)
@@ -145,31 +138,12 @@ export function MessagesPage() {
     <div className="flex h-[calc(100svh-15rem)] min-h-[540px] flex-col gap-4">
       {/* Barre d'outils */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex rounded-lg border p-0.5">
-          {READ_TABS.map((t) => (
-            <button
-              key={t.value}
-              type="button"
-              onClick={() => setRead(t.value)}
-              className={cn(
-                "flex items-center gap-1.5 rounded-md px-3 py-1 text-caption font-medium transition-colors",
-                read === t.value
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {t.label}
-              {t.value === "unread" && summary && summary.unread > 0 && (
-                <span className={cn(
-                  "rounded-full px-1.5 text-caption font-semibold tabular-nums",
-                  read === "unread" ? "bg-primary-foreground/20" : "bg-gehmit/15 text-gehmit"
-                )}>
-                  {summary.unread}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl
+          label="Filtrer par lecture"
+          value={read}
+          onChange={setRead}
+          options={READ_TABS.map((t) => (t.value === "unread" ? { ...t, badge: summary?.unread } : t))}
+        />
         <div className="relative min-w-[200px] flex-1 sm:max-w-[300px]">
           <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
