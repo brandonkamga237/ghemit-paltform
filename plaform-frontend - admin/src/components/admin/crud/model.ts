@@ -5,7 +5,6 @@
  */
 import type { ReactNode } from "react"
 import type { ContentItem } from "@/lib/types"
-import type { Block } from "@/components/admin/structured-editors"
 
 /** Libellés français des codes stockés (statuts, états). */
 const VALUE_LABELS: Record<string, string> = {
@@ -28,8 +27,6 @@ export type FieldKind =
   | "select"
   | "tags"
   | "image"
-  | "blocks"
-  | "articleCta"
 
 export interface FieldDef {
   name: string
@@ -89,15 +86,6 @@ export function toDraft(fields: FieldDef[], payload: Record<string, unknown>): D
       case "image":
         draft[f.name] = v === undefined || v === null ? "" : String(v)
         break
-      case "articleCta":
-        draft[f.name] =
-          v && typeof v === "object" && !Array.isArray(v)
-            ? structuredClone(v)
-            : null
-        break
-      case "blocks":
-        draft[f.name] = Array.isArray(v) ? structuredClone(v) : []
-        break
       default:
         draft[f.name] = v === undefined || v === null ? "" : String(v)
     }
@@ -126,52 +114,6 @@ export function toPayload(fields: FieldDef[], draft: Draft): Record<string, unkn
       case "image": {
         const s = String(raw ?? "").trim()
         payload[f.name] = s === "" ? undefined : s
-        break
-      }
-      case "articleCta": {
-        if (!raw) {
-          payload[f.name] = undefined
-          break
-        }
-        const obj = raw as Record<string, unknown>
-        // Nettoie les champs vides ; supprime la clé si tout est vide
-        const cleaned = Object.fromEntries(
-          Object.entries(obj).filter(([, v]) => v !== "" && v !== undefined)
-        )
-        payload[f.name] = Object.keys(cleaned).length > 0 ? cleaned : undefined
-        break
-      }
-      case "blocks": {
-        const arr = (Array.isArray(raw) ? raw : []) as Block[]
-        payload[f.name] = arr
-          .filter((b) => {
-            if (b.type === "image" || b.type === "video") return Boolean(b.url)
-            if (b.type === "hr") return true
-            return b.text.trim() !== ""
-          })
-          .map((b) => {
-            const text = b.text.trim()
-            if (b.type === "image" || b.type === "video") {
-              return text
-                ? { type: b.type, url: b.url, text }
-                : { type: b.type, url: b.url }
-            }
-            if (b.type === "hr") {
-              return { type: "hr" }
-            }
-            if (b.type === "table") {
-              return b.caption?.trim()
-                ? { type: "table", text: b.text, caption: b.caption.trim() }
-                : { type: "table", text: b.text }
-            }
-            if (b.type === "callout") {
-              return { type: "callout", text, tone: b.tone ?? "info" }
-            }
-            if (b.type === "quote" && b.cite?.trim()) {
-              return { type: "quote", text, cite: b.cite.trim() }
-            }
-            return { type: b.type, text }
-          })
         break
       }
       default:

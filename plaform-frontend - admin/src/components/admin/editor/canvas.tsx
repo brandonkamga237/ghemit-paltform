@@ -8,16 +8,8 @@ import {
   type KeyboardEvent,
   type SetStateAction,
 } from "react"
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  GripVerticalIcon,
-  ImageIcon,
-  PlusIcon,
-  Trash2Icon,
-} from "lucide-react"
+import { GripVerticalIcon, PlusIcon } from "lucide-react"
 import { cn } from "@gehmit/ui/cn"
-import { mediaSrc } from "@/lib/api"
 import {
   caretAtEnd,
   caretAtStart,
@@ -32,6 +24,8 @@ import { MediaPicker } from "@/components/admin/media-picker"
 import { Editable } from "./editable"
 import { InsertMenu } from "./insert-menu"
 import { SelectionToolbar } from "./selection-toolbar"
+import { BlockMenu } from "./block-menu"
+import { CalloutFrame, CodeBlock, ImageBlock, QuoteFrame, VideoBlock } from "./blocks"
 import { LIST_TYPES, RICH_TYPES, newBlock, type BlockType, type EditorBlock } from "./model"
 
 type Focus = { key: string; at: number | "start" | "end" }
@@ -62,10 +56,6 @@ const placeholders: Partial<Record<BlockType, string>> = {
   quote: "Une citation marquante",
   callout: "Information ou conseil à mettre en avant",
 }
-
-const isYoutube = (url: string) =>
-  url.match(/(?:youtube\.com\/(?:watch\?.*v=|embed\/|shorts\/))([\w-]{6,})/)?.[1] ??
-  url.match(/youtu\.be\/([\w-]{6,})/)?.[1]
 
 /**
  * Le corps de l'article, édité « en place » dans la typographie du site.
@@ -472,48 +462,10 @@ export function Canvas({
         />
       )
       if (b.type === "quote") {
-        return (
-          <figure className="my-4 flex flex-col gap-3 border-y border-line-strong py-7">
-            {editable}
-            <input
-              value={b.cite ?? ""}
-              onChange={(e) => update(b.id, { cite: e.target.value })}
-              placeholder="Source de la citation (facultative)"
-              className="bg-transparent text-small font-semibold text-ink-muted outline-none placeholder:font-normal placeholder:text-ink-faint"
-            />
-          </figure>
-        )
+        return <QuoteFrame block={b} onUpdate={(p) => update(b.id, p)}>{editable}</QuoteFrame>
       }
       if (b.type === "callout") {
-        const tones = { info: "bg-open-bg", success: "bg-surface-tint", warning: "bg-soon-bg" } as const
-        return (
-          <div className={cn("my-2 flex flex-col gap-3 px-6 py-5", tones[b.tone ?? "info"])}>
-            <div className="flex gap-1.5" role="radiogroup" aria-label="Ton de l'encadré">
-              {(
-                [
-                  ["info", "Information"],
-                  ["success", "Conseil"],
-                  ["warning", "Attention"],
-                ] as const
-              ).map(([tone, label]) => (
-                <button
-                  key={tone}
-                  type="button"
-                  role="radio"
-                  aria-checked={(b.tone ?? "info") === tone}
-                  onClick={() => update(b.id, { tone })}
-                  className={cn(
-                    "rounded-sm px-2 py-0.5 text-caption font-semibold transition-colors",
-                    (b.tone ?? "info") === tone ? "bg-inverse text-surface" : "text-ink-muted hover:text-ink"
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            {editable}
-          </div>
-        )
+        return <CalloutFrame block={b} onUpdate={(p) => update(b.id, p)}>{editable}</CalloutFrame>
       }
       return editable
     }
@@ -557,126 +509,29 @@ export function Canvas({
 
     if (b.type === "code" || b.type === "table") {
       return (
-        <div className="my-2 flex flex-col gap-2">
-          <textarea
-            ref={(el) => register(b.id, el)}
-            value={b.text}
-            spellCheck={false}
-            aria-label={b.type === "code" ? "Bloc de code" : "Tableau"}
-            placeholder={b.type === "code" ? "console.log('exemple')" : "Colonne 1 | Colonne 2\nValeur A | Valeur B"}
-            onChange={(e) => update(b.id, { text: e.target.value })}
-            onKeyDown={(e) => {
-              const el = e.currentTarget
-              if (e.key === "Tab") {
-                e.preventDefault()
-                const s = el.selectionStart
-                const v = el.value
-                update(b.id, { text: v.slice(0, s) + "  " + v.slice(el.selectionEnd) })
-                requestAnimationFrame(() => el.setSelectionRange(s + 2, s + 2))
-              } else if (e.key === "Backspace" && el.value === "") {
-                e.preventDefault()
-                update(b.id, { type: "p", text: "" }, true)
-                focusLater(b.id, "start")
-              } else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                e.preventDefault()
-                const p = newBlock("p")
-                insertAfter(b.id, p)
-                focusLater(p.id, "start")
-              }
-            }}
-            className={cn(
-              "min-h-[120px] w-full resize-none p-5 font-mono text-small outline-none [field-sizing:content]",
-              b.type === "code" ? "bg-inverse-deep text-surface placeholder:text-surface/35" : "border-y border-line-strong bg-surface text-ink placeholder:text-ink-faint"
-            )}
-          />
-          {b.type === "table" ? (
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <input
-                value={b.caption ?? ""}
-                onChange={(e) => update(b.id, { caption: e.target.value })}
-                placeholder="Légende du tableau (facultative)"
-                className="min-w-0 flex-1 bg-transparent text-small text-ink-muted outline-none placeholder:text-ink-faint"
-              />
-              <span className="text-caption text-ink-faint">Une ligne par rangée, cellules séparées par « | » ; la première ligne est l'en-tête.</span>
-            </div>
-          ) : (
-            <span className="text-caption text-ink-faint">Ctrl+Entrée pour sortir du bloc.</span>
-          )}
-        </div>
+        <CodeBlock
+          block={b}
+          register={register}
+          onUpdate={(p) => update(b.id, p)}
+          onRevert={() => {
+            update(b.id, { type: "p", text: "" }, true)
+            focusLater(b.id, "start")
+          }}
+          onExit={() => {
+            const p = newBlock("p")
+            insertAfter(b.id, p)
+            focusLater(p.id, "start")
+          }}
+        />
       )
     }
 
     if (b.type === "image") {
-      return (
-        <figure className="my-4 flex flex-col gap-2.5">
-          {b.url ? (
-            <div className="group/img relative bg-line">
-              <img src={mediaSrc(b.url)} alt={b.alt ?? b.text} className="w-full object-cover" />
-              <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 transition-opacity group-hover/img:opacity-100 group-focus-within/img:opacity-100">
-                <OverlayButton onClick={() => setPickerFor(b.id)}>Remplacer</OverlayButton>
-                <OverlayButton onClick={() => update(b.id, { wide: b.wide ? undefined : true })}>
-                  {b.wide ? "Largeur du texte" : "Pleine largeur"}
-                </OverlayButton>
-              </div>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setPickerFor(b.id)}
-              className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2 border border-dashed border-line-strong bg-surface text-ink-muted transition-colors hover:border-ink hover:text-ink"
-            >
-              <ImageIcon className="size-6" strokeWidth={1.5} />
-              <span className="text-small font-semibold">Choisir une image</span>
-              <span className="text-caption">Médiathèque ou ordinateur</span>
-            </button>
-          )}
-          <input
-            ref={(el) => register(`${b.id}:caption`, el)}
-            value={b.text}
-            onChange={(e) => update(b.id, { text: e.target.value })}
-            placeholder="Légende (facultative)"
-            className="bg-transparent text-center text-small text-ink-muted outline-none placeholder:text-ink-faint"
-          />
-          <input
-            value={b.alt ?? ""}
-            onChange={(e) => update(b.id, { alt: e.target.value || undefined })}
-            placeholder="Texte alternatif : décrire l'image pour les lecteurs d'écran"
-            className="bg-transparent text-center text-caption text-ink-faint outline-none placeholder:text-ink-faint/70"
-          />
-        </figure>
-      )
+      return <ImageBlock block={b} register={register} onUpdate={(p) => update(b.id, p)} onPick={() => setPickerFor(b.id)} />
     }
 
     if (b.type === "video") {
-      const yt = b.url ? isYoutube(b.url) : undefined
-      return (
-        <figure className="my-4 flex flex-col gap-2.5">
-          {yt ? (
-            <div className="aspect-video w-full bg-inverse-deep">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${yt}`}
-                title={b.text || "Vidéo"}
-                className="h-full w-full"
-                allowFullScreen
-              />
-            </div>
-          ) : null}
-          <input
-            ref={(el) => register(`${b.id}:url`, el)}
-            value={b.url ?? ""}
-            onChange={(e) => update(b.id, { url: e.target.value })}
-            placeholder="Collez l'adresse d'une vidéo YouTube ou d'un fichier de la médiathèque"
-            className="h-11 border-b border-line-strong bg-transparent text-small text-ink outline-none placeholder:text-ink-faint focus:border-gehmit"
-          />
-          <input
-            ref={(el) => register(`${b.id}:caption`, el)}
-            value={b.text}
-            onChange={(e) => update(b.id, { text: e.target.value })}
-            placeholder="Légende (facultative)"
-            className="bg-transparent text-center text-small text-ink-muted outline-none placeholder:text-ink-faint"
-          />
-        </figure>
-      )
+      return <VideoBlock block={b} register={register} onUpdate={(p) => update(b.id, p)} />
     }
 
     // Séparateur
@@ -699,59 +554,4 @@ export function Canvas({
       </button>
     )
   }
-}
-
-function OverlayButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="rounded-sm bg-inverse-deep/85 px-3 py-1.5 text-caption font-semibold text-surface backdrop-blur-sm hover:bg-inverse-deep"
-    >
-      {children}
-    </button>
-  )
-}
-
-function BlockMenu({
-  canUp,
-  canDown,
-  onUp,
-  onDown,
-  onDelete,
-  onClose,
-}: {
-  canUp: boolean
-  canDown: boolean
-  onUp: () => void
-  onDown: () => void
-  onDelete: () => void
-  onClose: () => void
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const onDownDoc = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
-    }
-    document.addEventListener("mousedown", onDownDoc)
-    return () => document.removeEventListener("mousedown", onDownDoc)
-  }, [onClose])
-  const item = "flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-small text-ink hover:bg-surface-alt disabled:opacity-40"
-  return (
-    <div
-      ref={ref}
-      role="menu"
-      className="absolute top-9 left-0 z-40 w-[190px] rounded-sm border border-line-strong bg-surface p-1 shadow-float"
-    >
-      <button type="button" role="menuitem" className={item} disabled={!canUp} onClick={() => { onUp(); onClose() }}>
-        <ArrowUpIcon className="size-4" /> Monter
-      </button>
-      <button type="button" role="menuitem" className={item} disabled={!canDown} onClick={() => { onDown(); onClose() }}>
-        <ArrowDownIcon className="size-4" /> Descendre
-      </button>
-      <button type="button" role="menuitem" className={cn(item, "text-destructive")} onClick={() => { onDelete(); onClose() }}>
-        <Trash2Icon className="size-4" /> Supprimer le bloc
-      </button>
-    </div>
-  )
 }

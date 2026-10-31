@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import { ImageField } from "@/components/admin/media-picker"
-import { ArticleCtaField, BlocksField, type ArticleCta, type Block } from "@/components/admin/structured-editors"
 import { Checkbox } from "@gehmit/ui/components/checkbox"
 import { Input } from "@gehmit/ui/components/input"
 import { Label } from "@gehmit/ui/components/label"
@@ -27,7 +26,7 @@ export function FieldWrap({
   )
 }
 
-/** Contrôle adapté au type du champ (texte, liste, image, blocs…). */
+/** Contrôle adapté au type du champ (texte, liste, case, nombre, image…). */
 export function FieldInput({
   field,
   draft,
@@ -101,20 +100,6 @@ export function FieldInput({
           onChange={(url) => set(field.name, url)}
           label={field.label}
           hint={field.hint}
-        />
-      )
-    case "blocks":
-      return (
-        <BlocksField
-          value={(value as Block[]) ?? []}
-          onChange={(blocks) => set(field.name, blocks)}
-        />
-      )
-    case "articleCta":
-      return (
-        <ArticleCtaField
-          value={(value as ArticleCta) ?? null}
-          onChange={(cta) => set(field.name, cta)}
         />
       )
     default:
