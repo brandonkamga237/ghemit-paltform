@@ -398,8 +398,14 @@ export const donationEquivalences = [
   { amount: "200 000 F", text: "Un séminaire d'orientation" },
 ]
 
+export interface Testimonial {
+  quote: string
+  name: string
+  place: string
+}
+
 /** Témoignages réels de bénéficiaires. */
-export const testimonials = [
+export const testimonials: Testimonial[] = [
   {
     quote:
       "Lors d'une période difficile, j'ai eu la chance de bénéficier des conseils avisés de Gehmit, qui m'ont permis de mieux orienter mes études en informatique.",

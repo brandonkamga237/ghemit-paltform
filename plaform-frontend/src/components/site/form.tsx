@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@gehmit/ui/components/select"
+import { Heading } from "@/components/site/heading"
 
 /** Champs de formulaire du site : 16 px minimum (pas de zoom iOS), angles nets. */
 export const inputCls =
@@ -153,9 +154,6 @@ export function FormFooter({
   )
 }
 
-export const submitCls =
-  "inline-flex h-12 items-center justify-center rounded-sm bg-gehmit px-7 text-small font-semibold text-surface transition-colors hover:bg-gehmit-hover active:bg-gehmit-active disabled:opacity-60"
-
 /** Confirmation après envoi : ce qui a été reçu et ce qui va se passer. */
 export function FormSuccess({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -170,7 +168,7 @@ export function FormSuccess({ title, children }: { title: string; children: Reac
         <CheckIcon className="size-5" strokeWidth={2.5} />
       </span>
       <span className="font-heading text-h2 font-semibold text-ink">{title}</span>
-      <div className="max-w-[560px] text-body text-ink-muted">{children}</div>
+      <div className="max-w-xl text-body text-ink-muted">{children}</div>
     </motion.div>
   )
 }
@@ -223,10 +221,10 @@ export function FormSection({
       <div className="mx-auto grid w-full max-w-page items-start gap-block px-gutter py-section lg:grid-cols-12">
         <div className="flex flex-col gap-group lg:col-span-7">
           <div className="flex flex-col gap-3">
-            <h2 className="font-heading text-h2 font-semibold text-ink">
+            <Heading>
               {title}
-            </h2>
-            {text ? <p className="max-w-[560px] text-body text-ink-muted">{text}</p> : null}
+            </Heading>
+            {text ? <p className="max-w-xl text-body text-ink-muted">{text}</p> : null}
           </div>
           {children}
         </div>

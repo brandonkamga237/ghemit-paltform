@@ -1,12 +1,12 @@
 import { Link } from "react-router"
-import { ArrowRightIcon } from "lucide-react"
 import { usePrograms } from "@/data/remote"
 import { parcours } from "@/data/parcours"
 import { usePageMeta } from "@/lib/seo"
 import { PageHero } from "@/components/site/page-header"
-import { Container } from "@/components/site/bands"
-import { CtaLink } from "@/components/site/cta"
+import { Container } from "@/components/site/section"
+import { ArrowLink, CtaLink } from "@/components/site/cta"
 import { StatusDot } from "@/components/site/status-pill"
+import { Heading } from "@/components/site/heading"
 
 export function ProgrammesPage() {
   const programs = usePrograms()
@@ -49,8 +49,8 @@ export function ProgrammesPage() {
               <span className="tnum font-heading text-display leading-none font-semibold text-gehmit/80">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h2 className="font-heading text-h2 font-normal text-ink italic">{stage.verb}</h2>
-              <p className="max-w-[320px] text-body text-ink-muted">{stage.text}</p>
+              <Heading className="font-normal italic">{stage.verb}</Heading>
+              <p className="max-w-xs text-body text-ink-muted">{stage.text}</p>
             </div>
 
             <ul className="flex flex-col border-t border-line-strong lg:col-span-8">
@@ -73,7 +73,7 @@ export function ProgrammesPage() {
                         </span>
                       )}
                     </div>
-                    <p className="max-w-[620px] text-body text-ink/75">
+                    <p className="max-w-xl text-body text-ink/75">
                       {p?.description ?? o.line}
                     </p>
                     {p?.meta?.length ? (
@@ -90,13 +90,7 @@ export function ProgrammesPage() {
                       {p && p.detail && !p.primaryCta.disabled && !closed ? (
                         <CtaLink to={p.primaryCta.to}>{p.primaryCta.label}</CtaLink>
                       ) : null}
-                      <Link
-                        to={o.to}
-                        className="group inline-flex items-center gap-2 text-small font-semibold text-gehmit underline-offset-4 hover:underline"
-                      >
-                        {p?.detail ? "Le programme en détail" : closed ? "M'avertir à l'ouverture" : "Découvrir"}
-                        <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
-                      </Link>
+                      <ArrowLink to={o.to}>{p?.detail ? "Le programme en détail" : closed ? "M'avertir à l'ouverture" : "Découvrir"}</ArrowLink>
                     </div>
                   </li>
                 )

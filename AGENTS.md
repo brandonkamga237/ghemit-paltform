@@ -67,6 +67,19 @@ Gehmit = **vert et blanc**. L'or est un accent rare (don, article à la une),
 - Primitives (bouton, champ, dialogue…) : `@gehmit/ui/components/<nom>`.
   Ne pas recréer de dossier `components/ui` dans une application.
 
+### Site public : composants de mise en page
+
+- Une bande de page = `<Section bg="surface|alt|tint|inverse" [compact]>` ;
+  un titre = `<Heading>` ; titre + phrase ou lien = `<SectionHeader>`.
+- Le **ton** (clair / sombre) se propage : sur `bg="inverse"` (ou dans un
+  `<ToneProvider tone="inverse">`), `Heading`, `ArrowLink`, `CtaLink`
+  (`outline`), `Ledger`, `Testimonial` et les légendes passent en clair
+  d'eux-mêmes. Ne pas écrire `text-surface` à la main sur ces composants.
+- Un seul style de bouton : `CtaLink` (lien), `CtaButton` (formulaire) ou
+  `ctaVariants(...)` ; la variante `donate` (or) est réservée au don.
+- Dates de l'API : `dateParts` / `shortDate` de `lib/date.ts`.
+- Une page longue se découpe en dossier (`pages/home/index.tsx` + sections).
+
 ## Infrastructure locale
 
 `docker compose up -d` à la racine : PostgreSQL 16, MinIO, Mailhog, Keycloak 26.

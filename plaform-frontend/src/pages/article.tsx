@@ -6,10 +6,11 @@ import { articleDate } from "@/data/remote"
 import { fetchArticle, mediaUrl } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
 import { cn } from "@gehmit/ui/cn"
-import { Container } from "@/components/site/bands"
+import { Container, Section } from "@/components/site/section"
 import { MediaImage, Photo } from "@/components/site/photo"
 import { Breadcrumb } from "@/components/site/page-header"
 import { CtaLink } from "@/components/site/cta"
+import { Heading } from "@/components/site/heading"
 
 
 /** Transforme le markdown léger du rédacteur en éléments React. */
@@ -140,9 +141,9 @@ const CALLOUT_TONES = {
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "h2":
-      return <h2 className="pt-4 font-heading text-h2 font-semibold text-ink">{richText(block.text)}</h2>
+      return <Heading className="pt-4">{richText(block.text)}</Heading>
     case "h3":
-      return <h3 className="pt-2 font-heading text-h3 font-semibold text-ink">{richText(block.text)}</h3>
+      return <Heading as="h3" className="pt-2">{richText(block.text)}</Heading>
     case "quote":
       return (
         <blockquote className="my-4 flex flex-col gap-3 border-y border-line-strong py-8">
@@ -257,14 +258,14 @@ export function ArticlePage() {
     return (
       <div className="flex flex-col bg-surface" aria-busy="true">
         <Container className="flex flex-col items-center pt-section pb-block">
-          <div className="flex w-full max-w-[680px] flex-col gap-5">
+          <div className="flex w-full max-w-text flex-col gap-5">
             <div className="h-4 w-32 animate-pulse rounded bg-line" />
             <div className="h-12 w-full animate-pulse rounded bg-line" />
             <div className="h-6 w-3/4 animate-pulse rounded bg-line" />
           </div>
         </Container>
         <Container className="flex justify-center pb-block">
-          <div className="h-[240px] w-full max-w-[1040px] animate-pulse bg-line sm:h-[460px]" />
+          <div className="h-[240px] w-full max-w-5xl animate-pulse bg-line sm:h-[460px]" />
         </Container>
       </div>
     )
@@ -274,7 +275,7 @@ export function ArticlePage() {
     <div className="flex flex-col bg-surface">
       <Container className="flex flex-col items-center pt-section pb-block">
         <div
-          className="flex w-full max-w-[680px] flex-col gap-5">
+          className="flex w-full max-w-text flex-col gap-5">
           <Breadcrumb
             trail={[
               { label: "Blog", to: "/blog" },
@@ -297,19 +298,19 @@ export function ArticlePage() {
             src={article.imageUrl}
             alt={article.imageAlt ?? article.title}
             sizes="(max-width: 640px) 100vw, 1040px"
-            frame="h-[240px] w-full max-w-[1040px] sm:h-[480px]"
+            frame="h-[240px] w-full max-w-5xl sm:h-[480px]"
             priority
           />
         ) : article.photoLabel ? (
           <Photo
             label={article.photoLabel}
-            className="h-[240px] w-full max-w-[1040px] sm:h-[480px]"
+            className="h-[240px] w-full max-w-5xl sm:h-[480px]"
           />
         ) : null}
       </Container>
 
       <Container className="flex flex-col items-center pb-section">
-        <article className="flex w-full max-w-[680px] flex-col gap-group [overflow-wrap:anywhere]">
+        <article className="flex w-full max-w-text flex-col gap-group [overflow-wrap:anywhere]">
           {article.body.map((block, i) => (
             <BlockView key={i} block={block} />
           ))}
@@ -317,17 +318,15 @@ export function ArticlePage() {
       </Container>
 
       {article.cta ? (
-        <section className="bg-inverse text-surface">
-          <Container className="flex flex-wrap items-center justify-between gap-group py-block">
-            <div className="flex flex-col gap-2">
-              <span className="font-heading text-h2 font-semibold">{article.cta.title}</span>
-              <span className="text-body text-surface/70">{article.cta.text}</span>
-            </div>
-            <CtaLink to={article.cta.to} arrow>
-              {article.cta.label}
-            </CtaLink>
-          </Container>
-        </section>
+        <Section bg="inverse" compact className="flex flex-wrap items-center justify-between gap-group">
+          <div className="flex flex-col gap-2">
+            <span className="font-heading text-h2 font-semibold">{article.cta.title}</span>
+            <span className="text-body text-surface/70">{article.cta.text}</span>
+          </div>
+          <CtaLink to={article.cta.to} arrow>
+            {article.cta.label}
+          </CtaLink>
+        </Section>
       ) : null}
     </div>
   )

@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { usePageMeta } from "@/lib/seo"
 import { apiPost } from "@/lib/api"
-import { Container } from "@/components/site/bands"
-import { ArrowLink, CtaLink } from "@/components/site/cta"
+import { Container } from "@/components/site/section"
+import { ArrowLink, CtaLink, CtaButton } from "@/components/site/cta"
 import { PageHero } from "@/components/site/page-header"
 import { Input } from "@gehmit/ui/components/input"
 import { Textarea } from "@gehmit/ui/components/textarea"
@@ -15,7 +15,6 @@ import {
   FormSuccess,
   Recap,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
@@ -181,9 +180,9 @@ export function HireDeveloperPage() {
               <Input value={form.budget} onChange={(e) => set("budget", e.target.value)} placeholder="Ex. 150 000 – 300 000 FCFA / mois" className={inputCls} />
             </Field>
             <FormFooter note="Sans commission" error={state === "error"}>
-              <button type="submit" disabled={state === "sending"} className={submitCls}>
+              <CtaButton type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Envoi…" : "Envoyer le besoin"}
-              </button>
+              </CtaButton>
             </FormFooter>
           </FormPanel>
         )}

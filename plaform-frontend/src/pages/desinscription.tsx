@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router"
-import { Container } from "@/components/site/bands"
+import { Section } from "@/components/site/section"
 import { CtaLink } from "@/components/site/cta"
 import { usePageMeta } from "@/lib/seo"
 
@@ -10,22 +10,20 @@ export function DesinscriptionPage() {
   usePageMeta("Désinscription")
 
   return (
-    <section className="bg-surface-alt">
-      <Container className="flex flex-col items-start gap-group py-section">
-        <h1 className="max-w-[720px] font-heading text-display font-semibold text-ink">
-          {ok ? (
-            <>Vous êtes <span className="accent-word">désinscrit</span>.</>
-          ) : (
-            <>Ce lien n'est <span className="accent-word">plus valide</span>.</>
-          )}
-        </h1>
-        <p className="max-w-[520px] text-body text-ink/75">
-          {ok
-            ? "Vous ne recevrez plus la lettre de Gehmit. Vous pourrez vous réinscrire à tout moment depuis le bas de chaque page."
-            : "Ce lien de désinscription est incomplet ou a expiré. Utilisez celui qui figure en bas de votre dernier e-mail."}
-        </p>
-        <CtaLink to="/" arrow>Retour à l'accueil</CtaLink>
-      </Container>
-    </section>
+    <Section bg="alt" className="flex flex-col items-start gap-group">
+      <h1 className="max-w-3xl font-heading text-display font-semibold text-ink">
+        {ok ? (
+          <>Vous êtes <span className="accent-word">désinscrit</span>.</>
+        ) : (
+          <>Ce lien n'est <span className="accent-word">plus valide</span>.</>
+        )}
+      </h1>
+      <p className="max-w-lg text-body text-ink/75">
+        {ok
+          ? "Vous ne recevrez plus la lettre de Gehmit. Vous pourrez vous réinscrire à tout moment depuis le bas de chaque page."
+          : "Ce lien de désinscription est incomplet ou a expiré. Utilisez celui qui figure en bas de votre dernier e-mail."}
+      </p>
+      <CtaLink to="/" arrow>Retour à l'accueil</CtaLink>
+    </Section>
   )
 }

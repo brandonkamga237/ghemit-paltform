@@ -1,3 +1,4 @@
+import { CtaButton } from "@/components/site/cta"
 import { useState } from "react"
 import { Link, Navigate, useParams } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
@@ -5,7 +6,7 @@ import { cn } from "@gehmit/ui/cn"
 import { usePrograms } from "@/data/remote"
 import { apiPost, uploadCv } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { Container } from "@/components/site/bands"
+import { Container } from "@/components/site/section"
 import { Breadcrumb } from "@/components/site/page-header"
 import { Input } from "@gehmit/ui/components/input"
 import { Textarea } from "@gehmit/ui/components/textarea"
@@ -17,7 +18,6 @@ import {
   FormSuccess,
   Recap,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
@@ -209,9 +209,9 @@ export function CandidaturePage() {
                         Retour
                       </button>
                     )}
-                    <button type="submit" disabled={state === "sending"} className={submitCls}>
+                    <CtaButton type="submit" disabled={state === "sending"}>
                       {step === 2 ? (state === "sending" ? "Envoi…" : "Envoyer ma candidature") : "Continuer"}
-                    </button>
+                    </CtaButton>
                   </div>
                 </FormFooter>
               </motion.form>

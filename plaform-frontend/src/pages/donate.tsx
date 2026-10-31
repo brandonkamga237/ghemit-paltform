@@ -1,10 +1,12 @@
 import { useState } from "react"
-import { Link } from "react-router"
-import { ArrowRightIcon, MailIcon, MessageCircleIcon } from "lucide-react"
+import { MailIcon, MessageCircleIcon } from "lucide-react"
 import { cn } from "@gehmit/ui/cn"
 import { contact, donationEquivalences, whatsappUrl } from "@/data/content"
 import { usePageMeta } from "@/lib/seo"
-import { Container } from "@/components/site/bands"
+import { Container, Section } from "@/components/site/section"
+import { Heading } from "@/components/site/heading"
+import { ArrowLink } from "@/components/site/cta"
+import { ctaVariants } from "@/components/site/cta-variants"
 import { Breadcrumb } from "@/components/site/page-header"
 import { Figure } from "@/components/site/photo"
 import { Input } from "@gehmit/ui/components/input"
@@ -127,10 +129,7 @@ export function DonatePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-disabled={total <= 0}
-                className={cn(
-                  "flex h-[52px] items-center justify-center gap-2.5 rounded-sm bg-gold text-body font-semibold text-ink transition-colors hover:bg-gold-hover",
-                  total <= 0 && "pointer-events-none opacity-50"
-                )}
+                className={cn(ctaVariants({ variant: "donate" }), "w-full text-body")}
               >
                 <MessageCircleIcon className="size-5" strokeWidth={1.8} />
                 Finaliser sur WhatsApp
@@ -152,23 +151,15 @@ export function DonatePage() {
       </section>
 
       {/* Don en nature */}
-      <section className="bg-inverse text-surface">
-        <Container className="flex flex-wrap items-center justify-between gap-group py-block">
-          <div className="flex flex-col gap-1.5">
-            <span className="font-heading text-h3 font-semibold">Don en nature ou partenariat</span>
-            <span className="text-body text-surface/70">
-              Matériel informatique, mise à disposition de locaux, mécénat de compétences.
-            </span>
-          </div>
-          <Link
-            to="/partenaire"
-            className="group inline-flex items-center gap-2 text-body font-semibold text-gehmit-light underline-offset-4 hover:underline"
-          >
-            Devenir partenaire
-            <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-        </Container>
-      </section>
+      <Section bg="inverse" compact className="flex flex-wrap items-center justify-between gap-group">
+        <div className="flex flex-col gap-1.5">
+          <Heading as="h3">Don en nature ou partenariat</Heading>
+          <span className="text-body text-surface/70">
+            Matériel informatique, mise à disposition de locaux, mécénat de compétences.
+          </span>
+        </div>
+        <ArrowLink to="/partenaire" className="text-body">Devenir partenaire</ArrowLink>
+      </Section>
     </div>
   )
 }

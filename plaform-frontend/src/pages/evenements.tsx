@@ -3,20 +3,12 @@ import { cn } from "@gehmit/ui/cn"
 import type { EventItem } from "@/data/content"
 import { useEvents } from "@/data/remote"
 import { usePageMeta } from "@/lib/seo"
-import { Container } from "@/components/site/bands"
+import { dateParts } from "@/lib/date"
+import { Container } from "@/components/site/section"
 import { MediaImage } from "@/components/site/photo"
 import { CtaLink } from "@/components/site/cta"
 import { PageHero } from "@/components/site/page-header"
-
-const MONTHS = [
-  "janvier", "février", "mars", "avril", "mai", "juin",
-  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
-]
-
-function dateParts(iso: string) {
-  const m = iso?.match(/^(\d{4})-(\d{2})-(\d{2})/)
-  return m ? { day: String(Number(m[3])), month: MONTHS[Number(m[2]) - 1], year: m[1] } : null
-}
+import { Heading } from "@/components/site/heading"
 
 function EventRow({ event }: { event: EventItem }) {
   const d = dateParts(event.date)
@@ -45,7 +37,7 @@ function EventRow({ event }: { event: EventItem }) {
           <p className="text-body text-ink-muted">{[event.time, event.location].filter(Boolean).join(" · ")}</p>
         </div>
         {event.description ? (
-          <p className="max-w-[620px] text-body text-ink/75">{event.description}</p>
+          <p className="max-w-xl text-body text-ink/75">{event.description}</p>
         ) : null}
         {!cancelled && event.registerUrl ? (
           external ? (
@@ -102,7 +94,7 @@ export function EvenementsPage() {
           ) : (
             <div className="flex flex-col items-start gap-3 border-y border-line-strong py-block">
               <p className="font-heading text-h2 text-ink">Aucun rendez-vous annoncé pour l'instant.</p>
-              <p className="max-w-[540px] text-body text-ink-muted">
+              <p className="max-w-lg text-body text-ink-muted">
                 Les prochaines dates sont publiées ici et dans la lettre mensuelle : inscrivez-vous en
                 bas de page pour ne rien manquer.
               </p>
@@ -111,7 +103,7 @@ export function EvenementsPage() {
 
           {past.length > 0 ? (
             <div className="flex flex-col gap-group pt-section">
-              <h2 className="font-heading text-h3 font-semibold text-ink">Ils ont eu lieu</h2>
+              <Heading size="h3">Ils ont eu lieu</Heading>
               <ul className="flex flex-col border-t border-line-strong">
                 {(showAllPast ? past : past.slice(0, PAST_SHOWN)).map((e) => {
                   const d = dateParts(e.date)

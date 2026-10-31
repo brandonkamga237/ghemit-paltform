@@ -3,8 +3,8 @@ import { Link } from "react-router"
 import { contact } from "@/data/content"
 import { apiPost } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { Container } from "@/components/site/bands"
-import { ArrowLink, CtaLink } from "@/components/site/cta"
+import { Section } from "@/components/site/section"
+import { ArrowLink, CtaLink, CtaButton } from "@/components/site/cta"
 import { PageHero } from "@/components/site/page-header"
 import { Figure } from "@/components/site/photo"
 import { PartnerLogos } from "@/components/site/partner-logos"
@@ -18,10 +18,10 @@ import {
   FormSection,
   FormSuccess,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
+import { Heading } from "@/components/site/heading"
 
 const ways = [
   {
@@ -123,44 +123,40 @@ export function PartnerPage() {
       />
 
       {/* Quatre façons de contribuer */}
-      <section className="bg-surface">
-        <Container className="flex flex-col gap-block py-section">
-          <h2 className="font-heading text-h2 font-semibold text-ink">
-            Quatre façons de contribuer
-          </h2>
-          <ol className="grid gap-px bg-line-strong md:grid-cols-2">
-            {ways.map((w, i) => (
-              <li key={w.title} className="flex flex-col gap-3 bg-surface py-8 md:p-8 md:[&:nth-child(odd)]:pl-0">
-                <span className="flex items-baseline gap-3">
-                  <span className="tnum text-small font-semibold text-gehmit">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-heading text-h3 font-semibold text-ink">{w.title}</span>
-                </span>
-                <p className="max-w-[480px] text-body text-ink/75">{w.text}</p>
-                <p className={w.urgent ? "text-small font-semibold text-gehmit" : "text-small text-ink-muted"}>
-                  {w.note}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </section>
+      <Section className="flex flex-col gap-block">
+        <Heading>
+          Quatre façons de contribuer
+        </Heading>
+        <ol className="grid gap-px bg-line-strong md:grid-cols-2">
+          {ways.map((w, i) => (
+            <li key={w.title} className="flex flex-col gap-3 bg-surface py-8 md:p-8 md:[&:nth-child(odd)]:pl-0">
+              <span className="flex items-baseline gap-3">
+                <span className="tnum text-small font-semibold text-gehmit">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-heading text-h3 font-semibold text-ink">{w.title}</span>
+              </span>
+              <p className="max-w-md text-body text-ink/75">{w.text}</p>
+              <p className={w.urgent ? "text-small font-semibold text-gehmit" : "text-small text-ink-muted"}>
+                {w.note}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </Section>
 
       {/* Ce que vous recevez */}
-      <section className="bg-inverse text-surface">
-        <Container className="grid gap-block py-section lg:grid-cols-12">
-          <h2 className="font-heading text-h2 font-semibold lg:col-span-4">
-            Ce que vous <span className="font-normal text-gehmit-light italic">recevez</span>
-          </h2>
-          <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-8">
-            {gains.map((g) => (
-              <div key={g.title} className="flex flex-col gap-2 border-t border-white/15 pt-5">
-                <dt className="text-body font-semibold">{g.title}</dt>
-                <dd className="text-body text-surface/70">{g.text}</dd>
-              </div>
-            ))}
-          </dl>
-        </Container>
-      </section>
+      <Section bg="inverse" className="grid gap-block lg:grid-cols-12">
+        <Heading className="lg:col-span-4">
+          Ce que vous <span className="font-normal text-gehmit-light italic">recevez</span>
+        </Heading>
+        <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-8">
+          {gains.map((g) => (
+            <div key={g.title} className="flex flex-col gap-2 border-t border-white/15 pt-5">
+              <dt className="text-body font-semibold">{g.title}</dt>
+              <dd className="text-body text-surface/70">{g.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
 
       <PartnerLogos title="Ils nous accompagnent déjà" />
 
@@ -212,9 +208,9 @@ export function PartnerPage() {
               <Textarea value={form.proposition} onChange={(e) => set("proposition", e.target.value)} placeholder="Quelques lignes suffisent." className={textareaCls} />
             </Field>
             <FormFooter note="Réponse sous 48 heures ouvrées" error={state === "error"}>
-              <button type="submit" disabled={state === "sending"} className={submitCls}>
+              <CtaButton type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Envoi…" : "Envoyer la proposition"}
-              </button>
+              </CtaButton>
             </FormFooter>
           </FormPanel>
         )}

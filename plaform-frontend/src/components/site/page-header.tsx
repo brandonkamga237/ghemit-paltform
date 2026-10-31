@@ -2,7 +2,8 @@ import { Link } from "react-router"
 import type { ReactNode } from "react"
 import { cn } from "@gehmit/ui/cn"
 import { parcours } from "@/data/parcours"
-import { Container } from "./bands"
+import { Container } from "./section"
+import { useTone } from "./tone"
 
 export function Breadcrumb({ trail }: { trail: { label: string; to?: string }[] }) {
   return (
@@ -69,14 +70,14 @@ export function PageHero({
         )}
       >
         <div
-          className={cn("flex flex-col gap-group", aside ? "lg:col-span-7" : "max-w-[860px]")}>
+          className={cn("flex flex-col gap-group", aside ? "lg:col-span-7" : "max-w-4xl")}>
           <Breadcrumb trail={trail} />
           {kicker}
           <h1 className="font-heading text-display font-semibold text-ink">
             {title}
           </h1>
           {lede ? (
-            <div className="max-w-[600px] text-lead text-ink/75">{lede}</div>
+            <div className="max-w-xl text-lead text-ink/75">{lede}</div>
           ) : null}
           {actions ? <div className="flex flex-wrap items-center gap-x-group gap-y-item pt-1">{actions}</div> : null}
         </div>
@@ -93,8 +94,9 @@ export function PageHero({
 }
 
 /** Registre de chiffres ou de faits sous un en-tête (2 colonnes mobile, 4 desktop). */
-export function Ledger({ items, tone = "light" }: { items: { label: string; value: string }[]; tone?: "light" | "dark" }) {
-  const line = tone === "dark" ? "border-white/15" : "border-line-strong"
+export function Ledger({ items }: { items: { label: string; value: string }[] }) {
+  const dark = useTone() === "inverse"
+  const line = dark ? "border-white/15" : "border-line-strong"
   return (
     <Container>
       <dl className={cn("grid grid-cols-2 border-t lg:grid-cols-4", line)}>
@@ -108,13 +110,13 @@ export function Ledger({ items, tone = "light" }: { items: { label: string; valu
               i >= 2 && cn("max-lg:border-t", line)
             )}
           >
-            <dt className={cn("order-2 text-small", tone === "dark" ? "text-surface/65" : "text-ink-muted")}>
+            <dt className={cn("order-2 text-small", dark ? "text-surface/65" : "text-ink-muted")}>
               {f.label}
             </dt>
             <dd
               className={cn(
                 "tnum order-1 font-heading text-h2 font-semibold",
-                tone === "dark" ? "text-surface" : "text-ink"
+                dark ? "text-surface" : "text-ink"
               )}
             >
               {f.value}
@@ -136,23 +138,9 @@ export function InfoRows({ rows, className }: { rows: { title: string; text: Rea
       {rows.map((r) => (
         <div key={r.title} className="grid gap-block border-b border-line py-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <dt className="font-heading text-h3 font-semibold text-ink">{r.title}</dt>
-          <dd className="max-w-[620px] text-body text-ink/75">{r.text}</dd>
+          <dd className="max-w-xl text-body text-ink/75">{r.text}</dd>
         </div>
       ))}
     </dl>
-  )
-}
-
-/** Titre de section avec phrase d'accompagnement optionnelle. */
-export function SectionTitle({ title, text, className }: { title: ReactNode; text?: ReactNode; className?: string }) {
-  return (
-    <div className={cn("grid gap-4 lg:grid-cols-12 lg:items-end", className)}>
-      <h2 className="font-heading text-h2 font-semibold text-ink lg:col-span-7">
-        {title}
-      </h2>
-      {text ? (
-        <p className="max-w-[440px] text-body text-ink-muted lg:col-span-5 lg:justify-self-end">{text}</p>
-      ) : null}
-    </div>
   )
 }

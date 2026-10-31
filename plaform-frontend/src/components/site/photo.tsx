@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react"
 import { cn } from "@gehmit/ui/cn"
 import { photoCaptions, staticPhoto, type PhotoName } from "@/data/photos"
 import { imageSrcSet, mediaUrl } from "@/lib/api"
+import { useTone } from "./tone"
 
 
 /**
@@ -107,7 +108,6 @@ export function Figure({
   position,
   sizes,
   priority,
-  tone = "light",
 }: {
   photo: PhotoName
   alt: string
@@ -117,8 +117,8 @@ export function Figure({
   position?: string
   sizes?: string
   priority?: boolean
-  tone?: "light" | "dark"
 }) {
+  const tone = useTone()
   return (
     <figure className={cn("flex flex-col gap-3", className)}>
       <div className={cn("overflow-hidden bg-line", frameClassName)} style={position ? { ["--pos" as string]: position } : undefined}>
@@ -133,7 +133,7 @@ export function Figure({
       <figcaption
         className={cn(
           "text-caption",
-          tone === "dark" ? "text-surface/60" : "text-ink-muted"
+          tone === "inverse" ? "text-surface/60" : "text-ink-muted"
         )}
       >
         {caption ?? photoCaptions[photo]}

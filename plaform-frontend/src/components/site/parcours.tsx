@@ -4,6 +4,7 @@ import { cn } from "@gehmit/ui/cn"
 import { usePrograms } from "@/data/remote"
 import { parcours, programStatus } from "@/data/parcours"
 import { StatusDot } from "./status-pill"
+import { Heading } from "@/components/site/heading"
 
 /**
  * Frise du parcours Gehmit : quatre étapes reliées, chacune avec ses offres.
@@ -37,10 +38,10 @@ export function Parcours({ current, className }: { current?: string; className?:
             </span>
 
             <div className="flex flex-col gap-2">
-              <h3 className="font-heading text-h3 font-normal text-ink italic">
+              <Heading as="h3" className="font-normal italic">
                 {stage.verb}
-              </h3>
-              <p className="max-w-[300px] text-small text-ink-muted">{stage.text}</p>
+              </Heading>
+              <p className="max-w-2xs text-small text-ink-muted">{stage.text}</p>
             </div>
 
             <ul className="mt-5 flex flex-col border-t border-line">

@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { usePageMeta } from "@/lib/seo"
 import { apiPost, uploadCv } from "@/lib/api"
-import { Container } from "@/components/site/bands"
-import { ArrowLink, CtaLink } from "@/components/site/cta"
+import { Section } from "@/components/site/section"
+import { ArrowLink, CtaLink, CtaButton } from "@/components/site/cta"
 import { InfoRows, PageHero, StageLine } from "@/components/site/page-header"
 import { Input } from "@gehmit/ui/components/input"
 import { Textarea } from "@gehmit/ui/components/textarea"
@@ -16,7 +16,6 @@ import {
   Recap,
   SelectField,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
@@ -111,11 +110,9 @@ export function JuniorBuildersPage() {
         }
       />
 
-      <section className="bg-surface">
-        <Container className="py-section">
-          <InfoRows rows={rows} />
-        </Container>
-      </section>
+      <Section>
+        <InfoRows rows={rows} />
+      </Section>
 
       <FormSection
         id="rejoindre"
@@ -195,9 +192,9 @@ export function JuniorBuildersPage() {
             </Group>
 
             <FormFooter note="Réponse sous 10 jours" error={state === "error"}>
-              <button type="submit" disabled={state === "sending"} className={submitCls}>
+              <CtaButton type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Envoi…" : "Envoyer mon profil"}
-              </button>
+              </CtaButton>
             </FormFooter>
           </FormPanel>
         )}
