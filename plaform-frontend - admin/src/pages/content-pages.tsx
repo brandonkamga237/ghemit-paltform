@@ -1,4 +1,4 @@
-import { CrudPage, StatusBadge, type CrudConfig } from "@/components/admin/crud-page"
+import { CrudPage, StatusBadge, type CrudConfig } from "@/components/admin/crud"
 import { Badge } from "@gehmit/ui/components/badge"
 import type { ContentItem } from "@/lib/types"
 
