@@ -1,15 +1,16 @@
 import { Link } from "react-router"
 import type { ReactNode } from "react"
 import { ArrowRightIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 
-type Variant = "primary" | "gold" | "outline" | "inverse" | "outline-inverse"
+type Variant = "primary" | "donate" | "outline" | "inverse" | "outline-inverse"
 
 const variants: Record<Variant, string> = {
   primary: "bg-gehmit text-surface hover:bg-gehmit-hover active:bg-gehmit-active",
-  gold: "bg-gold text-navy hover:bg-gold-hover active:bg-gold-active",
-  outline: "border border-navy/25 text-navy hover:border-navy hover:bg-navy hover:text-surface",
-  inverse: "bg-surface text-navy hover:bg-cream",
+  /** Réservé au don : seul usage de l'or sur le site. */
+  donate: "bg-gold text-ink hover:bg-gold-hover active:bg-gold-active",
+  outline: "border border-ink/25 text-ink hover:border-ink hover:bg-inverse hover:text-surface",
+  inverse: "bg-surface text-ink hover:bg-surface-alt",
   "outline-inverse": "border border-surface/30 text-surface hover:border-surface hover:bg-surface/10",
 }
 

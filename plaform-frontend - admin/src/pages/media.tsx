@@ -8,14 +8,14 @@ import {
   Trash2Icon,
   UploadIcon,
 } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { API_URL, api } from "@/lib/api"
 import type { MediaFile } from "@/lib/types"
-import { toast } from "@/components/ui/toast"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { toast } from "@gehmit/ui/components/toast"
+import { Button } from "@gehmit/ui/components/button"
+import { Card, CardContent } from "@gehmit/ui/components/card"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
 import {
   Dialog,
   DialogContent,
@@ -23,7 +23,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@gehmit/ui/components/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +33,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@gehmit/ui/components/alert-dialog"
 
 const ALL = "__all__"
 const ROOT = "__root__"
@@ -174,8 +174,8 @@ export function MediaPage() {
       }}
     >
       {dragging && (
-        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-navy/40">
-          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-surface bg-navy px-10 py-8 text-surface shadow-2xl">
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-inverse/40">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-surface bg-inverse px-10 py-8 text-surface shadow-2xl">
             <UploadIcon className="size-8" />
             <span className="text-body font-semibold">Déposez les fichiers pour les téléverser</span>
           </div>

@@ -21,24 +21,24 @@ export function ImpactPage() {
       {/* Réalisations, en chronologie */}
       <section className="bg-surface">
         <Container className="flex flex-col gap-block py-section">
-          <h2 className="font-heading text-h2 font-semibold text-navy">
+          <h2 className="font-heading text-h2 font-semibold text-ink">
             Les rendez-vous marquants
           </h2>
           <ol className="flex flex-col">
             {achievements.map((a) => (
               <li
                 key={a.title}
-                className="grid gap-block border-t border-sand-dark py-block lg:grid-cols-12"
+                className="grid gap-block border-t border-line-strong py-block lg:grid-cols-12"
               >
                 <div className="flex flex-col gap-2 lg:col-span-3">
-                  <span className="font-heading text-h3 text-navy italic">{a.date}</span>
-                  <span className="tnum font-heading text-h2 leading-none font-semibold text-gold">
+                  <span className="font-heading text-h3 text-ink italic">{a.date}</span>
+                  <span className="tnum font-heading text-h2 leading-none font-semibold text-gehmit">
                     {a.figure}
                   </span>
                 </div>
                 <div className="flex flex-col gap-3 lg:col-span-4">
-                  <h3 className="font-heading text-h3 font-semibold text-navy">{a.title}</h3>
-                  <p className="text-body text-navy/75">{a.text}</p>
+                  <h3 className="font-heading text-h3 font-semibold text-ink">{a.title}</h3>
+                  <p className="text-body text-ink/75">{a.text}</p>
                 </div>
                 {a.photo ? (
                   <Figure
@@ -57,13 +57,13 @@ export function ImpactPage() {
 
       {/* Témoignage */}
       {testimonial && (
-        <section className="bg-navy text-surface">
+        <section className="bg-inverse text-surface">
           <Container className="py-section">
             <figure className="mx-auto flex max-w-[920px] flex-col gap-group">
               <blockquote className="font-heading text-h2 italic">
-                <span aria-hidden className="text-gold">« </span>
+                <span aria-hidden className="text-gehmit-light">« </span>
                 {testimonial.quote}
-                <span aria-hidden className="text-gold"> »</span>
+                <span aria-hidden className="text-gehmit-light"> »</span>
               </blockquote>
               <figcaption className="text-body">
                 <span className="font-semibold">{testimonial.name}</span>
@@ -75,13 +75,13 @@ export function ImpactPage() {
       )}
 
       {/* Suite */}
-      <section className="bg-gehmit-tint">
+      <section className="bg-surface-tint">
         <Container className="flex flex-wrap items-center justify-between gap-group py-block">
           <div className="flex flex-col gap-2">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+            <h2 className="font-heading text-h2 font-semibold text-ink">
               Soutenez la prochaine promotion.
             </h2>
-            <p className="text-body text-navy/75">Chaque don finance directement l'accompagnement d'un jeune.</p>
+            <p className="text-body text-ink/75">Chaque don finance directement l'accompagnement d'un jeune.</p>
           </div>
           <CtaLink to="/don" arrow>
             Faire un don

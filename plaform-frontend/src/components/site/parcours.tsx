@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import { ArrowRightIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { usePrograms } from "@/data/remote"
 import { parcours, programStatus } from "@/data/parcours"
 import { StatusDot } from "./status-pill"
@@ -23,32 +23,32 @@ export function Parcours({ current, className }: { current?: string; className?:
             {!last && (
               <span
                 aria-hidden
-                className="absolute top-8 bottom-[-40px] left-[13px] w-px bg-sand-dark lg:top-[13px] lg:right-[-32px] lg:bottom-auto lg:left-7 lg:h-px lg:w-auto"
+                className="absolute top-8 bottom-[-40px] left-[13px] w-px bg-line-strong lg:top-[13px] lg:right-[-32px] lg:bottom-auto lg:left-7 lg:h-px lg:w-auto"
               />
             )}
             <span
               aria-hidden
               className={cn(
                 "tnum absolute top-0 left-0 flex size-7 items-center justify-center rounded-full border text-caption font-semibold",
-                here ? "border-gehmit bg-gehmit text-surface" : "border-sand-dark bg-surface text-navy"
+                here ? "border-gehmit bg-gehmit text-surface" : "border-line-strong bg-surface text-ink"
               )}
             >
               {i + 1}
             </span>
 
             <div className="flex flex-col gap-2">
-              <h3 className="font-heading text-h3 font-normal text-navy italic">
+              <h3 className="font-heading text-h3 font-normal text-ink italic">
                 {stage.verb}
               </h3>
               <p className="max-w-[300px] text-small text-ink-muted">{stage.text}</p>
             </div>
 
-            <ul className="mt-5 flex flex-col border-t border-sand">
+            <ul className="mt-5 flex flex-col border-t border-line">
               {stage.offers.map((o) => {
                 const st = programStatus(programs, o.programSlug)
                 const isCurrent = !!current && (o.name === current || o.programSlug === current)
                 return (
-                  <li key={o.name} className="border-b border-sand">
+                  <li key={o.name} className="border-b border-line">
                     <Link
                       to={o.to}
                       aria-current={isCurrent ? "page" : undefined}
@@ -58,7 +58,7 @@ export function Parcours({ current, className }: { current?: string; className?:
                       )}
                     >
                       <span className="flex flex-col gap-0.5">
-                        <span className="flex items-center gap-2 text-body font-semibold text-navy transition-colors group-hover:text-gehmit">
+                        <span className="flex items-center gap-2 text-body font-semibold text-ink transition-colors group-hover:text-gehmit">
                           {o.name}
                           {st && st.status !== "archived" && <StatusDot status={st.status} />}
                         </span>
@@ -85,18 +85,18 @@ export function NextStep({ offer }: { offer: string }) {
   const next = i >= 0 ? parcours[i + 1] : undefined
   if (!next) return null
   return (
-    <section className="border-t border-sand bg-surface">
+    <section className="border-t border-line bg-surface">
       <div className="mx-auto grid w-full max-w-page gap-block px-gutter py-block lg:grid-cols-12 lg:items-center">
         <p className="flex flex-col gap-1 lg:col-span-5">
           <span className="text-small text-ink-muted">Étape suivante du parcours</span>
-          <span className="font-heading text-h2 text-navy italic">{next.verb}</span>
+          <span className="font-heading text-h2 text-ink italic">{next.verb}</span>
         </p>
-        <ul className="flex flex-col border-t border-sand-dark lg:col-span-7">
+        <ul className="flex flex-col border-t border-line-strong lg:col-span-7">
           {next.offers.map((o) => (
-            <li key={o.name} className="border-b border-sand">
+            <li key={o.name} className="border-b border-line">
               <Link to={o.to} className="group flex items-center justify-between gap-4 py-4">
                 <span className="flex flex-col gap-0.5">
-                  <span className="text-body font-semibold text-navy group-hover:text-gehmit">{o.name}</span>
+                  <span className="text-body font-semibold text-ink group-hover:text-gehmit">{o.name}</span>
                   <span className="text-small text-ink-muted">{o.line}</span>
                 </span>
                 <ArrowRightIcon className="size-4 shrink-0 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:text-gehmit" />

@@ -17,13 +17,13 @@ import {
 } from "lucide-react"
 import { api } from "@/lib/api"
 import type { Campaign, CampaignStatus, Subscriber } from "@/lib/types"
-import { toast } from "@/components/ui/toast"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { toast } from "@gehmit/ui/components/toast"
+import { Badge } from "@gehmit/ui/components/badge"
+import { Button } from "@gehmit/ui/components/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@gehmit/ui/components/card"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   Dialog,
   DialogContent,
@@ -31,7 +31,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@gehmit/ui/components/dialog"
 import {
   Table,
   TableBody,
@@ -39,16 +39,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@gehmit/ui/components/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gehmit/ui/components/tabs"
+import { Checkbox } from "@gehmit/ui/components/checkbox"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@gehmit/ui/components/select"
 
 const STATUS_LABELS: Record<CampaignStatus, { label: string; variant: "default" | "secondary" | "outline" | "destructive" }> = {
   draft: { label: "Brouillon", variant: "secondary" },
@@ -607,7 +607,7 @@ export function NewsletterPage() {
             title="Aperçu de l'e-mail"
             srcDoc={previewHtml ?? ""}
             sandbox=""
-            className="h-[60vh] w-full rounded-lg border bg-white"
+            className="h-[60vh] w-full rounded-lg border bg-surface"
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setPreviewHtml(null)}>

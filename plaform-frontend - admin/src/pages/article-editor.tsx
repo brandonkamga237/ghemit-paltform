@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type SetStateAction } from "react"
 import { Link, useNavigate, useParams } from "react-router"
 import { ArrowLeftIcon, EyeIcon, ImagePlusIcon, PencilLineIcon, SlidersHorizontalIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 import { api, mediaSrc } from "@/lib/api"
 import type { ContentItem } from "@/lib/types"
-import { toast } from "@/components/ui/toast"
+import { toast } from "@gehmit/ui/components/toast"
 import { MediaPicker } from "@/components/admin/media-picker"
 import { Canvas } from "@/components/admin/editor/canvas"
 import { ArticlePreview } from "@/components/admin/editor/article-preview"
@@ -30,7 +30,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@gehmit/ui/components/alert-dialog"
 
 type SaveState = "idle" | "dirty" | "saving" | "error"
 
@@ -233,8 +233,8 @@ export function ArticleEditorPage() {
   // ─── Rendu ─────────────────────────────────────────────────────────────────
   if (loadError) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-4 bg-cream px-5 text-center">
-        <p className="font-heading text-h2 text-navy">{loadError}</p>
+      <div className="flex min-h-svh flex-col items-center justify-center gap-4 bg-surface-alt px-5 text-center">
+        <p className="font-heading text-h2 text-ink">{loadError}</p>
         <Link to="/articles" className="font-semibold text-gehmit hover:underline">Revenir aux articles</Link>
       </div>
     )
@@ -257,17 +257,17 @@ export function ArticleEditorPage() {
   return (
     <div className="min-h-svh bg-surface">
       {/* Barre du haut */}
-      <header className="sticky top-0 z-30 border-b border-sand bg-surface/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-page items-center gap-4 px-4 sm:px-6">
           <Link
             to="/articles"
             onClick={leave}
-            className="inline-flex items-center gap-2 rounded-sm px-2 py-1.5 text-small font-semibold text-navy hover:bg-cream"
+            className="inline-flex items-center gap-2 rounded-sm px-2 py-1.5 text-small font-semibold text-ink hover:bg-surface-alt"
           >
             <ArrowLeftIcon className="size-4" />
             <span className="max-sm:sr-only">Articles</span>
           </Link>
-          <span aria-hidden className="h-5 w-px bg-sand-dark" />
+          <span aria-hidden className="h-5 w-px bg-line-strong" />
           <div className="flex min-w-0 flex-1 items-center gap-2.5 text-small">
             <span
               className={cn(
@@ -297,7 +297,7 @@ export function ArticleEditorPage() {
                 type="button"
                 onClick={() => void save("draft")}
                 disabled={saveState === "saving" || (!dirty && !!item)}
-                className="hidden h-9 items-center rounded-sm px-3 text-small font-semibold text-navy hover:bg-cream disabled:text-ink-faint disabled:hover:bg-transparent sm:inline-flex"
+                className="hidden h-9 items-center rounded-sm px-3 text-small font-semibold text-ink hover:bg-surface-alt disabled:text-ink-faint disabled:hover:bg-transparent sm:inline-flex"
               >
                 Enregistrer
               </button>
@@ -315,8 +315,8 @@ export function ArticleEditorPage() {
       </header>
 
       {restore && (
-        <div className="border-b border-gold/40 bg-gold-tint">
-          <div className="mx-auto box-content flex max-w-text flex-wrap items-center justify-between gap-3 px-gutter py-3 text-small text-navy">
+        <div className="border-b border-gehmit/30 bg-surface-tint">
+          <div className="mx-auto box-content flex max-w-text flex-wrap items-center justify-between gap-3 px-gutter py-3 text-small text-ink">
             <span>Une version non enregistrée de cet article existe sur ce poste ({relative(restore.at)}).</span>
             <span className="flex gap-4">
               <button
@@ -350,9 +350,9 @@ export function ArticleEditorPage() {
 
       {loading ? (
         <div className="mx-auto box-content flex max-w-text flex-col gap-5 px-gutter pt-20" aria-busy="true">
-          <div className="h-12 w-3/4 animate-pulse bg-sand" />
-          <div className="h-6 w-full animate-pulse bg-sand/70" />
-          <div className="h-6 w-5/6 animate-pulse bg-sand/70" />
+          <div className="h-12 w-3/4 animate-pulse bg-line" />
+          <div className="h-6 w-full animate-pulse bg-line/70" />
+          <div className="h-6 w-5/6 animate-pulse bg-line/70" />
         </div>
       ) : preview ? (
         <ArticlePreview doc={doc} minutes={minutes} />
@@ -371,7 +371,7 @@ export function ArticleEditorPage() {
             <button
               type="button"
               onClick={() => setCoverPicker(true)}
-              className="mb-6 inline-flex items-center gap-2 rounded-sm px-2 py-1.5 text-small text-ink-muted transition-colors hover:bg-cream hover:text-navy"
+              className="mb-6 inline-flex items-center gap-2 rounded-sm px-2 py-1.5 text-small text-ink-muted transition-colors hover:bg-surface-alt hover:text-ink"
             >
               <ImagePlusIcon className="size-4" />
               Ajouter une image de couverture
@@ -392,7 +392,7 @@ export function ArticleEditorPage() {
             maxLength={140}
             rows={1}
             autoFocus={!item}
-            className="w-full resize-none bg-transparent font-heading text-display font-semibold text-navy outline-none [field-sizing:content] placeholder:text-sand-dark"
+            className="w-full resize-none bg-transparent font-heading text-display font-semibold text-ink outline-none [field-sizing:content] placeholder:text-line-strong"
           />
           <textarea
             ref={excerptRef}
@@ -413,7 +413,7 @@ export function ArticleEditorPage() {
             aria-label="Chapô"
             maxLength={300}
             rows={1}
-            className="mt-4 mb-10 w-full resize-none bg-transparent text-lead text-navy/75 outline-none [field-sizing:content] placeholder:text-ink-faint"
+            className="mt-4 mb-10 w-full resize-none bg-transparent text-lead text-ink/75 outline-none [field-sizing:content] placeholder:text-ink-faint"
           />
 
           <Canvas blocks={doc.blocks} setBlocks={setBlocks} />
@@ -487,8 +487,8 @@ function IconButton({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "inline-flex size-9 items-center justify-center rounded-sm text-navy transition-colors hover:bg-cream",
-        active && "bg-cream"
+        "inline-flex size-9 items-center justify-center rounded-sm text-ink transition-colors hover:bg-surface-alt",
+        active && "bg-surface-alt"
       )}
     >
       {children}
@@ -501,7 +501,7 @@ function CoverButton({ onClick, children }: { onClick: () => void; children: Rea
     <button
       type="button"
       onClick={onClick}
-      className="rounded-sm bg-navy-deep/85 px-3 py-1.5 text-caption font-semibold text-surface backdrop-blur-sm hover:bg-navy-deep"
+      className="rounded-sm bg-inverse-deep/85 px-3 py-1.5 text-caption font-semibold text-surface backdrop-blur-sm hover:bg-inverse-deep"
     >
       {children}
     </button>

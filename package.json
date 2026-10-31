@@ -1,0 +1,11 @@
+{
+  "name": "gehmit-platform",
+  "private": true,
+  "packageManager": "pnpm@12.3.4",
+  "scripts": {
+    "dev:public": "pnpm --filter gehmit-public dev",
+    "dev:admin": "pnpm --filter gehmit-admin dev",
+    "build": "pnpm -r --filter ./plaform-frontend --filter \"./plaform-frontend - admin\" build",
+    "check:colors": "node scripts/check-colors.mjs"
+  }
+}

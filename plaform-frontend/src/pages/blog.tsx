@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { SearchIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { useArticleSummaries } from "@/data/remote"
 import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
@@ -37,7 +37,7 @@ export function BlogPage() {
 
       <section className="bg-surface">
         <Container className="flex flex-col gap-block py-section">
-          <div className="flex flex-col gap-4 border-b border-sand-dark pb-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4 border-b border-line-strong pb-6 lg:flex-row lg:items-center lg:justify-between">
             {categories.length > 1 ? (
               <div className="flex flex-wrap gap-x-5 gap-y-2" role="group" aria-label="Rubriques">
                 {categories.map((c) => (
@@ -49,8 +49,8 @@ export function BlogPage() {
                     className={cn(
                       "relative h-10 text-small transition-colors",
                       cat === c
-                        ? "font-semibold text-navy after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-gehmit"
-                        : "text-ink-muted hover:text-navy"
+                        ? "font-semibold text-ink after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-gehmit"
+                        : "text-ink-muted hover:text-ink"
                     )}
                   >
                     {c}
@@ -60,7 +60,7 @@ export function BlogPage() {
             ) : (
               <span />
             )}
-            <label className="flex h-11 w-full items-center gap-2.5 border-b border-navy/30 focus-within:border-gehmit lg:max-w-[320px]">
+            <label className="flex h-11 w-full items-center gap-2.5 border-b border-ink/30 focus-within:border-gehmit lg:max-w-[320px]">
               <SearchIcon className="size-4 text-ink-muted" />
               <span className="sr-only">Rechercher un article</span>
               <input
@@ -68,7 +68,7 @@ export function BlogPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Rechercher un article"
-                className="w-full bg-transparent text-body text-navy outline-none placeholder:text-ink-faint"
+                className="w-full bg-transparent text-body text-ink outline-none placeholder:text-ink-faint"
               />
             </label>
           </div>
@@ -76,12 +76,12 @@ export function BlogPage() {
           {articles === null ? (
             <div className="grid gap-block sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="aspect-[4/3] animate-pulse bg-cream" />
+                <div key={i} className="aspect-[4/3] animate-pulse bg-surface-alt" />
               ))}
             </div>
           ) : list.length === 0 ? (
             <div className="flex flex-col items-start gap-3 py-block">
-              <p className="font-heading text-h2 text-navy">
+              <p className="font-heading text-h2 text-ink">
                 {articles.length === 0 ? "Les premiers articles arrivent bientôt." : "Aucun article ne correspond."}
               </p>
               {filtering && (
@@ -101,7 +101,7 @@ export function BlogPage() {
             <>
               {lead ? <ArticleCard article={lead} lead /> : null}
               {rest.length > 0 && (
-                <div className="grid gap-x-group gap-y-block border-t border-sand-dark pt-block sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-x-group gap-y-block border-t border-line-strong pt-block sm:grid-cols-2 lg:grid-cols-3">
                   {rest.map((a) => (
                     <ArticleCard key={a.slug} article={a} />
                   ))}

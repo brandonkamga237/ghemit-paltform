@@ -10,17 +10,17 @@ import {
   SearchIcon,
   Trash2Icon,
 } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { PageHeader } from "@/components/admin/page-header"
 import { api } from "@/lib/api"
 import type { ContactMessage, MessagesSummary, Page } from "@/lib/types"
 import { fmtDateTime, useDebounced } from "@/lib/inbox"
 import { Pagination } from "@/components/admin/pagination"
-import { toast } from "@/components/ui/toast"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
+import { toast } from "@gehmit/ui/components/toast"
+import { Button } from "@gehmit/ui/components/button"
+import { Card } from "@gehmit/ui/components/card"
+import { Input } from "@gehmit/ui/components/input"
+import { Skeleton } from "@gehmit/ui/components/skeleton"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +30,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@gehmit/ui/components/alert-dialog"
 
 const READ_TABS = [
   { value: "all", label: "Tous" },
@@ -340,7 +340,7 @@ export function MessagesPage() {
                       {open.subject || "(sans objet)"}
                     </h2>
                     <div className="flex flex-wrap items-center gap-2 text-caption text-muted-foreground">
-                      <span className="flex size-8 items-center justify-center rounded-full bg-navy/10 font-semibold text-navy">
+                      <span className="flex size-8 items-center justify-center rounded-full bg-inverse/10 font-semibold text-ink">
                         {(open.name || open.email).charAt(0).toUpperCase()}
                       </span>
                       <div className="flex flex-col">

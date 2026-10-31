@@ -45,18 +45,18 @@ export function AboutPage() {
       {/* Pourquoi */}
       <section className="bg-surface">
         <Container className="grid gap-block py-section lg:grid-cols-12">
-          <h2 className="font-heading text-h2 font-semibold text-navy lg:col-span-4">
+          <h2 className="font-heading text-h2 font-semibold text-ink lg:col-span-4">
             Pourquoi Gehmit existe
           </h2>
           <div className="flex max-w-[680px] flex-col gap-group lg:col-span-8">
-            <p className="font-heading text-h2 text-navy">
+            <p className="font-heading text-h2 text-ink">
               Le numérique crée des emplois plus vite qu'il ne crée de repères.
             </p>
-            <p className="text-body text-navy/75">
+            <p className="text-body text-ink/75">
               En Afrique centrale, un étudiant qui s'y intéresse découvre rarement l'étendue réelle
               des métiers, et ceux qui ont un objectif précis avancent souvent seuls.
             </p>
-            <p className="text-body text-navy/75">
+            <p className="text-body text-ink/75">
               Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de
               formation et un réseau d'entreprises. Le reste dépend d'elles.
             </p>
@@ -65,11 +65,11 @@ export function AboutPage() {
       </section>
 
       {/* Former. Inspirer. Connecter. */}
-      <section className="bg-navy text-surface">
+      <section className="bg-inverse text-surface">
         <Container className="grid gap-block py-section md:grid-cols-3">
           {missions.map((m, i) => (
             <div key={m.verb} className="flex flex-col gap-4 border-t border-white/15 pt-6">
-              <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
+              <span className="tnum text-small font-semibold text-gehmit-light">{String(i + 1).padStart(2, "0")}</span>
               <span className="font-heading text-display leading-none font-normal italic">
                 {m.verb}.
               </span>
@@ -80,11 +80,11 @@ export function AboutPage() {
       </section>
 
       {/* Suite logique */}
-      <section className="bg-cream">
+      <section className="bg-surface-alt">
         <Container>
-          <div className="grid gap-px bg-sand-dark md:grid-cols-2">
-          <div className="flex flex-col gap-5 bg-cream py-section md:pr-10">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+          <div className="grid gap-px bg-line-strong md:grid-cols-2">
+          <div className="flex flex-col gap-5 bg-surface-alt py-section md:pr-10">
+            <h2 className="font-heading text-h2 font-semibold text-ink">
               Vous cherchez votre voie ?
             </h2>
             <p className="max-w-[440px] text-body text-ink-muted">
@@ -95,8 +95,8 @@ export function AboutPage() {
               Voir le parcours
             </CtaLink>
           </div>
-          <div className="flex flex-col gap-5 bg-cream py-section md:pl-10">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+          <div className="flex flex-col gap-5 bg-surface-alt py-section md:pl-10">
+            <h2 className="font-heading text-h2 font-semibold text-ink">
               Entreprises et institutions
             </h2>
             <p className="max-w-[440px] text-body text-ink-muted">
@@ -112,7 +112,7 @@ export function AboutPage() {
             </Link>
             <p className="pt-2 text-small text-ink-muted">
               Ou écrivez-nous :{" "}
-              <a href={`mailto:${contact.email}`} className="font-semibold text-navy hover:text-gehmit">
+              <a href={`mailto:${contact.email}`} className="font-semibold text-ink hover:text-gehmit">
                 {contact.email}
               </a>
             </p>

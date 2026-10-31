@@ -6,8 +6,8 @@ import { apiPost } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
 import { PageHero } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@gehmit/ui/components/input"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   ChoiceGroup,
   Field,
@@ -24,7 +24,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@gehmit/ui/components/accordion"
 
 const sujets = [
   "Une question sur un programme",
@@ -109,8 +109,8 @@ export function ContactPage() {
 
           <aside className="flex flex-col gap-block lg:sticky lg:top-24 lg:col-span-5">
             <div className="flex flex-col gap-4">
-              <h2 className="font-heading text-h3 font-semibold text-navy">Directement</h2>
-              <dl className="flex flex-col border-t border-sand-dark">
+              <h2 className="font-heading text-h3 font-semibold text-ink">Directement</h2>
+              <dl className="flex flex-col border-t border-line-strong">
                 <Row label="E-mail">
                   <a href={`mailto:${contact.email}`} className="hover:text-gehmit">{contact.email}</a>
                 </Row>
@@ -123,19 +123,19 @@ export function ContactPage() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-navy text-small font-semibold text-surface transition-colors hover:bg-navy-light"
+                className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-inverse text-small font-semibold text-surface transition-colors hover:bg-inverse-soft"
               >
-                <MessageCircleIcon className="size-5 text-gold" strokeWidth={1.8} />
+                <MessageCircleIcon className="size-5 text-gehmit-light" strokeWidth={1.8} />
                 Écrire sur WhatsApp
               </a>
             </div>
 
             <div className="flex flex-col gap-2">
-              <h2 className="font-heading text-h3 font-semibold text-navy">Questions fréquentes</h2>
+              <h2 className="font-heading text-h3 font-semibold text-ink">Questions fréquentes</h2>
               <Accordion>
                 {faq.map((f, i) => (
-                  <AccordionItem key={i} value={`faq-${i}`} className="border-sand-dark">
-                    <AccordionTrigger className="py-4 text-left text-body font-semibold text-navy hover:no-underline">
+                  <AccordionItem key={i} value={`faq-${i}`} className="border-line-strong">
+                    <AccordionTrigger className="py-4 text-left text-body font-semibold text-ink hover:no-underline">
                       {f.q}
                     </AccordionTrigger>
                     <AccordionContent className="text-body text-ink-muted">{f.a}</AccordionContent>
@@ -152,9 +152,9 @@ export function ContactPage() {
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-sand py-3.5">
+    <div className="flex items-baseline justify-between gap-4 border-b border-line py-3.5">
       <dt className="text-small text-ink-muted">{label}</dt>
-      <dd className="text-right text-body font-semibold text-navy">{children}</dd>
+      <dd className="text-right text-body font-semibold text-ink">{children}</dd>
     </div>
   )
 }

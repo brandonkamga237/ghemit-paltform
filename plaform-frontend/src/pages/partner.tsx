@@ -8,8 +8,8 @@ import { ArrowLink, CtaLink } from "@/components/site/cta"
 import { PageHero } from "@/components/site/page-header"
 import { Figure } from "@/components/site/photo"
 import { PartnerLogos } from "@/components/site/partner-logos"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@gehmit/ui/components/input"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   ChoiceGroup,
   Field,
@@ -125,17 +125,17 @@ export function PartnerPage() {
       {/* Quatre façons de contribuer */}
       <section className="bg-surface">
         <Container className="flex flex-col gap-block py-section">
-          <h2 className="font-heading text-h2 font-semibold text-navy">
+          <h2 className="font-heading text-h2 font-semibold text-ink">
             Quatre façons de contribuer
           </h2>
-          <ol className="grid gap-px bg-sand-dark md:grid-cols-2">
+          <ol className="grid gap-px bg-line-strong md:grid-cols-2">
             {ways.map((w, i) => (
               <li key={w.title} className="flex flex-col gap-3 bg-surface py-8 md:p-8 md:[&:nth-child(odd)]:pl-0">
                 <span className="flex items-baseline gap-3">
-                  <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-heading text-h3 font-semibold text-navy">{w.title}</span>
+                  <span className="tnum text-small font-semibold text-gehmit">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-heading text-h3 font-semibold text-ink">{w.title}</span>
                 </span>
-                <p className="max-w-[480px] text-body text-navy/75">{w.text}</p>
+                <p className="max-w-[480px] text-body text-ink/75">{w.text}</p>
                 <p className={w.urgent ? "text-small font-semibold text-gehmit" : "text-small text-ink-muted"}>
                   {w.note}
                 </p>
@@ -146,10 +146,10 @@ export function PartnerPage() {
       </section>
 
       {/* Ce que vous recevez */}
-      <section className="bg-navy text-surface">
+      <section className="bg-inverse text-surface">
         <Container className="grid gap-block py-section lg:grid-cols-12">
           <h2 className="font-heading text-h2 font-semibold lg:col-span-4">
-            Ce que vous <span className="font-normal text-gold italic">recevez</span>
+            Ce que vous <span className="font-normal text-gehmit-light italic">recevez</span>
           </h2>
           <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-8">
             {gains.map((g) => (
@@ -169,12 +169,12 @@ export function PartnerPage() {
         title="Proposer un partenariat"
         text="Nous revenons vers vous sous 48 heures ouvrées, avec une proposition écrite."
         aside={
-          <aside className="flex flex-col gap-4 bg-navy p-7 text-surface lg:sticky lg:top-24">
+          <aside className="flex flex-col gap-4 bg-inverse p-7 text-surface lg:sticky lg:top-24">
             <span className="text-small text-surface/60">Contact direct</span>
             <span className="font-heading text-h3 font-semibold">Vous préférez en parler de vive voix ?</span>
             <div className="flex flex-col gap-1 border-y border-white/10 py-4 text-body">
-              <a href={`mailto:${contact.email}`} className="hover:text-gold">{contact.email}</a>
-              <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-gold">{contact.phone}</a>
+              <a href={`mailto:${contact.email}`} className="hover:text-gehmit-light">{contact.email}</a>
+              <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-gehmit-light">{contact.phone}</a>
             </div>
             <p className="text-small text-surface/65">
               Un soutien financier ?{" "}

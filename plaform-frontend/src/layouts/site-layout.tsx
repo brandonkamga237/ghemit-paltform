@@ -17,7 +17,7 @@ export function ScrollToTop() {
 /** En-tête réduit pour les parcours de formulaire. */
 export function SlimHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-sand bg-cream">
+    <header className="sticky top-0 z-40 border-b border-line bg-surface-alt">
       <div className="mx-auto flex h-[72px] max-w-page items-center justify-between px-gutter">
         <Link to="/" aria-label="Gehmit — accueil">
           <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-10 w-auto" />

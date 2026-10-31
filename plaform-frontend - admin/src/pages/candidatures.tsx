@@ -11,7 +11,7 @@ import {
   XIcon,
   ZapIcon,
 } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { api, openCv } from "@/lib/api"
 import type {
   Candidature,
@@ -32,13 +32,13 @@ import {
   useDebounced,
 } from "@/lib/inbox"
 import { Pagination } from "@/components/admin/pagination"
-import { toast } from "@/components/ui/toast"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Textarea } from "@/components/ui/textarea"
+import { toast } from "@gehmit/ui/components/toast"
+import { Button } from "@gehmit/ui/components/button"
+import { Card, CardContent } from "@gehmit/ui/components/card"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
+import { Skeleton } from "@gehmit/ui/components/skeleton"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   Table,
   TableBody,
@@ -46,13 +46,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@gehmit/ui/components/table"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet"
+} from "@gehmit/ui/components/sheet"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,28 +62,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@gehmit/ui/components/alert-dialog"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@gehmit/ui/components/select"
 
 /** Statuts proposés : le courant + les transitions autorisées par le workflow. */
 function allowedOptions(c: Candidature): CandidatureStatus[] {
   const current = (c.status as CandidatureStatus) ?? "new"
   const allowed = c.allowedStatuses ?? STATUS_ORDER
   return [current, ...allowed.filter((s) => s !== current)]
-}
-
-const STATUS_COLORS: Record<CandidatureStatus, string> = {
-  new: "#2b4c7e",
-  in_progress: "#d97706",
-  accepted: "#15803d",
-  rejected: "#b91c1c",
-  archived: "#9ca3af",
 }
 
 /* Familles d'espaces : chaque programme est une boîte de réception. */
@@ -458,7 +450,7 @@ export function CandidaturesPage() {
                     <span className="flex items-center gap-1.5 text-caption font-semibold">
                       <span
                         className="size-2 rounded-full"
-                        style={{ background: STATUS_COLORS[s] }}
+                        style={{ background: STATUS_META[s].color }}
                       />
                       {STATUS_META[s].label}
                     </span>
@@ -639,7 +631,7 @@ export function CandidaturesPage() {
 
         {/* Barre d'actions groupées */}
         {selected.size > 0 && (
-          <div className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-xl border bg-navy px-4 py-2.5 text-surface shadow-xl">
+          <div className="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-xl border bg-inverse px-4 py-2.5 text-surface shadow-xl">
             <span className="mr-2 text-caption font-semibold tabular-nums">
               {selected.size} sélectionnée{selected.size > 1 ? "s" : ""}
             </span>

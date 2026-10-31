@@ -5,7 +5,7 @@ import { Container } from "@/components/site/bands"
 import { CtaLink } from "@/components/site/cta"
 import { InfoRows, PageHero, StageLine } from "@/components/site/page-header"
 import { NextStep } from "@/components/site/parcours"
-import { Input } from "@/components/ui/input"
+import { Input } from "@gehmit/ui/components/input"
 import {
   ChoiceGroup,
   Field,

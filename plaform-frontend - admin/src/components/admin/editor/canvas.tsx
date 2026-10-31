@@ -16,7 +16,7 @@ import {
   PlusIcon,
   Trash2Icon,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 import { mediaSrc } from "@/lib/api"
 import {
   caretAtEnd,
@@ -48,11 +48,11 @@ const SHORTCUTS: { prefix: string; type: BlockType }[] = [
 ]
 
 const richClass: Partial<Record<BlockType, string>> = {
-  p: "text-lead text-navy/85",
-  h2: "pt-6 font-heading text-h2 font-semibold text-navy",
-  h3: "pt-3 font-heading text-h3 font-semibold text-navy",
-  quote: "font-heading text-h2 text-navy italic",
-  callout: "text-body text-navy",
+  p: "text-lead text-ink/85",
+  h2: "pt-6 font-heading text-h2 font-semibold text-ink",
+  h3: "pt-3 font-heading text-h3 font-semibold text-ink",
+  quote: "font-heading text-h2 text-ink italic",
+  callout: "text-body text-ink",
 }
 
 const placeholders: Partial<Record<BlockType, string>> = {
@@ -370,8 +370,8 @@ export function Canvas({
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => setMenuFor(menuFor === b.id ? null : b.id)}
                     className={cn(
-                      "flex size-8 items-center justify-center rounded-full border border-sand-dark bg-surface text-ink-muted transition-transform hover:border-navy hover:text-navy",
-                      menuFor === b.id && "rotate-45 border-navy text-navy"
+                      "flex size-8 items-center justify-center rounded-full border border-line-strong bg-surface text-ink-muted transition-transform hover:border-ink hover:text-ink",
+                      menuFor === b.id && "rotate-45 border-ink text-ink"
                     )}
                   >
                     <PlusIcon className="size-4" />
@@ -396,7 +396,7 @@ export function Canvas({
                     aria-label="Actions du bloc"
                     aria-expanded={blockMenu === b.id}
                     onClick={() => setBlockMenu(blockMenu === b.id ? null : b.id)}
-                    className="flex h-8 w-6 items-center justify-center rounded-sm text-ink-faint hover:bg-sand hover:text-navy"
+                    className="flex h-8 w-6 items-center justify-center rounded-sm text-ink-faint hover:bg-line hover:text-ink"
                   >
                     <GripVerticalIcon className="size-4" />
                   </button>
@@ -473,7 +473,7 @@ export function Canvas({
       )
       if (b.type === "quote") {
         return (
-          <figure className="my-4 flex flex-col gap-3 border-y border-sand-dark py-7">
+          <figure className="my-4 flex flex-col gap-3 border-y border-line-strong py-7">
             {editable}
             <input
               value={b.cite ?? ""}
@@ -485,7 +485,7 @@ export function Canvas({
         )
       }
       if (b.type === "callout") {
-        const tones = { info: "bg-open-bg", success: "bg-gold-tint", warning: "bg-soon-bg" } as const
+        const tones = { info: "bg-open-bg", success: "bg-surface-tint", warning: "bg-soon-bg" } as const
         return (
           <div className={cn("my-2 flex flex-col gap-3 px-6 py-5", tones[b.tone ?? "info"])}>
             <div className="flex gap-1.5" role="radiogroup" aria-label="Ton de l'encadré">
@@ -504,7 +504,7 @@ export function Canvas({
                   onClick={() => update(b.id, { tone })}
                   className={cn(
                     "rounded-sm px-2 py-0.5 text-caption font-semibold transition-colors",
-                    (b.tone ?? "info") === tone ? "bg-navy text-surface" : "text-ink-muted hover:text-navy"
+                    (b.tone ?? "info") === tone ? "bg-inverse text-surface" : "text-ink-muted hover:text-ink"
                   )}
                 >
                   {label}
@@ -524,7 +524,7 @@ export function Canvas({
       return (
         <Tag
           className={cn(
-            "flex flex-col gap-1.5 pl-7 text-lead text-navy/85 marker:text-gehmit",
+            "flex flex-col gap-1.5 pl-7 text-lead text-ink/85 marker:text-gehmit",
             b.type === "ol" ? "list-decimal marker:font-semibold" : "list-disc"
           )}
         >
@@ -586,7 +586,7 @@ export function Canvas({
             }}
             className={cn(
               "min-h-[120px] w-full resize-none p-5 font-mono text-small outline-none [field-sizing:content]",
-              b.type === "code" ? "bg-navy-deep text-surface placeholder:text-surface/35" : "border-y border-sand-dark bg-white text-navy placeholder:text-ink-faint"
+              b.type === "code" ? "bg-inverse-deep text-surface placeholder:text-surface/35" : "border-y border-line-strong bg-surface text-ink placeholder:text-ink-faint"
             )}
           />
           {b.type === "table" ? (
@@ -610,7 +610,7 @@ export function Canvas({
       return (
         <figure className="my-4 flex flex-col gap-2.5">
           {b.url ? (
-            <div className="group/img relative bg-sand">
+            <div className="group/img relative bg-line">
               <img src={mediaSrc(b.url)} alt={b.alt ?? b.text} className="w-full object-cover" />
               <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 transition-opacity group-hover/img:opacity-100 group-focus-within/img:opacity-100">
                 <OverlayButton onClick={() => setPickerFor(b.id)}>Remplacer</OverlayButton>
@@ -623,7 +623,7 @@ export function Canvas({
             <button
               type="button"
               onClick={() => setPickerFor(b.id)}
-              className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2 border border-dashed border-sand-dark bg-white text-ink-muted transition-colors hover:border-navy hover:text-navy"
+              className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2 border border-dashed border-line-strong bg-surface text-ink-muted transition-colors hover:border-ink hover:text-ink"
             >
               <ImageIcon className="size-6" strokeWidth={1.5} />
               <span className="text-small font-semibold">Choisir une image</span>
@@ -652,7 +652,7 @@ export function Canvas({
       return (
         <figure className="my-4 flex flex-col gap-2.5">
           {yt ? (
-            <div className="aspect-video w-full bg-navy-deep">
+            <div className="aspect-video w-full bg-inverse-deep">
               <iframe
                 src={`https://www.youtube-nocookie.com/embed/${yt}`}
                 title={b.text || "Vidéo"}
@@ -666,7 +666,7 @@ export function Canvas({
             value={b.url ?? ""}
             onChange={(e) => update(b.id, { url: e.target.value })}
             placeholder="Collez l'adresse d'une vidéo YouTube ou d'un fichier de la médiathèque"
-            className="h-11 border-b border-sand-dark bg-transparent text-small text-navy outline-none placeholder:text-ink-faint focus:border-gehmit"
+            className="h-11 border-b border-line-strong bg-transparent text-small text-ink outline-none placeholder:text-ink-faint focus:border-gehmit"
           />
           <input
             ref={(el) => register(`${b.id}:caption`, el)}
@@ -693,7 +693,7 @@ export function Canvas({
             if (prev) focusLater(entryKey(prev, true), "end")
           }
         }}
-        className="my-6 flex w-full justify-center gap-4 rounded-sm py-2 text-h3 text-ink-faint outline-none focus-visible:bg-sand/60"
+        className="my-6 flex w-full justify-center gap-4 rounded-sm py-2 text-h3 text-ink-faint outline-none focus-visible:bg-line/60"
       >
         ···
       </button>
@@ -706,7 +706,7 @@ function OverlayButton({ onClick, children }: { onClick: () => void; children: R
     <button
       type="button"
       onClick={onClick}
-      className="rounded-sm bg-navy-deep/85 px-3 py-1.5 text-caption font-semibold text-surface backdrop-blur-sm hover:bg-navy-deep"
+      className="rounded-sm bg-inverse-deep/85 px-3 py-1.5 text-caption font-semibold text-surface backdrop-blur-sm hover:bg-inverse-deep"
     >
       {children}
     </button>
@@ -736,12 +736,12 @@ function BlockMenu({
     document.addEventListener("mousedown", onDownDoc)
     return () => document.removeEventListener("mousedown", onDownDoc)
   }, [onClose])
-  const item = "flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-small text-navy hover:bg-cream disabled:opacity-40"
+  const item = "flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-small text-ink hover:bg-surface-alt disabled:opacity-40"
   return (
     <div
       ref={ref}
       role="menu"
-      className="absolute top-9 left-0 z-40 w-[190px] rounded-sm border border-sand-dark bg-surface p-1 shadow-[0_16px_40px_-16px_rgba(20,30,51,0.35)]"
+      className="absolute top-9 left-0 z-40 w-[190px] rounded-sm border border-line-strong bg-surface p-1 shadow-float"
     >
       <button type="button" role="menuitem" className={item} disabled={!canUp} onClick={() => { onUp(); onClose() }}>
         <ArrowUpIcon className="size-4" /> Monter

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { useFormations } from "@/data/remote"
 import { usePageMeta } from "@/lib/seo"
 import { Container } from "@/components/site/bands"
@@ -50,8 +50,8 @@ export function FormationsPage() {
                 className={cn(
                   "h-11 rounded-sm border px-4 text-small transition-colors",
                   filter === f
-                    ? "border-navy bg-navy font-semibold text-surface"
-                    : "border-sand-dark bg-white text-navy hover:border-navy"
+                    ? "border-ink bg-inverse font-semibold text-surface"
+                    : "border-line-strong bg-surface text-ink hover:border-ink"
                 )}
               >
                 {f}
@@ -62,12 +62,12 @@ export function FormationsPage() {
           {formations === null ? (
             <div className="flex flex-col gap-px" aria-busy="true">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="h-24 animate-pulse bg-cream" />
+                <div key={i} className="h-24 animate-pulse bg-surface-alt" />
               ))}
             </div>
           ) : rows.length === 0 ? (
-            <div className="flex flex-col items-start gap-3 border-t border-sand-dark py-block">
-              <p className="font-heading text-h3 text-navy">
+            <div className="flex flex-col items-start gap-3 border-t border-line-strong py-block">
+              <p className="font-heading text-h3 text-ink">
                 {formations.length === 0
                   ? "Aucune session programmée pour le moment."
                   : `Aucune session « ${filter} » pour le moment.`}
@@ -86,11 +86,11 @@ export function FormationsPage() {
               )}
             </div>
           ) : (
-            <ul className="flex flex-col border-t border-sand-dark">
+            <ul className="flex flex-col border-t border-line-strong">
               {/* En-têtes de colonnes (grand écran) */}
               <li
                 aria-hidden
-                className="hidden grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] gap-group border-b border-sand-dark py-3 text-caption text-ink-muted lg:grid"
+                className="hidden grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] gap-group border-b border-line-strong py-3 text-caption text-ink-muted lg:grid"
               >
                 <span>Formation</span>
                 <span>Prochaine session</span>
@@ -105,12 +105,12 @@ export function FormationsPage() {
                   <li
                     key={f.name}
                     className={cn(
-                      "grid gap-x-6 gap-y-3 border-b border-sand py-6 lg:grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] lg:items-center",
+                      "grid gap-x-6 gap-y-3 border-b border-line py-6 lg:grid-cols-[minmax(0,2.2fr)_1.2fr_1fr_1fr_1fr_170px] lg:items-center",
                       done && "text-ink-muted"
                     )}
                   >
                     <div className="flex flex-col gap-1">
-                      <span className={cn("font-heading text-h3 font-semibold", done ? "text-ink-muted" : "text-navy")}>
+                      <span className={cn("font-heading text-h3 font-semibold", done ? "text-ink-muted" : "text-ink")}>
                         {f.name}
                       </span>
                       <span className="text-small text-ink-muted">{f.category}</span>

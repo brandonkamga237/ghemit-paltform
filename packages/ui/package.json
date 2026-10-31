@@ -1,0 +1,32 @@
+{
+  "name": "@gehmit/ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Système visuel Gehmit partagé : jetons, primitives, utilitaire cn.",
+  "exports": {
+    "./theme.css": {
+      "style": "./src/theme.css",
+      "default": "./src/theme.css"
+    },
+    "./cn": "./src/cn.ts",
+    "./components/*": "./src/components/*.tsx"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/lora": "^5.3.0",
+    "@fontsource-variable/source-sans-3": "^5.3.0",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.3.0",
+    "lucide-react": "^1.46.0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7"
+  }
+}

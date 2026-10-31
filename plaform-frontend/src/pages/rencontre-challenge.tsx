@@ -4,7 +4,7 @@ import { apiPost } from "@/lib/api"
 import { Container } from "@/components/site/bands"
 import { CtaLink } from "@/components/site/cta"
 import { PageHero, StageLine } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
+import { Input } from "@gehmit/ui/components/input"
 import {
   ChoiceGroup,
   Field,
@@ -78,15 +78,15 @@ export function RencontreChallengePage() {
       />
 
       {/* La journée, en trois temps */}
-      <section className="bg-navy text-surface">
+      <section className="bg-inverse text-surface">
         <Container className="flex flex-col gap-block py-section">
           <h2 className="font-heading text-h2 font-semibold">
-            Une journée, <span className="font-normal text-gold italic">trois temps</span>.
+            Une journée, <span className="font-normal text-gehmit-light italic">trois temps</span>.
           </h2>
           <ol className="grid gap-block md:grid-cols-3">
             {day.map((d, i) => (
               <li key={d.title} className="flex flex-col gap-3 border-t border-white/15 pt-6">
-                <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
+                <span className="tnum text-small font-semibold text-gehmit-light">{String(i + 1).padStart(2, "0")}</span>
                 <span className="font-heading text-h2 italic">{d.title}</span>
                 <p className="text-body text-surface/70">{d.text}</p>
               </li>

@@ -1,0 +1,256 @@
+/*
+ * Système visuel Gehmit — partagé par le site public et le back office.
+ *
+ * À importer après Tailwind dans le CSS de chaque application :
+ *   @import "tailwindcss";
+ *   @import "tw-animate-css";
+ *   @import "shadcn/tailwind.css";
+ *   @import "@gehmit/ui/theme.css";
+ *
+ * Identité : VERT et BLANC. L'or est un accent rare (bouton « Faire un don »,
+ * article à la une) — jamais une couleur de structure. Aucun bleu.
+ *
+ * Deux niveaux de jetons :
+ *   1. Rôles (ci-dessous) : ce que les composants utilisent — `text-ink`,
+ *      `bg-surface-alt`, `border-line`, `bg-inverse`…
+ *   2. Variables shadcn (`--primary`, `--foreground`…) : dérivées des rôles,
+ *      pour les primitives de `@gehmit/ui/components`.
+ * Changer une couleur = changer une ligne ici, jamais dans un composant.
+ */
+
+@import "@fontsource-variable/lora";
+@import "@fontsource-variable/lora/wght-italic.css";
+@import "@fontsource-variable/source-sans-3";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Les composants partagés utilisent des classes Tailwind : à scanner. */
+@source "./";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme static {
+    /* ── Marque ─────────────────────────────────────────────────────────── */
+    --color-gehmit: #15803d;
+    --color-gehmit-hover: #116632;
+    --color-gehmit-active: #0e5429;
+    --color-gehmit-deep: #0f5f2d;
+    /* Vert clair : accents (chiffres, mot-clé, numéros) posés sur un fond vert foncé. */
+    --color-gehmit-light: #8fd1a6;
+
+    /* Or — accent rare, à réserver au don et à la mise en avant éditoriale. */
+    --color-gold: #c9952a;
+    --color-gold-hover: #b4831f;
+    --color-gold-active: #9e731a;
+
+    /* ── Texte (vert presque noir, pas de bleu ni de gris froid) ────────── */
+    --color-ink: #12261b;
+    --color-ink-muted: #4a5d52;
+    --color-ink-faint: #8b9a91;
+
+    /* ── Surfaces claires ──────────────────────────────────────────────── */
+    --color-surface: #ffffff;
+    --color-surface-alt: #f2f7f4;
+    --color-surface-tint: #e3f2e8;
+
+    /* ── Surfaces sombres (bandeaux, héros, barre latérale) ─────────────── */
+    --color-inverse: #0c4423;
+    --color-inverse-deep: #08311a;
+    --color-inverse-soft: #155c33;
+
+    /* ── Filets ────────────────────────────────────────────────────────── */
+    --color-line: #e2e8e4;
+    --color-line-strong: #c8d2cc;
+
+    /* Contour de focus (passe en blanc sur fond sombre, voir plus bas). */
+    --color-focus: #0f5f2d;
+
+    /* ── États d'un programme ──────────────────────────────────────────── */
+    --color-open-bg: #f0fdf4;
+    --color-open-text: #14532d;
+    --color-soon-bg: #fffbeb;
+    --color-soon-text: #92400e;
+    --color-soon-border: #d97706;
+    --color-closed-bg: #f1f4f2;
+    --color-closed-text: #4a5d52;
+    --color-archived-bg: #f7f9f8;
+    --color-archived-text: #8b9a91;
+    --color-archived-border: #c8d2cc;
+
+    /* ── États d'une candidature (graphiques, pastilles) ────────────────── */
+    --color-status-new: #12261b;
+    --color-status-progress: #d97706;
+    --color-status-accepted: #15803d;
+    --color-status-rejected: #b91c1c;
+    --color-status-archived: #8b9a91;
+}
+
+@theme inline {
+    --font-heading: 'Lora Variable', Georgia, serif;
+    --font-sans: 'Source Sans 3 Variable', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Variables shadcn : dérivées des rôles, jamais de valeur propre. */
+:root {
+    --background: var(--color-surface-alt);
+    --foreground: var(--color-ink);
+    --card: var(--color-surface);
+    --card-foreground: var(--color-ink);
+    --popover: var(--color-surface);
+    --popover-foreground: var(--color-ink);
+    --primary: var(--color-gehmit);
+    --primary-foreground: var(--color-surface);
+    --secondary: var(--color-surface-alt);
+    --secondary-foreground: var(--color-ink);
+    --muted: var(--color-surface-alt);
+    --muted-foreground: var(--color-ink-muted);
+    --accent: var(--color-surface-tint);
+    --accent-foreground: var(--color-ink);
+    --destructive: #b91c1c;
+    --border: var(--color-line);
+    --input: var(--color-line-strong);
+    --ring: var(--color-focus);
+    --chart-1: var(--color-gehmit);
+    --chart-2: var(--color-inverse);
+    --chart-3: #5c9c76;
+    --chart-4: #d97706;
+    --chart-5: var(--color-gold);
+    --radius: 0.1875rem;
+}
+
+/*
+ * Échelle unique d'espacement et de typographie (site public et back office).
+ * Valeurs fluides entre 390 px (mobile) et 1440 px (ordinateur). Toute la
+ * mise en page passe par ces jetons : pas de taille ou d'écart « à l'œil ».
+ */
+@theme {
+    /* Texte — 8 tailles */
+    --text-display: clamp(2.25rem, 1.82rem + 1.76vw, 3.375rem);   /* 36 → 54 */
+    --text-display--line-height: 1.04;
+    --text-display--letter-spacing: -0.025em;
+    --text-h1: clamp(2rem, 1.71rem + 1.14vw, 2.75rem);            /* 32 → 44 */
+    --text-h1--line-height: 1.08;
+    --text-h1--letter-spacing: -0.02em;
+    --text-h2: clamp(1.625rem, 1.44rem + 0.76vw, 2.125rem);       /* 26 → 34 */
+    --text-h2--line-height: 1.15;
+    --text-h2--letter-spacing: -0.015em;
+    --text-h3: clamp(1.25rem, 1.16rem + 0.38vw, 1.5rem);          /* 20 → 24 */
+    --text-h3--line-height: 1.25;
+    --text-lead: clamp(1.125rem, 1.08rem + 0.19vw, 1.25rem);      /* 18 → 20 */
+    --text-lead--line-height: 1.55;
+    --text-body: 1.0625rem;                                        /* 17 */
+    --text-body--line-height: 1.65;
+    --text-small: 0.9375rem;                                       /* 15 */
+    --text-small--line-height: 1.5;
+    --text-caption: 0.8125rem;                                     /* 13 */
+    --text-caption--line-height: 1.4;
+
+    /* Rythme vertical — 4 niveaux */
+    --spacing-section: clamp(3.5rem, 2.66rem + 3.43vw, 5.5rem);   /* 56 → 88 : entre deux sections */
+    --spacing-block: clamp(1.75rem, 1.43rem + 1.33vw, 2.5rem);    /* 28 → 40 : titre ↔ contenu, colonnes */
+    --spacing-group: clamp(1rem, 0.84rem + 0.67vw, 1.5rem);       /* 16 → 24 : entre éléments d'un groupe */
+    --spacing-item: 0.75rem;                                       /* 12 : à l'intérieur d'un élément */
+
+    /* Largeurs */
+    --container-page: 75rem;   /* 1200 */
+    --container-text: 42.5rem; /* 680 : lecture */
+
+    /* Ombres — 5 niveaux, teintées du vert du texte (jamais de bleu) */
+    --shadow-hairline: 0 1px 0 var(--color-line-strong);                                        /* filet sous un bandeau ou un formulaire */
+    --shadow-raised: 0 1px 2px color-mix(in srgb, var(--color-ink) 12%, transparent);            /* onglet actif */
+    --shadow-float: 0 16px 40px -16px color-mix(in srgb, var(--color-ink) 35%, transparent);     /* menus, barres flottantes */
+    --shadow-overlay: 0 24px 60px -24px color-mix(in srgb, var(--color-ink) 45%, transparent);   /* boîtes de dialogue */
+    --shadow-panel: -16px 0 40px -24px color-mix(in srgb, var(--color-ink) 45%, transparent);    /* panneau latéral */
+}
+
+/* Gouttière latérale : 20 px (mobile) → 32 px (tablette) → 48 px (ordinateur). */
+:root { --gutter: 1.25rem; }
+@media (min-width: 40rem) { :root { --gutter: 2rem; } }
+@media (min-width: 64rem) { :root { --gutter: 3rem; } }
+
+/* Distance entre le bord du contenu et le bord de l'écran. */
+@utility px-gutter { padding-inline: var(--gutter); }
+@utility bleed-r { margin-right: calc(-1 * (var(--gutter) + max(0px, (100vw - var(--container-page)) / 2))); }
+@utility pl-edge { padding-left: calc(var(--gutter) + max(0px, (100vw - var(--container-page)) / 2)); }
+@utility pr-edge { padding-right: calc(var(--gutter) + max(0px, (100vw - var(--container-page)) / 2)); }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-size: 16px;
+    /* Filet de sécurité : un mot ou un lien trop long passe à la ligne au lieu de déborder. */
+    overflow-wrap: break-word;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+    text-wrap: balance;
+  }
+  /* Titres : une adresse ou un mot très long se coupe au lieu d'élargir sa colonne. */
+  h1, h2, h3, h4 {
+    overflow-wrap: anywhere;
+  }
+  p, li, figcaption {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-surface-tint);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  /* À l'intérieur d'un fond vert (bandeaux sombres, pied de page) : focus blanc.
+     Descendants seulement : un bouton vert sur fond clair garde un focus vert. */
+  :where(.bg-inverse, .bg-inverse-deep, .bg-inverse-soft, .bg-gehmit, .bg-gehmit-deep) * {
+    --color-focus: var(--color-surface);
+  }
+}
+
+@layer utilities {
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  .mono-label {
+    @apply font-mono text-xs uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-ink-faint);
+  }
+}

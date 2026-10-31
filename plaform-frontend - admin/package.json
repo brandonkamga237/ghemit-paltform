@@ -1,5 +1,5 @@
 {
-  "name": "plaform-frontend",
+  "name": "gehmit-admin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,13 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gehmit/ui": "workspace:*",
     "@base-ui/react": "^1.8.0",
-    "@fontsource-variable/jetbrains-mono": "^5.3.0",
-    "@fontsource-variable/lora": "^5.3.0",
-    "@fontsource-variable/source-sans-3": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "class-variance-authority": "^0.7.1",
-    "cn": "^0.3.0",
     "lucide-react": "^1.46.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

@@ -1,27 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { FolderIcon, ImageIcon, LoaderCircleIcon, UploadIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { API_URL, api } from "@/lib/api"
 import type { MediaFile } from "@/lib/types"
-import { toast } from "@/components/ui/toast"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { toast } from "@gehmit/ui/components/toast"
+import { Button } from "@gehmit/ui/components/button"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@gehmit/ui/components/dialog"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from "@gehmit/ui/components/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gehmit/ui/components/tabs"
 
 export interface PickedImage {
   /** URL publique relative, ex. /api/public/media/<key> */

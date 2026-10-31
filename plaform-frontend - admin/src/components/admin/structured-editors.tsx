@@ -19,18 +19,18 @@ import {
   VideoIcon,
 } from "lucide-react"
 import { ImageField } from "@/components/admin/media-picker"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@gehmit/ui/components/button"
+import { Checkbox } from "@gehmit/ui/components/checkbox"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@gehmit/ui/components/select"
 
 // ─── Éditeur de blocs professionnel (style Medium) ─────────────────────────────
 
@@ -346,9 +346,9 @@ export function BlocksField({
                 </div>
               ) : block.type === "hr" ? (
                 <div className="flex items-center gap-4 py-3">
-                  <hr className="flex-1 border-t border-sand" />
+                  <hr className="flex-1 border-t border-line" />
                   <span className="mono-label">Séparateur</span>
-                  <hr className="flex-1 border-t border-sand" />
+                  <hr className="flex-1 border-t border-line" />
                 </div>
               ) : (
                 <Textarea
@@ -373,7 +373,7 @@ export function BlocksField({
                           : block.type === "h3"
                             ? "font-heading text-h3 font-semibold text-foreground placeholder:text-ink-faint"
                             : block.type === "quote"
-                              ? "italic text-lg leading-relaxed text-navy border-l-[3px] border-gold pl-4 placeholder:text-ink-faint"
+                              ? "italic text-lg leading-relaxed text-ink border-l-[3px] border-gehmit pl-4 placeholder:text-ink-faint"
                               : block.type === "code"
                                 ? "font-mono text-sm bg-muted rounded-lg p-3 text-foreground placeholder:text-ink-faint"
                                 : block.type === "ul" || block.type === "ol"

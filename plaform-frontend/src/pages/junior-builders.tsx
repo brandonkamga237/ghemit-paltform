@@ -4,8 +4,8 @@ import { apiPost, uploadCv } from "@/lib/api"
 import { Container } from "@/components/site/bands"
 import { ArrowLink, CtaLink } from "@/components/site/cta"
 import { InfoRows, PageHero, StageLine } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@gehmit/ui/components/input"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   Field,
   FormFooter,
@@ -209,7 +209,7 @@ export function JuniorBuildersPage() {
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <fieldset className="flex flex-col gap-5">
-      <legend className="mb-5 font-heading text-h3 font-semibold text-navy italic">{title}</legend>
+      <legend className="mb-5 font-heading text-h3 font-semibold text-ink italic">{title}</legend>
       {children}
     </fieldset>
   )

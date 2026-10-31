@@ -36,14 +36,14 @@ export function TechPathPage() {
         }
         below={
           <Container>
-            <ol className="grid border-t border-sand-dark md:grid-cols-3">
+            <ol className="grid border-t border-line-strong md:grid-cols-3">
               {steps.map((s, i) => (
                 <li
                   key={s.title}
-                  className="flex flex-col gap-2 border-sand-dark py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
+                  className="flex flex-col gap-2 border-line-strong py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
                 >
-                  <span className="tnum text-small font-semibold text-gold">{i + 1}</span>
-                  <span className="font-heading text-h3 font-semibold text-navy">{s.title}</span>
+                  <span className="tnum text-small font-semibold text-gehmit">{i + 1}</span>
+                  <span className="font-heading text-h3 font-semibold text-ink">{s.title}</span>
                   <span className="text-body text-ink-muted">{s.text}</span>
                 </li>
               ))}
@@ -54,7 +54,7 @@ export function TechPathPage() {
 
       <section className="bg-surface">
         <Container className="flex flex-col gap-block py-section">
-          <h2 className="font-heading text-h2 font-semibold text-navy">
+          <h2 className="font-heading text-h2 font-semibold text-ink">
             Ce que TechPath vous apporte
           </h2>
           <InfoRows

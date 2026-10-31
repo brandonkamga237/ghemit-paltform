@@ -5,7 +5,7 @@ import type { Article, Block } from "@/data/content"
 import { articleDate } from "@/data/remote"
 import { fetchArticle, mediaUrl } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { Container } from "@/components/site/bands"
 import { MediaImage, Photo } from "@/components/site/photo"
 import { Breadcrumb } from "@/components/site/page-header"
@@ -76,12 +76,12 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
   const [head, ...body] = rows
   return (
     <figure className="flex flex-col gap-2">
-      <div ref={scroller} className="overflow-x-auto border-y border-sand-dark">
+      <div ref={scroller} className="overflow-x-auto border-y border-line-strong">
         <table className="w-full min-w-[480px] text-left [overflow-wrap:normal]">
           <thead>
-            <tr className="border-b border-sand-dark bg-cream">
+            <tr className="border-b border-line-strong bg-surface-alt">
               {head.map((c, i) => (
-                <th key={i} className={cn("px-4 py-3 text-small font-semibold text-navy", NUMERIC.test(c) && "whitespace-nowrap")}>
+                <th key={i} className={cn("px-4 py-3 text-small font-semibold text-ink", NUMERIC.test(c) && "whitespace-nowrap")}>
                   {richText(c)}
                 </th>
               ))}
@@ -89,7 +89,7 @@ function TableBlock({ text, caption }: { text: string; caption?: string }) {
           </thead>
           <tbody>
             {body.map((row, i) => (
-              <tr key={i} className="border-b border-sand last:border-0">
+              <tr key={i} className="border-b border-line last:border-0">
                 {row.map((c, j) => (
                   <td key={j} className={cn("px-4 py-3 text-small text-ink-muted", NUMERIC.test(c) && "tnum whitespace-nowrap")}>
                     {richText(c)}
@@ -133,20 +133,20 @@ function ImageBlock({ url, text, alt }: { url: string; text?: string; alt?: stri
 
 const CALLOUT_TONES = {
   info: { icon: InfoIcon, className: "bg-open-bg" },
-  success: { icon: CheckCircle2Icon, className: "bg-gehmit-tint" },
+  success: { icon: CheckCircle2Icon, className: "bg-surface-tint" },
   warning: { icon: AlertTriangleIcon, className: "bg-soon-bg" },
 } as const
 
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case "h2":
-      return <h2 className="pt-4 font-heading text-h2 font-semibold text-navy">{richText(block.text)}</h2>
+      return <h2 className="pt-4 font-heading text-h2 font-semibold text-ink">{richText(block.text)}</h2>
     case "h3":
-      return <h3 className="pt-2 font-heading text-h3 font-semibold text-navy">{richText(block.text)}</h3>
+      return <h3 className="pt-2 font-heading text-h3 font-semibold text-ink">{richText(block.text)}</h3>
     case "quote":
       return (
-        <blockquote className="my-4 flex flex-col gap-3 border-y border-sand-dark py-8">
-          <p className="font-heading text-h2 text-navy italic">
+        <blockquote className="my-4 flex flex-col gap-3 border-y border-line-strong py-8">
+          <p className="font-heading text-h2 text-ink italic">
             {richText(block.text)}
           </p>
           {block.cite ? (
@@ -161,7 +161,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <figure className="flex flex-col gap-2">
           {embed ? (
-            <div className="aspect-video w-full overflow-hidden bg-navy">
+            <div className="aspect-video w-full overflow-hidden bg-inverse">
               <iframe
                 src={embed}
                 title={block.text ?? "Vidéo"}
@@ -192,16 +192,16 @@ function BlockView({ block }: { block: Block }) {
       const Icon = tone.icon
       return (
         <aside className={cn("flex gap-3.5 px-6 py-5", tone.className)}>
-          <Icon className="mt-0.5 size-5 shrink-0 text-navy" />
-          <p className="text-body text-navy">{richText(block.text)}</p>
+          <Icon className="mt-0.5 size-5 shrink-0 text-ink" />
+          <p className="text-body text-ink">{richText(block.text)}</p>
         </aside>
       )
     }
     case "hr":
-      return <hr className="border-t border-sand" />
+      return <hr className="border-t border-line" />
     case "ul":
       return (
-        <ul className="list-disc space-y-2 pl-6 text-lead text-navy/80 marker:text-gehmit">
+        <ul className="list-disc space-y-2 pl-6 text-lead text-ink/80 marker:text-gehmit">
           {block.text.split("\n").filter((l) => l.trim() !== "").map((line, idx) => (
             <li key={idx}>{richText(line)}</li>
           ))}
@@ -209,7 +209,7 @@ function BlockView({ block }: { block: Block }) {
       )
     case "ol":
       return (
-        <ol className="list-decimal space-y-2 pl-6 text-lead text-navy/80 marker:font-semibold marker:text-gehmit">
+        <ol className="list-decimal space-y-2 pl-6 text-lead text-ink/80 marker:font-semibold marker:text-gehmit">
           {block.text.split("\n").filter((l) => l.trim() !== "").map((line, idx) => (
             <li key={idx}>{richText(line)}</li>
           ))}
@@ -217,12 +217,12 @@ function BlockView({ block }: { block: Block }) {
       )
     case "code":
       return (
-        <pre className="overflow-x-auto bg-navy p-5">
+        <pre className="overflow-x-auto bg-inverse p-5">
           <code className="font-mono text-small text-surface">{block.text}</code>
         </pre>
       )
     default:
-      return <p className="text-lead text-navy/80">{richText(block.text)}</p>
+      return <p className="text-lead text-ink/80">{richText(block.text)}</p>
   }
 }
 
@@ -258,13 +258,13 @@ export function ArticlePage() {
       <div className="flex flex-col bg-surface" aria-busy="true">
         <Container className="flex flex-col items-center pt-section pb-block">
           <div className="flex w-full max-w-[680px] flex-col gap-5">
-            <div className="h-4 w-32 animate-pulse rounded bg-sand" />
-            <div className="h-12 w-full animate-pulse rounded bg-sand" />
-            <div className="h-6 w-3/4 animate-pulse rounded bg-sand" />
+            <div className="h-4 w-32 animate-pulse rounded bg-line" />
+            <div className="h-12 w-full animate-pulse rounded bg-line" />
+            <div className="h-6 w-3/4 animate-pulse rounded bg-line" />
           </div>
         </Container>
         <Container className="flex justify-center pb-block">
-          <div className="h-[240px] w-full max-w-[1040px] animate-pulse bg-sand sm:h-[460px]" />
+          <div className="h-[240px] w-full max-w-[1040px] animate-pulse bg-line sm:h-[460px]" />
         </Container>
       </div>
     )
@@ -284,10 +284,10 @@ export function ArticlePage() {
           <p className="text-small text-ink-muted">
             {articleDate(article)} · {article.readingMinutes} min de lecture
           </p>
-          <h1 className="font-heading text-display font-semibold text-navy">
+          <h1 className="font-heading text-display font-semibold text-ink">
             {article.title}
           </h1>
-          <p className="text-lead text-navy/75">{article.excerpt}</p>
+          <p className="text-lead text-ink/75">{article.excerpt}</p>
         </div>
       </Container>
 
@@ -317,7 +317,7 @@ export function ArticlePage() {
       </Container>
 
       {article.cta ? (
-        <section className="bg-navy text-surface">
+        <section className="bg-inverse text-surface">
           <Container className="flex flex-wrap items-center justify-between gap-group py-block">
             <div className="flex flex-col gap-2">
               <span className="font-heading text-h2 font-semibold">{article.cta.title}</span>

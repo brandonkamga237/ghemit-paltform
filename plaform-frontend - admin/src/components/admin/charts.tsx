@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type MouseEvent } from "react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 
 /* ─── Helpers ─── */
 
@@ -142,7 +142,7 @@ export function AreaChart({
         </defs>
         {gridYs.map((g, i) => (
           <g key={i}>
-            <line x1="0" x2={PW} y1={g.y} y2={g.y} stroke="var(--color-sand)" strokeDasharray={i === 0 ? "" : "3 4"} />
+            <line x1="0" x2={PW} y1={g.y} y2={g.y} stroke="var(--color-line)" strokeDasharray={i === 0 ? "" : "3 4"} />
             <text x={PW - 2} y={g.y - 4} textAnchor="end" fontSize="9" fill="var(--color-ink-faint)">
               {g.label}
             </text>
@@ -157,7 +157,7 @@ export function AreaChart({
             x2={hx * PW}
             y1={PAD_T}
             y2={PH - PAD_B}
-            stroke="var(--color-navy)"
+            stroke="var(--color-ink)"
             strokeOpacity="0.4"
           />
         )}

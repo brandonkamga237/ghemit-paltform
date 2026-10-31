@@ -20,15 +20,15 @@ export function ProgrammesPage() {
         lede="De la découverte des métiers au premier emploi. Commencez par l'étape qui vous ressemble : la candidature est directe, sans compte à créer, et la plupart des programmes sont gratuits."
         below={
           <Container>
-            <nav aria-label="Étapes" className="grid grid-cols-2 gap-px border-y border-sand-dark bg-sand-dark sm:grid-cols-4">
+            <nav aria-label="Étapes" className="grid grid-cols-2 gap-px border-y border-line-strong bg-line-strong sm:grid-cols-4">
               {parcours.map((s, i) => (
                 <a
                   key={s.id}
                   href={`#${s.id}`}
-                  className="group flex items-baseline gap-2.5 bg-cream py-5 pr-3 transition-colors hover:bg-surface [&:not(:nth-child(2n+1))]:pl-5 sm:[&:not(:first-child)]:pl-5"
+                  className="group flex items-baseline gap-2.5 bg-surface-alt py-5 pr-3 transition-colors hover:bg-surface [&:not(:nth-child(2n+1))]:pl-5 sm:[&:not(:first-child)]:pl-5"
                 >
-                  <span className="tnum text-small font-semibold text-gold">{i + 1}</span>
-                  <span className="font-heading text-h3 text-navy italic group-hover:text-gehmit">
+                  <span className="tnum text-small font-semibold text-gehmit">{i + 1}</span>
+                  <span className="font-heading text-h3 text-ink italic group-hover:text-gehmit">
                     {s.verb}
                   </span>
                 </a>
@@ -42,45 +42,45 @@ export function ProgrammesPage() {
         <section
           key={stage.id}
           id={stage.id}
-          className={"scroll-mt-20 " + (i % 2 === 0 ? "bg-surface" : "bg-cream")}
+          className={"scroll-mt-20 " + (i % 2 === 0 ? "bg-surface" : "bg-surface-alt")}
         >
           <Container className="grid gap-block py-section lg:grid-cols-12">
             <div className="flex flex-col gap-3 lg:sticky lg:top-24 lg:col-span-4 lg:self-start">
-              <span className="tnum font-heading text-display leading-none font-semibold text-gold/80">
+              <span className="tnum font-heading text-display leading-none font-semibold text-gehmit/80">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h2 className="font-heading text-h2 font-normal text-navy italic">{stage.verb}</h2>
+              <h2 className="font-heading text-h2 font-normal text-ink italic">{stage.verb}</h2>
               <p className="max-w-[320px] text-body text-ink-muted">{stage.text}</p>
             </div>
 
-            <ul className="flex flex-col border-t border-sand-dark lg:col-span-8">
+            <ul className="flex flex-col border-t border-line-strong lg:col-span-8">
               {stage.offers.map((o) => {
                 const p = programs.find((x) => x.slug === o.programSlug)
                 const closed = p?.status === "closed" || p?.status === "archived"
                 return (
-                  <li key={o.name} className="flex flex-col gap-4 border-b border-sand-dark py-8">
+                  <li key={o.name} className="flex flex-col gap-4 border-b border-line-strong py-8">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                       <Link
                         to={o.to}
-                        className="font-heading text-h2 font-semibold text-navy transition-colors hover:text-gehmit"
+                        className="font-heading text-h2 font-semibold text-ink transition-colors hover:text-gehmit"
                       >
                         {o.name}
                       </Link>
                       {p && (
-                        <span className="flex items-center gap-2 text-small font-semibold text-navy">
+                        <span className="flex items-center gap-2 text-small font-semibold text-ink">
                           <StatusDot status={p.status} />
                           {p.statusLabel}
                         </span>
                       )}
                     </div>
-                    <p className="max-w-[620px] text-body text-navy/75">
+                    <p className="max-w-[620px] text-body text-ink/75">
                       {p?.description ?? o.line}
                     </p>
                     {p?.meta?.length ? (
                       <ul className="flex flex-wrap gap-x-2 gap-y-1 text-small text-ink-muted">
                         {p.meta.map((m, k) => (
                           <li key={m} className="flex items-center gap-2">
-                            {k > 0 && <span aria-hidden className="text-sand-dark">·</span>}
+                            {k > 0 && <span aria-hidden className="text-line-strong">·</span>}
                             {m}
                           </li>
                         ))}

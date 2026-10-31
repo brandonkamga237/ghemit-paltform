@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import type { EventItem } from "@/data/content"
 import { useEvents } from "@/data/remote"
 import { usePageMeta } from "@/lib/seo"
@@ -23,12 +23,12 @@ function EventRow({ event }: { event: EventItem }) {
   const cancelled = event.cancelled === true
   const external = event.registerUrl && !event.registerUrl.startsWith("/")
   return (
-    <article className={cn("grid gap-block border-t border-sand-dark py-block lg:grid-cols-12", cancelled && "opacity-70")}>
+    <article className={cn("grid gap-block border-t border-line-strong py-block lg:grid-cols-12", cancelled && "opacity-70")}>
       <div className="flex items-baseline gap-3 lg:col-span-2 lg:flex-col lg:gap-1">
         {d ? (
           <>
             <span className="tnum font-heading text-display leading-none font-semibold text-gehmit">{d.day}</span>
-            <span className="text-small text-navy">{`${d.month} ${d.year}`}</span>
+            <span className="text-small text-ink">{`${d.month} ${d.year}`}</span>
           </>
         ) : (
           <span className="font-heading text-h3 text-gehmit italic">Date à confirmer</span>
@@ -37,15 +37,15 @@ function EventRow({ event }: { event: EventItem }) {
       <div className={cn("flex flex-col gap-4", event.imageUrl ? "lg:col-span-5" : "lg:col-span-8")}>
         <div className="flex flex-col gap-2">
           {cancelled && (
-            <span className="w-fit bg-sand px-2.5 py-1 text-caption font-semibold text-navy">Annulé</span>
+            <span className="w-fit bg-line px-2.5 py-1 text-caption font-semibold text-ink">Annulé</span>
           )}
-          <h2 className={cn("font-heading text-h2 font-semibold text-navy", cancelled && "line-through decoration-1")}>
+          <h2 className={cn("font-heading text-h2 font-semibold text-ink", cancelled && "line-through decoration-1")}>
             {event.title}
           </h2>
           <p className="text-body text-ink-muted">{[event.time, event.location].filter(Boolean).join(" · ")}</p>
         </div>
         {event.description ? (
-          <p className="max-w-[620px] text-body text-navy/75">{event.description}</p>
+          <p className="max-w-[620px] text-body text-ink/75">{event.description}</p>
         ) : null}
         {!cancelled && event.registerUrl ? (
           external ? (
@@ -60,7 +60,7 @@ function EventRow({ event }: { event: EventItem }) {
           src={event.imageUrl}
           alt={event.title}
           sizes="(min-width: 1024px) 40vw, 100vw"
-          frame="aspect-[16/10] overflow-hidden bg-sand lg:col-span-5"
+          frame="aspect-[16/10] overflow-hidden bg-line lg:col-span-5"
         />
       ) : null}
     </article>
@@ -90,18 +90,18 @@ export function EvenementsPage() {
           {events === null ? (
             <div className="flex flex-col gap-px pt-block" aria-busy="true">
               {[0, 1].map((i) => (
-                <div key={i} className="h-40 animate-pulse bg-cream" />
+                <div key={i} className="h-40 animate-pulse bg-surface-alt" />
               ))}
             </div>
           ) : upcoming.length > 0 ? (
-            <div className="border-b border-sand-dark">
+            <div className="border-b border-line-strong">
               {upcoming.map((e) => (
                 <EventRow key={`${e.title}-${e.date}`} event={e} />
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-start gap-3 border-y border-sand-dark py-block">
-              <p className="font-heading text-h2 text-navy">Aucun rendez-vous annoncé pour l'instant.</p>
+            <div className="flex flex-col items-start gap-3 border-y border-line-strong py-block">
+              <p className="font-heading text-h2 text-ink">Aucun rendez-vous annoncé pour l'instant.</p>
               <p className="max-w-[540px] text-body text-ink-muted">
                 Les prochaines dates sont publiées ici et dans la lettre mensuelle : inscrivez-vous en
                 bas de page pour ne rien manquer.
@@ -111,14 +111,14 @@ export function EvenementsPage() {
 
           {past.length > 0 ? (
             <div className="flex flex-col gap-group pt-section">
-              <h2 className="font-heading text-h3 font-semibold text-navy">Ils ont eu lieu</h2>
-              <ul className="flex flex-col border-t border-sand-dark">
+              <h2 className="font-heading text-h3 font-semibold text-ink">Ils ont eu lieu</h2>
+              <ul className="flex flex-col border-t border-line-strong">
                 {(showAllPast ? past : past.slice(0, PAST_SHOWN)).map((e) => {
                   const d = dateParts(e.date)
                   return (
-                    <li key={`${e.title}-${e.date}`} className="grid gap-group border-b border-sand py-4 sm:grid-cols-[180px_1fr_auto]">
+                    <li key={`${e.title}-${e.date}`} className="grid gap-group border-b border-line py-4 sm:grid-cols-[180px_1fr_auto]">
                       <span className="tnum text-small text-ink-muted">{d ? `${d.day} ${d.month} ${d.year}` : "Date inconnue"}</span>
-                      <span className="text-body font-semibold text-navy">{e.title}</span>
+                      <span className="text-body font-semibold text-ink">{e.title}</span>
                       {e.location ? <span className="text-small text-ink-muted">{e.location}</span> : null}
                     </li>
                   )

@@ -1,0 +1,15 @@
+# Contexte des images frontend (racine du dépôt). Le backend a son propre contexte.
+**/node_modules
+**/dist
+**/*.log
+**/.env
+**/.env.*
+!**/.env.example
+.git
+.github
+.claude
+.agents
+platform-backend
+keycloak
+IMAGES-GHEMIT
+**/UIUX

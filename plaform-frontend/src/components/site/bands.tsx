@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 
 /** Colonne centrale du site : 1240 px maximum, gouttières 20 / 40 px. */
 export function Container({

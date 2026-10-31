@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react"
 import { PencilIcon, PlusIcon, SearchIcon, Trash2Icon } from "lucide-react"
 import { api } from "@/lib/api"
 import type { ContentItem } from "@/lib/types"
-import { toast } from "@/components/ui/toast"
+import { toast } from "@gehmit/ui/components/toast"
 import { ImageField } from "@/components/admin/media-picker"
 import {
   BlocksField,
@@ -10,21 +10,21 @@ import {
   type ArticleCta,
   type Block,
 } from "@/components/admin/structured-editors"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@gehmit/ui/components/badge"
 import { PageHeader } from "@/components/admin/page-header"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@gehmit/ui/components/button"
+import { Checkbox } from "@gehmit/ui/components/checkbox"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
+import { Skeleton } from "@gehmit/ui/components/skeleton"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@gehmit/ui/components/select"
 import {
   Dialog,
   DialogContent,
@@ -32,7 +32,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@gehmit/ui/components/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,7 +42,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@gehmit/ui/components/alert-dialog"
 import {
   Table,
   TableBody,
@@ -50,7 +50,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@gehmit/ui/components/table"
 
 /** Libellés français des codes stockés (statuts, états). */
 const VALUE_LABELS: Record<string, string> = {

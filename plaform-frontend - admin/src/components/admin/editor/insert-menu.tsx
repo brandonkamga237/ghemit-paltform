@@ -62,7 +62,7 @@ export function InsertMenu({
       ref={listRef}
       role="menu"
       aria-label="Insérer un bloc"
-      className="absolute top-9 left-0 z-40 grid w-[300px] grid-cols-1 gap-px overflow-hidden rounded-sm border border-sand-dark bg-surface p-1 shadow-[0_16px_40px_-16px_rgba(20,30,51,0.35)]"
+      className="absolute top-9 left-0 z-40 grid w-[300px] grid-cols-1 gap-px overflow-hidden rounded-sm border border-line-strong bg-surface p-1 shadow-float"
       onKeyDown={(e) => {
         if (e.key === "ArrowDown") {
           e.preventDefault()
@@ -82,13 +82,13 @@ export function InsertMenu({
           type="button"
           role="menuitem"
           onClick={() => onPick(it.type)}
-          className="flex items-center gap-3 rounded-sm px-2.5 py-2 text-left outline-none hover:bg-cream focus-visible:bg-cream"
+          className="flex items-center gap-3 rounded-sm px-2.5 py-2 text-left outline-none hover:bg-surface-alt focus-visible:bg-surface-alt"
         >
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-sm border border-sand bg-white text-navy">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-sm border border-line bg-surface text-ink">
             <it.icon className="size-4" strokeWidth={1.75} />
           </span>
           <span className="flex flex-1 flex-col">
-            <span className="text-small font-semibold text-navy">{it.label}</span>
+            <span className="text-small font-semibold text-ink">{it.label}</span>
             <span className="text-caption text-ink-muted">{it.hint}</span>
           </span>
         </button>

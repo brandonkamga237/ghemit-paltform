@@ -6,6 +6,7 @@
 |---|---|
 | `plaform-frontend/` | Site public (React 19, Vite, pnpm) |
 | `plaform-frontend - admin/` | Back office (même stack, Keycloak) |
+| `packages/ui/` | `@gehmit/ui` : jetons, primitives et `cn` partagés par les deux frontends |
 | `platform-backend/platform/` | API Spring Boot, architecture hexagonale multi-module |
 
 ## Backend
@@ -41,11 +42,30 @@ colonnes sans migration.
 
 ## Frontends
 
+Workspace pnpm à la racine (un seul `pnpm-lock.yaml`) : les deux applications
+dépendent de `@gehmit/ui` (`packages/ui`).
+
 ```bash
-cd plaform-frontend            # ou "plaform-frontend - admin"
-pnpm install && pnpm dev
-pnpm build                     # vérification (tsc + vite build)
+pnpm install                   # à la racine, une fois pour tout le workspace
+pnpm dev:public                # ou : pnpm dev:admin
+pnpm build                     # vérification des deux apps (tsc + vite build)
+pnpm check:colors              # charte graphique (aussi exécutée en CI)
 ```
+
+### Charte graphique
+
+Gehmit = **vert et blanc**. L'or est un accent rare (don, article à la une),
+**jamais de bleu**.
+
+- Toutes les couleurs, ombres, tailles et espacements sont définis dans
+  `packages/ui/src/theme.css`. Aucune couleur en dur (#hex, rgb()) dans un
+  composant : utiliser les rôles (`text-ink`, `text-ink-muted`, `bg-surface`,
+  `bg-surface-alt`, `bg-inverse`, `border-line`, `text-gehmit-light` sur fond
+  sombre…).
+- `scripts/check-colors.mjs` bloque la CI en cas de bleu, de palette Tailwind
+  brute, de couleur en dur ou d'or hors des fichiers autorisés.
+- Primitives (bouton, champ, dialogue…) : `@gehmit/ui/components/<nom>`.
+  Ne pas recréer de dossier `components/ui` dans une application.
 
 ## Infrastructure locale
 
@@ -55,7 +75,8 @@ pnpm build                     # vérification (tsc + vite build)
 
 Push sur `master` → `.github/workflows/deploy.yml` : tests backend, images
 Docker Hub (`brandoniscoding/gehmit-{backend,frontend,admin}`, construites
-seulement si leur dossier a changé), puis déploiement SSH sur le VPS dans
+seulement si leur dossier ou `packages/` a changé ; les images frontend se
+construisent depuis la racine du dépôt, `docker build -f plaform-frontend/Dockerfile .`), puis déploiement SSH sur le VPS dans
 `/root/gehmit-platform` (même serveur que LesCracks, derrière Traefik).
 
 - Secrets GitHub : `DOCKER_USERNAME`, `DOCKER_TOKEN`, `VPS_HOST`, `VPS_USER`,

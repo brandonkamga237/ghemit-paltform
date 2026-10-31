@@ -67,9 +67,21 @@ jobs:
               - '.github/workflows/deploy.yml'
             frontend:
               - 'plaform-frontend/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-workspace.yaml'
+              - 'pnpm-lock.yaml'
+              - 'scripts/check-colors.mjs'
+              - '.dockerignore'
               - '.github/workflows/deploy.yml'
             admin:
               - 'plaform-frontend - admin/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-workspace.yaml'
+              - 'pnpm-lock.yaml'
+              - 'scripts/check-colors.mjs'
+              - '.dockerignore'
               - '.github/workflows/deploy.yml'
 
   # ---------------------------------------------------------------------------
@@ -127,6 +139,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Charte graphique (vert + blanc, or rare, jamais de bleu)
+        run: node scripts/check-colors.mjs
+
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
@@ -137,7 +152,9 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: ./plaform-frontend
+          # Racine du dépôt : le site dépend du paquet partagé packages/ui.
+          context: .
+          file: ./plaform-frontend/Dockerfile
           build-args: |
             VITE_API_URL=https://api.gehmit.org
           push: ${{ env.PUSH == 'true' }}
@@ -160,6 +177,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Charte graphique (vert + blanc, or rare, jamais de bleu)
+        run: node scripts/check-colors.mjs
+
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
@@ -170,7 +190,9 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: "./plaform-frontend - admin"
+          # Racine du dépôt : le back office dépend du paquet partagé packages/ui.
+          context: .
+          file: "./plaform-frontend - admin/Dockerfile"
           build-args: |
             VITE_API_URL=https://api.gehmit.org
             VITE_KEYCLOAK_URL=https://auth.gehmit.org

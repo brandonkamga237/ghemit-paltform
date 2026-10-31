@@ -27,7 +27,7 @@ export function HomePage() {
   return (
     <div className="flex flex-col">
       {/* 1. Héros plein cadre : qui nous sommes, la preuve en image, et le parcours à portée de main */}
-      <section className="relative isolate overflow-hidden bg-navy-deep text-surface">
+      <section className="relative isolate overflow-hidden bg-inverse-deep text-surface">
         <div aria-hidden className="absolute inset-0 -z-10">
           <Photo
             photo="seminaire-public"
@@ -37,13 +37,13 @@ export function HomePage() {
             className="hero-settle [object-position:50%_38%]"
           />
           {/* Voile : lisibilité du texte à gauche, photo visible à droite */}
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgb(20_30_51/0.92)_0%,rgb(20_30_51/0.78)_42%,rgb(20_30_51/0.35)_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[linear-gradient(0deg,rgb(20_30_51/0.95)_0%,rgb(20_30_51/0)_100%)]" />
+          <div className="absolute inset-0 bg-linear-to-r from-inverse-deep/92 via-inverse-deep/78 via-42% to-inverse-deep/35" />
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-inverse-deep/95 to-transparent" />
         </div>
 
         <Container className="flex min-h-[min(78svh,700px)] flex-col justify-end gap-group pt-section pb-block">
           <h1 className="max-w-[16ch] font-heading text-display font-semibold">
-            Former, inspirer, <span className="font-normal text-gold italic">connecter</span> les talents du numérique.
+            Former, inspirer, <span className="font-normal text-gehmit-light italic">connecter</span> les talents du numérique.
           </h1>
           <p className="max-w-[560px] text-lead text-surface/85">
             Gehmit oriente, forme et accompagne les jeunes jusqu'à leur premier emploi dans le
@@ -68,7 +68,7 @@ export function HomePage() {
         </Container>
 
         {/* Barre du parcours : quatre étapes, leurs offres et leur statut */}
-        <nav aria-label="Le parcours Gehmit" className="border-t border-white/15 bg-navy-deep/70 backdrop-blur-sm">
+        <nav aria-label="Le parcours Gehmit" className="border-t border-white/15 bg-inverse-deep/70 backdrop-blur-sm">
           <Container>
             <ol className="grid sm:grid-cols-2 lg:grid-cols-4">
               {parcours.map((stage, i) => (
@@ -76,8 +76,8 @@ export function HomePage() {
                   key={stage.id}
                   className="flex flex-col gap-2 border-white/15 py-5 max-sm:[&:not(:first-child)]:border-t sm:max-lg:[&:nth-child(n+3)]:border-t sm:max-lg:[&:nth-child(even)]:border-l sm:max-lg:[&:nth-child(even)]:pl-5 lg:[&:not(:first-child)]:border-l lg:[&:not(:first-child)]:pl-5 lg:pr-4"
                 >
-                  <Link to={`/programmes#${stage.id}`} className="flex items-baseline gap-2.5 hover:text-gold">
-                    <span className="tnum text-caption font-semibold text-gold">{i + 1}</span>
+                  <Link to={`/programmes#${stage.id}`} className="flex items-baseline gap-2.5 hover:text-gehmit-light">
+                    <span className="tnum text-caption font-semibold text-gehmit-light">{i + 1}</span>
                     <span className="font-heading text-h3 italic">{stage.verb}</span>
                   </Link>
                   <ul className="flex flex-wrap gap-x-4 gap-y-1">
@@ -104,16 +104,16 @@ export function HomePage() {
       </section>
 
       {/* Chiffres clés */}
-      <section className="bg-cream">
+      <section className="bg-surface-alt">
         <Ledger items={stats} />
       </section>
 
       {/* 3. Sur le terrain : des dates, des lieux, des chiffres */}
-      <section className="bg-navy text-surface">
+      <section className="bg-inverse text-surface">
         <Container className="flex flex-col gap-block py-section">
           <div className="flex flex-wrap items-end justify-between gap-group">
             <h2 className="max-w-[640px] font-heading text-h2 font-semibold">
-              Sur le terrain, <span className="font-normal text-gold italic">pas seulement en ligne</span>.
+              Sur le terrain, <span className="font-normal text-gehmit-light italic">pas seulement en ligne</span>.
             </h2>
             <Link
               to="/notre-impact"
@@ -127,13 +127,13 @@ export function HomePage() {
             {achievements.map((a) => (
               <article key={a.title} className="flex flex-col gap-5">
                 {a.photo ? (
-                  <div className="aspect-[4/3] overflow-hidden bg-navy-light">
+                  <div className="aspect-[4/3] overflow-hidden bg-inverse-soft">
                     <Photo photo={a.photo} alt={a.title} sizes="(min-width: 768px) 33vw, 100vw" />
                   </div>
                 ) : null}
                 <div className="flex flex-col gap-2 border-t border-white/15 pt-4">
                   <span className="text-caption font-semibold text-surface/55">{a.date}</span>
-                  <span className="tnum font-heading text-h2 leading-none font-semibold text-gold">
+                  <span className="tnum font-heading text-h2 leading-none font-semibold text-gehmit-light">
                     {a.figure}
                   </span>
                   <h3 className="pt-1 text-body font-semibold">{a.title}</h3>
@@ -147,13 +147,13 @@ export function HomePage() {
 
       {/* 4. Une voix */}
       {testimonial && (
-        <section className="bg-cream">
+        <section className="bg-surface-alt">
           <Container className="py-section">
             <figure className="mx-auto flex max-w-[920px] flex-col gap-group">
-              <span aria-hidden className="font-heading text-display text-gold">
+              <span aria-hidden className="font-heading text-display text-gehmit">
                 “
               </span>
-              <blockquote className="font-heading text-h2 text-navy italic">
+              <blockquote className="font-heading text-h2 text-ink italic">
                 {testimonial.quote}
               </blockquote>
               <figcaption className="flex items-center gap-4">
@@ -167,7 +167,7 @@ export function HomePage() {
                     .join("")}
                 </span>
                 <span className="flex flex-col">
-                  <span className="text-body font-semibold text-navy">{testimonial.name}</span>
+                  <span className="text-body font-semibold text-ink">{testimonial.name}</span>
                   <span className="text-small text-ink-muted">{testimonial.place}</span>
                 </span>
               </figcaption>
@@ -183,14 +183,14 @@ export function HomePage() {
             {upcoming.length > 0 && (
               <div className={lead ? "flex flex-col gap-group lg:col-span-5" : "flex flex-col gap-group lg:col-span-12"}>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h2 className="font-heading text-h2 font-semibold text-navy">À venir</h2>
+                  <h2 className="font-heading text-h2 font-semibold text-ink">À venir</h2>
                   <ArrowLink to="/evenements">Agenda</ArrowLink>
                 </div>
-                <ul className="flex flex-col border-t border-sand-dark">
+                <ul className="flex flex-col border-t border-line-strong">
                   {upcoming.map((e) => {
                     const m = e.date.match(/^(\d{4})-(\d{2})-(\d{2})/)
                     return (
-                      <li key={`${e.title}-${e.date}`} className="border-b border-sand">
+                      <li key={`${e.title}-${e.date}`} className="border-b border-line">
                         <Link to="/evenements" className="group grid grid-cols-[64px_1fr] gap-4 py-5">
                           {m ? (
                             <span className="flex flex-col">
@@ -203,7 +203,7 @@ export function HomePage() {
                             <span className="text-caption font-semibold text-gehmit">Date à confirmer</span>
                           )}
                           <span className="flex flex-col gap-1">
-                            <span className="text-body font-semibold text-navy group-hover:text-gehmit">
+                            <span className="text-body font-semibold text-ink group-hover:text-gehmit">
                               {e.title}
                             </span>
                             <span className="text-small text-ink-muted">
@@ -221,16 +221,16 @@ export function HomePage() {
             {lead && (
               <div className={upcoming.length > 0 ? "flex flex-col gap-group lg:col-span-7" : "flex flex-col gap-group lg:col-span-12"}>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h2 className="font-heading text-h2 font-semibold text-navy">À lire</h2>
+                  <h2 className="font-heading text-h2 font-semibold text-ink">À lire</h2>
                   <ArrowLink to="/blog">Le blog</ArrowLink>
                 </div>
-                <Link to={`/blog/${lead.slug}`} className="group grid gap-5 border-t border-sand-dark pt-6 sm:grid-cols-[1.1fr_1fr]">
+                <Link to={`/blog/${lead.slug}`} className="group grid gap-5 border-t border-line-strong pt-6 sm:grid-cols-[1.1fr_1fr]">
                   {lead.imageUrl ? (
                     <MediaImage
                       src={lead.imageUrl}
                       alt={lead.imageAlt ?? lead.title}
                       sizes="(min-width: 1024px) 30vw, 100vw"
-                      frame="aspect-[4/3] overflow-hidden bg-sand"
+                      frame="aspect-[4/3] overflow-hidden bg-line"
                       className="transition-transform duration-500 group-hover:scale-[1.02]"
                     />
                   ) : null}
@@ -238,7 +238,7 @@ export function HomePage() {
                     <span className="text-caption text-ink-muted">
                       {[articleDate(lead), lead.category].filter(Boolean).join(" · ")}
                     </span>
-                    <span className="font-heading text-h3 font-semibold text-navy group-hover:text-gehmit">
+                    <span className="font-heading text-h3 font-semibold text-ink group-hover:text-gehmit">
                       {lead.title}
                     </span>
                     <p className="line-clamp-3 text-small text-ink-muted">{lead.excerpt}</p>
@@ -248,9 +248,9 @@ export function HomePage() {
                   <Link
                     key={a.slug}
                     to={`/blog/${a.slug}`}
-                    className="group flex items-baseline justify-between gap-group border-t border-sand pt-4"
+                    className="group flex items-baseline justify-between gap-group border-t border-line pt-4"
                   >
-                    <span className="text-body font-semibold text-navy group-hover:text-gehmit">
+                    <span className="text-body font-semibold text-ink group-hover:text-gehmit">
                       {a.title}
                     </span>
                     <span className="shrink-0 text-caption text-ink-muted">{articleDate(a)}</span>
@@ -264,21 +264,21 @@ export function HomePage() {
 
       {/* 6. Les deux autres publics : entreprises et donateurs */}
       <section className="grid lg:grid-cols-2">
-        <div className="flex flex-col gap-group bg-surface px-gutter py-section lg:border-t lg:border-sand lg:pl-edge">
+        <div className="flex flex-col gap-group bg-surface px-gutter py-section lg:border-t lg:border-line lg:pl-edge">
           <div className="flex flex-col gap-3">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+            <h2 className="font-heading text-h2 font-semibold text-ink">
               Vous recrutez ?
             </h2>
             <p className="max-w-[440px] text-body text-ink-muted">
               Des profils formés et suivis par l'équipe, présentés sans commission.
             </p>
           </div>
-          <ul className="flex max-w-[480px] flex-col border-t border-sand-dark">
+          <ul className="flex max-w-[480px] flex-col border-t border-line-strong">
             {forCompanies.map((o) => (
-              <li key={o.name} className="border-b border-sand">
+              <li key={o.name} className="border-b border-line">
                 <Link to={o.to} className="group flex items-center justify-between gap-4 py-4">
                   <span className="flex flex-col gap-0.5">
-                    <span className="text-body font-semibold text-navy group-hover:text-gehmit">{o.name}</span>
+                    <span className="text-body font-semibold text-ink group-hover:text-gehmit">{o.name}</span>
                     <span className="text-small text-ink-muted">{o.line}</span>
                   </span>
                   <ArrowRightIcon className="size-4 shrink-0 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:text-gehmit" />
@@ -288,9 +288,9 @@ export function HomePage() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-group bg-gehmit-tint px-gutter py-section lg:pr-edge">
+        <div className="flex flex-col gap-group bg-surface-tint px-gutter py-section lg:pr-edge">
           <div className="flex flex-col gap-3">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+            <h2 className="font-heading text-h2 font-semibold text-ink">
               Un don finance un accompagnement.
             </h2>
             <p className="max-w-[440px] text-body text-ink-muted">
@@ -300,8 +300,8 @@ export function HomePage() {
           <dl className="flex max-w-[480px] flex-col border-t border-gehmit/30">
             {donationEquivalences.map((e) => (
               <div key={e.amount} className="flex items-baseline justify-between gap-4 border-b border-gehmit/20 py-4">
-                <dt className="text-body text-navy">{e.text}</dt>
-                <dd className="tnum font-heading text-h3 font-semibold text-navy">{e.amount}</dd>
+                <dt className="text-body text-ink">{e.text}</dt>
+                <dd className="tnum font-heading text-h3 font-semibold text-ink">{e.amount}</dd>
               </div>
             ))}
           </dl>

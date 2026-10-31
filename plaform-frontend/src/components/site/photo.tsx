@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { photoCaptions, staticPhoto, type PhotoName } from "@/data/photos"
 import { imageSrcSet, mediaUrl } from "@/lib/api"
 
@@ -74,7 +74,7 @@ export function Photo({
       aria-label={label}
       className={cn(
         "flex items-end p-4",
-        dark ? "bg-navy-light" : "bg-sand",
+        dark ? "bg-inverse-soft" : "bg-line",
         className
       )}
     >
@@ -82,7 +82,7 @@ export function Photo({
         <span
           className={cn(
             "font-mono text-caption",
-            dark ? "text-surface/60" : "text-sand-text",
+            dark ? "text-surface/60" : "text-ink-muted",
             captionClassName
           )}
         >
@@ -121,7 +121,7 @@ export function Figure({
 }) {
   return (
     <figure className={cn("flex flex-col gap-3", className)}>
-      <div className={cn("overflow-hidden bg-sand", frameClassName)} style={position ? { ["--pos" as string]: position } : undefined}>
+      <div className={cn("overflow-hidden bg-line", frameClassName)} style={position ? { ["--pos" as string]: position } : undefined}>
         <Photo
           photo={photo}
           alt={alt}
@@ -195,5 +195,5 @@ export function MediaImage({
       className={cn("h-full w-full object-cover", className, state === "small" && "object-contain")}
     />
   )
-  return frame ? <div className={cn(frame, state === "small" && "bg-sand")}>{img}</div> : img
+  return frame ? <div className={cn(frame, state === "small" && "bg-line")}>{img}</div> : img
 }

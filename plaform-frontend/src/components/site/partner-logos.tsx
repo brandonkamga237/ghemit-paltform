@@ -11,7 +11,7 @@ export function PartnerLogos({ title }: { title: string }) {
     <section className="bg-surface">
       <Container className="flex flex-col gap-group py-block">
         <h2 className="text-small font-semibold text-ink-muted">{title}</h2>
-        <ul className="grid grid-cols-2 gap-px bg-sand sm:grid-cols-3 lg:grid-cols-6">
+        <ul className="grid grid-cols-2 gap-px bg-line sm:grid-cols-3 lg:grid-cols-6">
           {partners.map((p) => (
             <li
               key={p.name}
@@ -45,7 +45,7 @@ function PartnerMark({ name, logoUrl }: { name: string; logoUrl?: string }) {
     )
   }
   return (
-    <span className="line-clamp-3 text-center font-heading text-small font-semibold text-navy [overflow-wrap:anywhere]">
+    <span className="line-clamp-3 text-center font-heading text-small font-semibold text-ink [overflow-wrap:anywhere]">
       {name}
     </span>
   )

@@ -13,7 +13,7 @@ import {
   UserPlusIcon,
   UsersIcon,
 } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { api } from "@/lib/api"
 import type {
   Campaign,
@@ -32,11 +32,11 @@ import { candidateName, programLabel, STATUS_META, STATUS_ORDER } from "@/lib/in
 import { useAuth } from "@/lib/auth"
 import { AreaChart, DistributionBars, Sparkline } from "@/components/admin/charts"
 import { MetricCard } from "@/components/admin/metric"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@gehmit/ui/components/badge"
+import { Button } from "@gehmit/ui/components/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@gehmit/ui/components/card"
+import { Skeleton } from "@gehmit/ui/components/skeleton"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gehmit/ui/components/tabs"
 
 /* ─── Data ─── */
 
@@ -76,14 +76,6 @@ const CHART_PERIODS = [
   { label: "30 jours", days: 30 },
   { label: "90 jours", days: 90 },
 ]
-
-const STATUS_COLORS: Record<string, string> = {
-  new: "#2b4c7e",
-  in_progress: "#d97706",
-  accepted: "#15803d",
-  rejected: "#b91c1c",
-  archived: "#9ca3af",
-}
 
 export function DashboardPage() {
   const { username } = useAuth()
@@ -218,9 +210,9 @@ export function DashboardPage() {
 
       {/* Bande attention */}
       {data && pending > 0 && (
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-navy px-5 py-4 text-surface">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-inverse px-5 py-4 text-surface">
           <span className="flex items-center gap-2 text-small font-semibold">
-            <BellRingIcon className="size-4.5 text-gold" />
+            <BellRingIcon className="size-4.5 text-gehmit" />
             Centre d'attention
           </span>
           <div className="flex flex-wrap gap-2">
@@ -255,7 +247,7 @@ export function DashboardPage() {
           delta={data ? deltaOf(derived!.msgSeries, 30) : null}
           periodLabel="vs 30 j préc."
           spark={derived?.msgSeries.slice(-30)}
-          sparkColor="var(--color-navy)"
+          sparkColor="var(--color-ink)"
           to="/messages?read=unread"
           hint="Messages de contact non lus — volume quotidien sur 30 jours."
         />
@@ -265,7 +257,7 @@ export function DashboardPage() {
           delta={data ? deltaOf(derived!.subSeries, 30) : null}
           periodLabel="vs 30 j préc."
           spark={derived?.subSeries.slice(-30)}
-          sparkColor="var(--color-gold)"
+          sparkColor="var(--color-chart-3)"
           to="/newsletter"
           hint="Inscriptions quotidiennes à la newsletter sur 30 jours."
         />
@@ -403,7 +395,7 @@ export function DashboardPage() {
                     items={STATUS_ORDER.map((s) => ({
                       label: STATUS_META[s].label,
                       value: data.candSummary.byStatus[s] ?? 0,
-                      color: STATUS_COLORS[s],
+                      color: STATUS_META[s].color,
                     }))}
                     onSelect={(i) => {
                       const s = STATUS_ORDER.find((x) => STATUS_META[x].label === i.label)
@@ -542,9 +534,9 @@ export function DashboardPage() {
                     )}
                     <span className={cn(
                       "z-10 flex size-7 shrink-0 items-center justify-center rounded-full border bg-surface",
-                      f.kind === "candidature" && "text-navy",
+                      f.kind === "candidature" && "text-ink",
                       f.kind === "message" && "text-gehmit",
-                      f.kind === "subscriber" && "text-gold",
+                      f.kind === "subscriber" && "text-gehmit",
                       f.kind === "campaign" && "text-ink-muted",
                     )}>
                       {f.kind === "candidature" ? <InboxIcon className="size-3.5" />
