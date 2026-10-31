@@ -93,7 +93,7 @@ export function useComposer(newsletter: Pick<Newsletter, "segments" | "activeCou
       else await api.post(`${BASE}/campaigns`, payload())
       toast.add({ title: "Brouillon enregistré" })
       reset()
-      await newsletter.refresh()
+      newsletter.refresh()
     } catch (e) {
       toast.add({ title: "Enregistrement impossible", description: errorMessage(e) })
     } finally {
@@ -113,7 +113,7 @@ export function useComposer(newsletter: Pick<Newsletter, "segments" | "activeCou
       }
       toast.add({ title: "Envoi lancé", description: `${targetCount} destinataire(s) — envoi en arrière-plan.` })
       reset()
-      await newsletter.refresh()
+      newsletter.refresh()
     } catch (e) {
       toast.add({ title: "Envoi impossible", description: errorMessage(e) })
     } finally {

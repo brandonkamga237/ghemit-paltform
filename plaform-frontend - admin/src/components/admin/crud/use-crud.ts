@@ -1,39 +1,24 @@
-import { useCallback, useEffect, useState } from "react"
+import { useState } from "react"
 import { api } from "@/lib/api"
 import type { ContentItem } from "@/lib/types"
 import { toast } from "@gehmit/ui/components/toast"
+import { useResource } from "@/lib/use-resource"
 import { toDraft, toPayload, type CrudConfig, type Draft } from "./model"
 
 const errorMessage = (e: unknown) => (e instanceof Error ? e.message : undefined)
 
 /** Éléments d'un type de contenu : chargement, recherche, suppression. */
 export function useCrudList(type: string) {
-  const [items, setItems] = useState<ContentItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [loadError, setLoadError] = useState<string | null>(null)
+  const res = useResource(() => api.get<ContentItem[]>(`/api/admin/content/${type}`), [type])
+  const items = res.data ?? []
+  const { loading, error: loadError, reload: refresh } = res
   const [q, setQ] = useState("")
-
-  const refresh = useCallback(async () => {
-    setLoading(true)
-    setLoadError(null)
-    try {
-      setItems(await api.get<ContentItem[]>(`/api/admin/content/${type}`))
-    } catch (e) {
-      setLoadError(errorMessage(e) ?? "Erreur de chargement")
-    } finally {
-      setLoading(false)
-    }
-  }, [type])
-
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
 
   const remove = async (item: ContentItem) => {
     try {
       await api.del(`/api/admin/content/${item.id}`)
       toast.add({ title: "Élément supprimé" })
-      await refresh()
+      refresh()
       return true
     } catch (e) {
       toast.add({ title: "Suppression impossible", description: errorMessage(e) })
@@ -50,7 +35,7 @@ export function useCrudList(type: string) {
 }
 
 /** Formulaire de création / modification d'un élément, avec validation des champs. */
-export function useCrudEditor(config: CrudConfig, onSaved: () => Promise<void>) {
+export function useCrudEditor(config: CrudConfig, onSaved: () => void) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<ContentItem | null>(null)
   const [draft, setDraft] = useState<Draft>({})
@@ -88,7 +73,7 @@ export function useCrudEditor(config: CrudConfig, onSaved: () => Promise<void>) 
       else await api.post(`/api/admin/content/${config.type}`, body)
       setOpen(false)
       toast.add({ title: editing ? "Élément mis à jour" : "Élément créé" })
-      await onSaved()
+      onSaved()
     } catch (e) {
       setError(errorMessage(e) ?? "Erreur d'enregistrement")
     } finally {

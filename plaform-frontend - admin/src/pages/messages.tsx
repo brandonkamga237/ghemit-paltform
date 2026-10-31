@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useState } from "react"
 import {
   ArrowLeftIcon,
   ChevronLeftIcon,
@@ -15,6 +15,7 @@ import { PageHeader } from "@/components/admin/page-header"
 import { api } from "@/lib/api"
 import type { ContactMessage, MessagesSummary, Page } from "@/lib/types"
 import { fmtDateTime, useDebounced, timeAgo } from "@/lib/inbox"
+import { useResource } from "@/lib/use-resource"
 import { Pagination } from "@/components/admin/pagination"
 import { toast } from "@gehmit/ui/components/toast"
 import { Button } from "@gehmit/ui/components/button"
@@ -40,60 +41,48 @@ const READ_TABS = [
 ]
 
 export function MessagesPage() {
-  const [page, setPage] = useState<Page<ContactMessage> | null>(null)
-  const [summary, setSummary] = useState<MessagesSummary | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  const [read, setRead] = useState(
+  // Filtres : tout changement revient à la première page.
+  const [read, setReadState] = useState(
     () => new URLSearchParams(window.location.search).get("read") ?? "all"
   )
-  const [q, setQ] = useState("")
+  const [q, setQState] = useState("")
   const [pageNo, setPageNo] = useState(0)
-  const [size, setSize] = useState(15)
+  const [size, setSizeState] = useState(15)
+  const resetting =
+    <T,>(set: (v: T) => void) =>
+    (v: T) => {
+      set(v)
+      setPageNo(0)
+    }
+  const setRead = resetting(setReadState)
+  const setQ = resetting(setQState)
+  const setSize = resetting(setSizeState)
   const debouncedQ = useDebounced(q)
 
   const [open, setOpen] = useState<ContactMessage | null>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
-  const refresh = useCallback(async () => {
-    setLoading(true)
-    try {
-      const params = new URLSearchParams()
-      params.set("page", String(pageNo))
-      params.set("size", String(size))
-      if (read === "unread") params.set("read", "false")
-      if (read === "read") params.set("read", "true")
-      if (debouncedQ.trim()) params.set("q", debouncedQ.trim())
-      const [p, s] = await Promise.all([
-        api.get<Page<ContactMessage>>(`/api/admin/messages?${params}`),
-        api.get<MessagesSummary>("/api/admin/messages/summary"),
-      ])
-      setPage(p)
-      setSummary(s)
-      setError(null)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur de chargement")
-    } finally {
-      setLoading(false)
-    }
-  }, [pageNo, size, read, debouncedQ])
-
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
-  useEffect(() => {
-    setPageNo(0)
-  }, [read, debouncedQ, size])
+  const search = debouncedQ.trim()
+  const pageRes = useResource(() => {
+    const params = new URLSearchParams({ page: String(pageNo), size: String(size) })
+    if (read === "unread") params.set("read", "false")
+    if (read === "read") params.set("read", "true")
+    if (search) params.set("q", search)
+    return api.get<Page<ContactMessage>>(`/api/admin/messages?${params}`)
+  }, [pageNo, size, read, search])
+  const summaryRes = useResource(() => api.get<MessagesSummary>("/api/admin/messages/summary"), [])
+  const page = pageRes.data ?? null
+  const summary = summaryRes.data ?? null
+  const { error, loading } = pageRes
 
   const update = async (id: string, patch: Record<string, unknown>) => {
     try {
       const updated = await api.patch<ContactMessage>(`/api/admin/messages/${id}`, patch)
-      setPage((p) =>
+      pageRes.setData((p) =>
         p ? { ...p, content: p.content.map((m) => (m.id === id ? updated : m)) } : p
       )
       setOpen((o) => (o?.id === id ? updated : o))
-      void api.get<MessagesSummary>("/api/admin/messages/summary").then(setSummary).catch(() => {})
+      summaryRes.reload()
       return updated
     } catch (e) {
       toast.add({
@@ -109,7 +98,8 @@ export function MessagesPage() {
       await api.del(`/api/admin/messages/${id}`)
       setOpen(null)
       toast.add({ title: "Message supprimé" })
-      void refresh()
+      pageRes.reload()
+      summaryRes.reload()
     } catch (e) {
       toast.add({
         title: "Suppression impossible",

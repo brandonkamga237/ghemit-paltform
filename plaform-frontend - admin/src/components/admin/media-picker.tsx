@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { FolderIcon, ImageIcon, LoaderCircleIcon, UploadIcon } from "lucide-react"
 import { cn } from "@gehmit/ui/cn"
 import { API_URL, api } from "@/lib/api"
@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@gehmit/ui/components/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@gehmit/ui/components/tabs"
+import { useResource } from "@/lib/use-resource"
 
 export interface PickedImage {
   /** URL publique relative, ex. /api/public/media/<key> */
@@ -42,37 +43,27 @@ export function MediaPicker({
   onOpenChange: (open: boolean) => void
   onSelect: (img: PickedImage) => void
 }) {
-  const [media, setMedia] = useState<MediaFile[]>([])
-  const [folders, setFolders] = useState<string[]>([])
   const [folder, setFolder] = useState<string>("") // "" = tous, "__root__" = racine
-  const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadFolder, setUploadFolder] = useState<string>("__root__")
   const [newFolder, setNewFolder] = useState("")
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const refresh = useCallback(async () => {
-    setLoading(true)
-    try {
+  // Rechargée à chaque ouverture ; un échec est signalé sans bloquer la saisie d'URL.
+  const library = useResource(
+    async () => {
       const [files, dirs] = await Promise.all([
         api.get<MediaFile[]>("/api/admin/media"),
         api.get<string[]>("/api/admin/media/folders"),
       ])
-      setMedia(files.filter((m) => (m.contentType ?? "").startsWith("image/")))
-      setFolders(dirs)
-    } catch (e) {
-      toast.add({
-        title: "Médiathèque inaccessible",
-        description: e instanceof Error ? e.message : undefined,
-      })
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (open) void refresh()
-  }, [open, refresh])
+      return { files: files.filter((m) => (m.contentType ?? "").startsWith("image/")), dirs }
+    },
+    [],
+    { enabled: open, onError: (message) => toast.add({ title: "Médiathèque inaccessible", description: message }) }
+  )
+  const media = library.data?.files ?? []
+  const folders = library.data?.dirs ?? []
+  const loading = library.loading && !library.data
 
   const visible = media.filter((m) =>
     folder === "" ? true : folder === "__root__" ? !m.folder : m.folder === folder

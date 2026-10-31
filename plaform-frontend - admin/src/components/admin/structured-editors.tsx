@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -128,24 +128,22 @@ export function BlocksField({
     if (active === i) setActive(null)
   }
 
-  const add = useCallback(
-    (type: Block["type"]) => {
-      const block: Block =
-        type === "image" || type === "video"
-          ? { type, text: "", url: "" }
-          : type === "callout"
-            ? { type, text: "", tone: "info" }
-            : { type, text: "" }
-      const idx = blocks.length
-      onChange([...blocks, block])
-      setActive(idx)
-      setTimeout(() => {
-        if (type === "image" || type === "hr" || type === "video") return
-        refs.current[idx]?.focus()
-      }, 0)
-    },
-    [blocks, onChange]
-  )
+  // Mémoïsé par le React Compiler (pas de useCallback manuel).
+  const add = (type: Block["type"]) => {
+    const block: Block =
+      type === "image" || type === "video"
+        ? { type, text: "", url: "" }
+        : type === "callout"
+          ? { type, text: "", tone: "info" }
+          : { type, text: "" }
+    const idx = blocks.length
+    onChange([...blocks, block])
+    setActive(idx)
+    setTimeout(() => {
+      if (type === "image" || type === "hr" || type === "video") return
+      refs.current[idx]?.focus()
+    }, 0)
+  }
 
   const setRef = (el: HTMLTextAreaElement | null, i: number) => {
     refs.current[i] = el

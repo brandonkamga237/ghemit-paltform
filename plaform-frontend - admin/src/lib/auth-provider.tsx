@@ -1,26 +1,8 @@
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import { currentUser, hasSession, loginWithPassword, logoutTokens } from "./token"
+import { AuthContext } from "./auth"
 
-interface AuthState {
-  ready: boolean
-  authenticated: boolean
-  isAdmin: boolean
-  username: string
-  login: (username: string, password: string) => Promise<void>
-  logout: () => void
-}
-
-const AuthContext = createContext<AuthState>({
-  ready: true,
-  authenticated: false,
-  isAdmin: false,
-  username: "",
-  login: () => Promise.resolve(),
-  logout: () => {},
-})
-
-export const useAuth = () => useContext(AuthContext)
-
+/** Fournit la session (restaurée depuis le refresh token s'il existe) à toute l'application. */
 export function AuthProvider({ children }: { children: ReactNode }) {
   // Session restaurée si un refresh token valide est en sessionStorage.
   const initial = hasSession() ? currentUser() : null

@@ -49,6 +49,7 @@ dépendent de `@gehmit/ui` (`packages/ui`).
 pnpm install                   # à la racine, une fois pour tout le workspace
 pnpm dev:public                # ou : pnpm dev:admin
 pnpm build                     # vérification des deux apps (tsc + vite build)
+pnpm lint                      # ESLint + règles du React Compiler (aussi en CI)
 pnpm check:colors              # charte graphique (aussi exécutée en CI)
 ```
 
@@ -79,6 +80,17 @@ Gehmit = **vert et blanc**. L'or est un accent rare (don, article à la une),
   `ctaVariants(...)` ; la variante `donate` (or) est réservée au don.
 - Dates de l'API : `dateParts` / `shortDate` de `lib/date.ts`.
 - Une page longue se découpe en dossier (`pages/home/index.tsx` + sections).
+
+### Back office : conventions
+
+- Un écran = un dossier (`pages/candidatures/`…) : un hook `use-…` porte
+  l'état et les appels API, `index.tsx` assemble des composants d'affichage.
+- Chargement de données : `useResource(load, deps)` (`lib/use-resource.ts`),
+  jamais `useEffect` + `setState` à la main ; mise à jour locale après une
+  mutation avec `setData`, rechargement avec `reload`.
+- Pas de `useCallback` / `useMemo` de confort : le React Compiler mémoïse.
+- Carte de tableau de bord : `Panel` ; choix exclusif en ligne :
+  `SegmentedControl` (`@gehmit/ui`).
 
 ## Infrastructure locale
 

@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { api } from "@/lib/api"
 import type { Campaign, Subscriber } from "@/lib/types"
 import { toast } from "@gehmit/ui/components/toast"
+import { useResource } from "@/lib/use-resource"
 
 const BASE = "/api/admin/newsletter"
 
@@ -12,27 +13,16 @@ const errorMessage = (e: unknown) => (e instanceof Error ? e.message : undefined
 
 /** Abonnés et campagnes : chargement, suivi des envois en cours, actions sur les brouillons et les abonnés. */
 export function useNewsletter() {
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([])
-  const [campaigns, setCampaigns] = useState<Campaign[]>([])
-  const [error, setError] = useState<string | null>(null)
-
-  const refresh = useCallback(async () => {
-    try {
-      const [subs, camps] = await Promise.all([
-        api.get<Subscriber[]>(`${BASE}/subscribers`),
-        api.get<Campaign[]>(`${BASE}/campaigns`),
-      ])
-      setSubscribers(subs)
-      setCampaigns(camps)
-      setError(null)
-    } catch (e) {
-      setError(errorMessage(e) ?? "Erreur de chargement")
-    }
+  const res = useResource(async () => {
+    const [subscribers, campaigns] = await Promise.all([
+      api.get<Subscriber[]>(`${BASE}/subscribers`),
+      api.get<Campaign[]>(`${BASE}/campaigns`),
+    ])
+    return { subscribers, campaigns }
   }, [])
-
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
+  const subscribers = useMemo(() => res.data?.subscribers ?? [], [res.data])
+  const campaigns = res.data?.campaigns ?? []
+  const { error, reload: refresh } = res
 
   // Recharge tant qu'une campagne est en cours d'envoi.
   const sendingInProgress = campaigns.some((c) => c.status === "sending")
@@ -57,7 +47,7 @@ export function useNewsletter() {
     try {
       await action()
       toast.add({ title: success, description })
-      await refresh()
+      refresh()
       return true
     } catch (e) {
       toast.add({ title: failure, description: errorMessage(e) })

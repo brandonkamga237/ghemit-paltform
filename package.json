@@ -6,6 +6,7 @@
     "dev:public": "pnpm --filter gehmit-public dev",
     "dev:admin": "pnpm --filter gehmit-admin dev",
     "build": "pnpm -r --filter ./plaform-frontend --filter \"./plaform-frontend - admin\" build",
+    "lint": "pnpm -r --filter ./plaform-frontend --filter \"./plaform-frontend - admin\" lint",
     "check:colors": "node scripts/check-colors.mjs"
   }
 }

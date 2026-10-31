@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import {
   CopyIcon,
   FolderIcon,
@@ -16,6 +16,7 @@ import { Button } from "@gehmit/ui/components/button"
 import { Card, CardContent } from "@gehmit/ui/components/card"
 import { Input } from "@gehmit/ui/components/input"
 import { Label } from "@gehmit/ui/components/label"
+import { useResource } from "@/lib/use-resource"
 import {
   Dialog,
   DialogContent,
@@ -39,10 +40,7 @@ const ALL = "__all__"
 const ROOT = "__root__"
 
 export function MediaPage() {
-  const [media, setMedia] = useState<MediaFile[]>([])
-  const [folders, setFolders] = useState<string[]>([])
   const [folder, setFolder] = useState<string>(ALL)
-  const [error, setError] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [folderDialog, setFolderDialog] = useState(false)
   const [newFolder, setNewFolder] = useState("")
@@ -52,23 +50,17 @@ export function MediaPage() {
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const refresh = useCallback(async () => {
-    try {
-      const [files, dirs] = await Promise.all([
-        api.get<MediaFile[]>("/api/admin/media"),
-        api.get<string[]>("/api/admin/media/folders"),
-      ])
-      setMedia(files)
-      setFolders(dirs)
-      setError(null)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur de chargement")
-    }
+  const library = useResource(async () => {
+    const [files, dirs] = await Promise.all([
+      api.get<MediaFile[]>("/api/admin/media"),
+      api.get<string[]>("/api/admin/media/folders"),
+    ])
+    return { files, dirs }
   }, [])
-
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
+  const media = library.data?.files ?? []
+  const folders = library.data?.dirs ?? []
+  const { error } = library
+  const refresh = library.reload
 
   const query = q.trim().toLowerCase()
   const visible = media
@@ -86,7 +78,7 @@ export function MediaPage() {
       fd.append("folder", folder === ALL || folder === ROOT ? "" : folder)
       await api.post("/api/admin/media", fd)
       toast.add({ title: "Fichier téléversé" })
-      await refresh()
+      refresh()
     } catch (e) {
       toast.add({
         title: "Téléversement impossible",
@@ -101,7 +93,7 @@ export function MediaPage() {
   const remove = async (id: string) => {
     try {
       await api.del(`/api/admin/media/${id}`)
-      await refresh()
+      refresh()
     } catch (e) {
       toast.add({
         title: "Suppression impossible",
@@ -119,7 +111,7 @@ export function MediaPage() {
       setNewFolder("")
       setFolderDialog(false)
       setFolder(name)
-      await refresh()
+      refresh()
     } catch (e) {
       toast.add({
         title: "Création impossible",
@@ -138,7 +130,7 @@ export function MediaPage() {
       })
       setDeletingFolder(null)
       setFolder(ALL)
-      await refresh()
+      refresh()
     } catch (e) {
       toast.add({
         title: "Suppression impossible",

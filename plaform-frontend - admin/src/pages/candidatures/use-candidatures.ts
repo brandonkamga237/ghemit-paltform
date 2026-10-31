@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react"
+import { useState } from "react"
 import { api } from "@/lib/api"
 import type { Candidature, CandidaturesSummary, CandidatureStatus, Page } from "@/lib/types"
 import { useDebounced } from "@/lib/inbox"
+import { useResource } from "@/lib/use-resource"
 import { toast } from "@gehmit/ui/components/toast"
 
 /** Nombre de candidatures chargées d'un coup pour la vue pipeline d'un espace. */
@@ -19,12 +20,6 @@ const errorMessage = (e: unknown) => (e instanceof Error ? e.message : undefined
  * groupée et file de triage. L'écran ne fait qu'afficher ce que renvoie ce hook.
  */
 export function useCandidatures() {
-  const [page, setPage] = useState<Page<Candidature> | null>(null)
-  const [board, setBoard] = useState<Candidature[]>([])
-  const [summary, setSummary] = useState<CandidaturesSummary | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
   /* ─── Filtres : tout changement revient à la première page et vide la sélection ─── */
 
   const [domain, setDomainState] = useState(() => initialParam("domain"))
@@ -53,45 +48,35 @@ export function useCandidatures() {
 
   /* ─── Chargement ─── */
 
-  const refreshSummary = useCallback(async () => {
-    try {
-      setSummary(await api.get<CandidaturesSummary>(`${ENDPOINT}/summary`))
-    } catch {
-      /* le récapitulatif est secondaire */
-    }
-  }, [])
+  const search = debouncedQ.trim()
+  const pageRes = useResource(
+    () => {
+      const params = new URLSearchParams({ sort: "createdAt,desc", page: String(pageNo), size: String(size) })
+      if (search) params.set("q", search)
+      if (domain !== "all") params.set("program", domain)
+      if (status !== "all") params.set("status", status)
+      return api.get<Page<Candidature>>(`${ENDPOINT}?${params}`)
+    },
+    [pageNo, size, domain, status, search],
+    { enabled: listMode }
+  )
+  const boardRes = useResource(
+    async () => {
+      const params = new URLSearchParams({ sort: "createdAt,desc", page: "0", size: String(BOARD_SIZE), program: domain })
+      if (search) params.set("q", search)
+      return (await api.get<Page<Candidature>>(`${ENDPOINT}?${params}`)).content
+    },
+    [domain, search],
+    { enabled: !listMode }
+  )
+  // Le récapitulatif est secondaire : en cas d'échec, le rail affiche « … ».
+  const summaryRes = useResource(() => api.get<CandidaturesSummary>(`${ENDPOINT}/summary`), [])
 
-  const refresh = useCallback(async () => {
-    setLoading(true)
-    try {
-      const params = new URLSearchParams({ sort: "createdAt,desc" })
-      if (debouncedQ.trim()) params.set("q", debouncedQ.trim())
-      if (listMode) {
-        params.set("page", String(pageNo))
-        params.set("size", String(size))
-        if (domain !== "all") params.set("program", domain)
-        if (status !== "all") params.set("status", status)
-        setPage(await api.get<Page<Candidature>>(`${ENDPOINT}?${params}`))
-      } else {
-        params.set("page", "0")
-        params.set("size", String(BOARD_SIZE))
-        params.set("program", domain)
-        setBoard((await api.get<Page<Candidature>>(`${ENDPOINT}?${params}`)).content)
-      }
-      setError(null)
-    } catch (e) {
-      setError(errorMessage(e) ?? "Erreur de chargement")
-    } finally {
-      setLoading(false)
-    }
-  }, [pageNo, size, domain, status, debouncedQ, listMode])
-
-  useEffect(() => {
-    void refresh()
-  }, [refresh])
-  useEffect(() => {
-    void refreshSummary()
-  }, [refreshSummary])
+  const page = pageRes.data ?? null
+  const board = boardRes.data ?? []
+  const summary = summaryRes.data ?? null
+  const current = listMode ? pageRes : boardRes
+  const { error, loading } = current
 
   /* ─── Détail ouvert ─── */
 
@@ -103,10 +88,10 @@ export function useCandidatures() {
     try {
       const updated = await api.patch<Candidature>(`${ENDPOINT}/${id}`, patch)
       const swap = (c: Candidature) => (c.id === id ? updated : c)
-      setPage((p) => (p ? { ...p, content: p.content.map(swap) } : p))
-      setBoard((b) => b.map(swap))
+      pageRes.setData((p) => (p ? { ...p, content: p.content.map(swap) } : p))
+      boardRes.setData((b) => b?.map(swap))
       setOpen((o) => (o?.id === id ? updated : o))
-      void refreshSummary()
+      summaryRes.reload()
       return updated
     } catch (e) {
       toast.add({ title: "Mise à jour impossible", description: errorMessage(e) })
@@ -117,14 +102,14 @@ export function useCandidatures() {
   const remove = async (id: string) => {
     try {
       await api.del(`${ENDPOINT}/${id}`)
-      setPage((p) =>
+      pageRes.setData((p) =>
         p ? { ...p, content: p.content.filter((c) => c.id !== id), totalElements: p.totalElements - 1 } : p
       )
-      setBoard((b) => b.filter((c) => c.id !== id))
+      boardRes.setData((b) => b?.filter((c) => c.id !== id))
       setOpen(null)
       toast.add({ title: "Candidature supprimée" })
-      void refreshSummary()
-      if (listMode) void refresh()
+      summaryRes.reload()
+      if (listMode) pageRes.reload()
     } catch (e) {
       toast.add({ title: "Suppression impossible", description: errorMessage(e) })
     }
@@ -164,8 +149,8 @@ export function useCandidatures() {
     })
     setSelected(new Set())
     setBulkBusy(false)
-    void refresh()
-    void refreshSummary()
+    current.reload()
+    summaryRes.reload()
   }
 
   /* ─── Triage : file des nouvelles candidatures de l'espace ─── */
