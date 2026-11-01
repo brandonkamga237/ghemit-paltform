@@ -1,9 +1,9 @@
 import { Link } from "react-router"
 import { ArrowDownRightIcon, ArrowRightIcon, ArrowUpRightIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { Sparkline } from "./charts"
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent } from "@gehmit/ui/components/card"
+import { Skeleton } from "@gehmit/ui/components/skeleton"
 
 /**
  * Métrique de tableau de bord : valeur, tendance vs période précédente,

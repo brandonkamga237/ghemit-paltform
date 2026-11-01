@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { AlertTriangleIcon, CheckCircle2Icon, InfoIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 import { mediaSrc } from "@/lib/api"
 import { serializeBlocks, type ArticleDoc } from "./model"
 
@@ -14,7 +14,7 @@ const MONTHS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "aoû
 
 function richText(text: string): ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
-    if (/^\*\*[^*]+\*\*$/.test(part)) return <strong key={i} className="font-semibold text-navy">{part.slice(2, -2)}</strong>
+    if (/^\*\*[^*]+\*\*$/.test(part)) return <strong key={i} className="font-semibold text-ink">{part.slice(2, -2)}</strong>
     if (/^\*[^*]+\*$/.test(part)) return <em key={i}>{part.slice(1, -1)}</em>
     const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
     if (m) {
@@ -45,18 +45,18 @@ function TableView({ text, caption }: { text: string; caption?: string }) {
   const [head, ...body] = rows
   return (
     <figure className="flex flex-col gap-2">
-      <div className="overflow-x-auto border-y border-sand-dark">
+      <div className="overflow-x-auto border-y border-line-strong">
         <table className="w-full min-w-[480px] text-left">
           <thead>
-            <tr className="border-b border-sand-dark bg-cream">
+            <tr className="border-b border-line-strong bg-surface-alt">
               {head.map((c, i) => (
-                <th key={i} className="px-4 py-3 text-small font-semibold text-navy">{richText(c)}</th>
+                <th key={i} className="px-4 py-3 text-small font-semibold text-ink">{richText(c)}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {body.map((row, i) => (
-              <tr key={i} className="border-b border-sand last:border-0">
+              <tr key={i} className="border-b border-line last:border-0">
                 {row.map((c, j) => (
                   <td key={j} className="px-4 py-3 text-small text-ink-muted">{richText(c)}</td>
                 ))}
@@ -72,7 +72,7 @@ function TableView({ text, caption }: { text: string; caption?: string }) {
 
 const TONES = {
   info: { icon: InfoIcon, cls: "bg-open-bg" },
-  success: { icon: CheckCircle2Icon, cls: "bg-gold-tint" },
+  success: { icon: CheckCircle2Icon, cls: "bg-surface-tint" },
   warning: { icon: AlertTriangleIcon, cls: "bg-soon-bg" },
 } as const
 
@@ -80,13 +80,13 @@ function BlockView({ block }: { block: Record<string, unknown> }) {
   const text = String(block.text ?? "")
   switch (block.type) {
     case "h2":
-      return <h2 className="pt-4 font-heading text-h2 font-semibold text-navy">{richText(text)}</h2>
+      return <h2 className="pt-4 font-heading text-h2 font-semibold text-ink">{richText(text)}</h2>
     case "h3":
-      return <h3 className="pt-2 font-heading text-h3 font-semibold text-navy">{richText(text)}</h3>
+      return <h3 className="pt-2 font-heading text-h3 font-semibold text-ink">{richText(text)}</h3>
     case "quote":
       return (
-        <blockquote className="my-4 flex flex-col gap-3 border-y border-sand-dark py-8">
-          <p className="font-heading text-h2 text-navy italic">{richText(text)}</p>
+        <blockquote className="my-4 flex flex-col gap-3 border-y border-line-strong py-8">
+          <p className="font-heading text-h2 text-ink italic">{richText(text)}</p>
           {block.cite ? <cite className="text-small font-semibold text-ink-muted not-italic">{String(block.cite)}</cite> : null}
         </blockquote>
       )
@@ -102,7 +102,7 @@ function BlockView({ block }: { block: Record<string, unknown> }) {
       return (
         <figure className="flex flex-col gap-2">
           {embed ? (
-            <div className="aspect-video w-full bg-navy">
+            <div className="aspect-video w-full bg-inverse">
               <iframe src={embed} title={text || "Vidéo"} className="h-full w-full" allowFullScreen />
             </div>
           ) : (
@@ -119,20 +119,20 @@ function BlockView({ block }: { block: Record<string, unknown> }) {
       const Icon = tone.icon
       return (
         <aside className={cn("flex gap-3.5 px-6 py-5", tone.cls)}>
-          <Icon className="mt-0.5 size-5 shrink-0 text-navy" />
-          <p className="text-body text-navy">{richText(text)}</p>
+          <Icon className="mt-0.5 size-5 shrink-0 text-ink" />
+          <p className="text-body text-ink">{richText(text)}</p>
         </aside>
       )
     }
     case "hr":
-      return <hr className="border-t border-sand" />
+      return <hr className="border-t border-line" />
     case "ul":
     case "ol": {
       const Tag = block.type === "ol" ? "ol" : "ul"
       return (
         <Tag
           className={cn(
-            "space-y-2 pl-6 text-lead text-navy/80 marker:text-gehmit",
+            "space-y-2 pl-6 text-lead text-ink/80 marker:text-gehmit",
             block.type === "ol" ? "list-decimal marker:font-semibold" : "list-disc"
           )}
         >
@@ -144,12 +144,12 @@ function BlockView({ block }: { block: Record<string, unknown> }) {
     }
     case "code":
       return (
-        <pre className="overflow-x-auto bg-navy p-5">
+        <pre className="overflow-x-auto bg-inverse p-5">
           <code className="font-mono text-small text-surface">{text}</code>
         </pre>
       )
     default:
-      return <p className="text-lead text-navy/80">{richText(text)}</p>
+      return <p className="text-lead text-ink/80">{richText(text)}</p>
   }
 }
 
@@ -163,15 +163,15 @@ export function ArticlePreview({ doc, minutes }: { doc: ArticleDoc; minutes: num
       <div className="mx-auto box-content flex max-w-text flex-col gap-5 px-gutter pt-14 pb-10">
         <p className="text-small text-ink-muted">
           Blog <span className="text-ink-faint">/</span>{" "}
-          <span className="font-semibold text-navy">{doc.category || "Sans rubrique"}</span>
+          <span className="font-semibold text-ink">{doc.category || "Sans rubrique"}</span>
         </p>
         <p className="text-small text-ink-muted">
           {date} · {minutes} min de lecture
         </p>
-        <h1 className="font-heading text-display font-semibold text-navy">
+        <h1 className="font-heading text-display font-semibold text-ink">
           {doc.title || "Titre de l'article"}
         </h1>
-        {doc.excerpt ? <p className="text-lead text-navy/75">{doc.excerpt}</p> : null}
+        {doc.excerpt ? <p className="text-lead text-ink/75">{doc.excerpt}</p> : null}
       </div>
       {doc.imageUrl ? (
         <div className="mx-auto max-w-[1040px] px-5 pb-12">
@@ -186,7 +186,7 @@ export function ArticlePreview({ doc, minutes }: { doc: ArticleDoc; minutes: num
         )}
       </article>
       {doc.cta ? (
-        <section className="mt-16 bg-navy text-surface">
+        <section className="mt-16 bg-inverse text-surface">
           <div className="mx-auto flex max-w-[1040px] flex-wrap items-center justify-between gap-group px-5 py-block">
             <div className="flex flex-col gap-2">
               <span className="font-heading text-h2 font-semibold">{doc.cta.title}</span>

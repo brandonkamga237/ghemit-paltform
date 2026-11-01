@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { Link, useNavigate } from "react-router"
 import { PenLineIcon, SearchIcon, StarIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 import { api, mediaSrc } from "@/lib/api"
 import type { ContentItem } from "@/lib/types"
 import { PageHeader } from "@/components/admin/page-header"
@@ -81,15 +81,15 @@ export function ArticlesPage() {
               className={cn(
                 "relative h-9 text-small transition-colors",
                 filter === key
-                  ? "font-semibold text-navy after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-gehmit"
-                  : "text-ink-muted hover:text-navy"
+                  ? "font-semibold text-ink after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-gehmit"
+                  : "text-ink-muted hover:text-ink"
               )}
             >
               {label} <span className="tnum text-ink-faint">{counts[key]}</span>
             </button>
           ))}
         </div>
-        <label className="flex h-10 w-full items-center gap-2 border-b border-sand-dark focus-within:border-gehmit sm:w-[280px]">
+        <label className="flex h-10 w-full items-center gap-2 border-b border-line-strong focus-within:border-gehmit sm:w-[280px]">
           <SearchIcon className="size-4 text-ink-muted" />
           <span className="sr-only">Rechercher</span>
           <input
@@ -97,7 +97,7 @@ export function ArticlesPage() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Titre, rubrique…"
-            className="w-full bg-transparent text-small text-navy outline-none placeholder:text-ink-faint"
+            className="w-full bg-transparent text-small text-ink outline-none placeholder:text-ink-faint"
           />
         </label>
       </div>
@@ -111,8 +111,8 @@ export function ArticlesPage() {
           ))}
         </div>
       ) : rows.length === 0 ? (
-        <div className="flex flex-col items-start gap-3 border-y border-sand-dark py-block">
-          <p className="font-heading text-h3 text-navy">
+        <div className="flex flex-col items-start gap-3 border-y border-line-strong py-block">
+          <p className="font-heading text-h3 text-ink">
             {items.length === 0 ? "Aucun article pour l'instant." : "Aucun article ne correspond."}
           </p>
           {items.length === 0 && (
@@ -122,24 +122,24 @@ export function ArticlesPage() {
           )}
         </div>
       ) : (
-        <ul className="flex flex-col border-t border-sand-dark bg-surface">
+        <ul className="flex flex-col border-t border-line-strong bg-surface">
           {rows.map((a) => {
             const p = a.payload
             return (
-              <li key={a.id} className="border-b border-sand">
+              <li key={a.id} className="border-b border-line">
                 <button
                   type="button"
                   onClick={() => navigate(`/articles/${a.id}`)}
-                  className="group grid w-full grid-cols-[72px_1fr] items-center gap-4 px-4 py-4 text-left transition-colors hover:bg-cream/70 sm:grid-cols-[96px_1fr_auto] sm:gap-5"
+                  className="group grid w-full grid-cols-[72px_1fr] items-center gap-4 px-4 py-4 text-left transition-colors hover:bg-surface-alt/70 sm:grid-cols-[96px_1fr_auto] sm:gap-5"
                 >
-                  <span className="aspect-[4/3] w-full overflow-hidden bg-sand">
+                  <span className="aspect-[4/3] w-full overflow-hidden bg-line">
                     {p.imageUrl ? (
                       <img src={mediaSrc(String(p.imageUrl))} alt="" className="h-full w-full object-cover" loading="lazy" />
                     ) : null}
                   </span>
                   <span className="flex min-w-0 flex-col gap-1">
                     <span className="flex items-center gap-2">
-                      <span className="truncate font-heading text-lead font-semibold text-navy group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
+                      <span className="truncate font-heading text-lead font-semibold text-ink group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
                         {String(p.title || "Sans titre")}
                       </span>
                       {p.featured ? <StarIcon className="size-4 shrink-0 fill-gold text-gold" aria-label="À la une" /> : null}

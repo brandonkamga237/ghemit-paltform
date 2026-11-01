@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import { CheckIcon, CircleAlertIcon, FileTextIcon } from "lucide-react"
 import { motion } from "motion/react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { contact } from "@/data/content"
 import {
   Select,
@@ -9,14 +9,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@gehmit/ui/components/select"
+import { Heading } from "@/components/site/heading"
 
 /** Champs de formulaire du site : 16 px minimum (pas de zoom iOS), angles nets. */
 export const inputCls =
-  "h-12 rounded-sm border-sand-dark bg-white px-3.5 text-body text-navy placeholder:text-ink-faint focus-visible:border-gehmit focus-visible:ring-3 focus-visible:ring-gehmit/15"
+  "h-12 rounded-sm border-line-strong bg-surface px-3.5 text-body text-ink placeholder:text-ink-faint focus-visible:border-gehmit focus-visible:ring-3 focus-visible:ring-gehmit/15"
 
 export const textareaCls =
-  "min-h-[120px] rounded-sm border-sand-dark bg-white p-3.5 text-body text-navy placeholder:text-ink-faint focus-visible:border-gehmit focus-visible:ring-3 focus-visible:ring-gehmit/15"
+  "min-h-[120px] rounded-sm border-line-strong bg-surface p-3.5 text-body text-ink placeholder:text-ink-faint focus-visible:border-gehmit focus-visible:ring-3 focus-visible:ring-gehmit/15"
 
 /**
  * Libellé + champ + aide ou erreur. Rendu en <label> pour associer le libellé
@@ -42,7 +43,7 @@ export function Field({
   const Tag = as
   return (
     <Tag className={cn("flex flex-col gap-2", className)}>
-      <span className="flex items-baseline justify-between gap-3 text-small font-semibold text-navy">
+      <span className="flex items-baseline justify-between gap-3 text-small font-semibold text-ink">
         {label}
         {optional && <span className="text-caption font-normal text-ink-muted">Facultatif</span>}
       </span>
@@ -114,8 +115,8 @@ export function ChoiceGroup({
           className={cn(
             "inline-flex h-11 items-center gap-2 rounded-sm border px-4 text-small transition-colors",
             selected(o)
-              ? "border-navy bg-navy font-semibold text-surface"
-              : "border-sand-dark bg-white text-navy hover:border-navy"
+              ? "border-ink bg-inverse font-semibold text-surface"
+              : "border-line-strong bg-surface text-ink hover:border-ink"
           )}
         >
           {selected(o) && <CheckIcon className="size-3.5" strokeWidth={2.5} />}
@@ -137,7 +138,7 @@ export function FormFooter({
   children: ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-3 border-t border-sand pt-5">
+    <div className="flex flex-col gap-3 border-t border-line pt-5">
       <div className="flex flex-wrap items-center justify-between gap-4">
         {note ? <span className="text-small text-ink-muted">{note}</span> : <span />}
         {children}
@@ -153,9 +154,6 @@ export function FormFooter({
   )
 }
 
-export const submitCls =
-  "inline-flex h-12 items-center justify-center rounded-sm bg-gehmit px-7 text-small font-semibold text-surface transition-colors hover:bg-gehmit-hover active:bg-gehmit-active disabled:opacity-60"
-
 /** Confirmation après envoi : ce qui a été reçu et ce qui va se passer. */
 export function FormSuccess({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -169,8 +167,8 @@ export function FormSuccess({ title, children }: { title: string; children: Reac
       <span className="flex size-10 items-center justify-center rounded-full bg-gehmit text-surface">
         <CheckIcon className="size-5" strokeWidth={2.5} />
       </span>
-      <span className="font-heading text-h2 font-semibold text-navy">{title}</span>
-      <div className="max-w-[560px] text-body text-ink-muted">{children}</div>
+      <span className="font-heading text-h2 font-semibold text-ink">{title}</span>
+      <div className="max-w-xl text-body text-ink-muted">{children}</div>
     </motion.div>
   )
 }
@@ -178,7 +176,7 @@ export function FormSuccess({ title, children }: { title: string; children: Reac
 /** Panneau blanc qui porte un formulaire. */
 export function FormPanel({ onSubmit, children }: { onSubmit: (e: React.FormEvent<HTMLFormElement>) => void; children: ReactNode }) {
   return (
-    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-group bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9">
+    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-group bg-surface p-6 shadow-hairline sm:p-9">
       {children}
     </form>
   )
@@ -187,7 +185,7 @@ export function FormPanel({ onSubmit, children }: { onSubmit: (e: React.FormEven
 /** Petit récapitulatif clé/valeur (encart latéral des formulaires). */
 export function Recap({ title, eyebrow, rows, children }: { title: string; eyebrow: string; rows: [string, string][]; children?: ReactNode }) {
   return (
-    <aside className="flex flex-col gap-4 bg-navy p-7 text-surface lg:sticky lg:top-24">
+    <aside className="flex flex-col gap-4 bg-inverse p-7 text-surface lg:sticky lg:top-24">
       <span className="text-small text-surface/60">{eyebrow}</span>
       <span className="font-heading text-h3 font-semibold">{title}</span>
       <dl className="flex flex-col border-t border-white/10">
@@ -219,14 +217,14 @@ export function FormSection({
   children: ReactNode
 }) {
   return (
-    <section id={id} className="scroll-mt-20 bg-cream">
+    <section id={id} className="scroll-mt-20 bg-surface-alt">
       <div className="mx-auto grid w-full max-w-page items-start gap-block px-gutter py-section lg:grid-cols-12">
         <div className="flex flex-col gap-group lg:col-span-7">
           <div className="flex flex-col gap-3">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+            <Heading>
               {title}
-            </h2>
-            {text ? <p className="max-w-[560px] text-body text-ink-muted">{text}</p> : null}
+            </Heading>
+            {text ? <p className="max-w-xl text-body text-ink-muted">{text}</p> : null}
           </div>
           {children}
         </div>
@@ -239,8 +237,8 @@ export function FormSection({
 /** Sélection d'un CV PDF (2 Mo max). */
 export function CvInput({ name, onChange }: { name?: string; onChange: (f: File | null, error?: string) => void }) {
   return (
-    <label className="flex h-12 cursor-pointer items-center justify-between rounded-sm border border-dashed border-sand-dark bg-white px-3.5 text-body transition-colors hover:border-gehmit focus-within:border-gehmit">
-      <span className={name ? "text-navy" : "text-ink-muted"}>{name || "Choisir un fichier PDF"}</span>
+    <label className="flex h-12 cursor-pointer items-center justify-between rounded-sm border border-dashed border-line-strong bg-surface px-3.5 text-body transition-colors hover:border-gehmit focus-within:border-gehmit">
+      <span className={name ? "text-ink" : "text-ink-muted"}>{name || "Choisir un fichier PDF"}</span>
       <FileTextIcon className="size-4 text-ink-faint" />
       <input
         type="file"

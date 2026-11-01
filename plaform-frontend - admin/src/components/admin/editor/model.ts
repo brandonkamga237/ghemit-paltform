@@ -1,5 +1,29 @@
-import type { ArticleCta, Block } from "@/components/admin/structured-editors"
 import { plainText } from "@/lib/rich-text"
+
+/** Bloc du corps d'un article, tel que stocké et affiché par le site public. */
+export interface Block {
+  type:
+    | "p" | "h2" | "h3" | "quote" | "image" | "hr"
+    | "ul" | "ol" | "code" | "video" | "table" | "callout"
+  /** Texte du bloc ; pour « image »/« vidéo », c'est la légende (facultative). */
+  text: string
+  /** Pour « image » : URL du média choisi. Pour « video » : URL YouTube ou fichier. */
+  url?: string
+  /** Pour « table » : légende sous le tableau. */
+  caption?: string
+  /** Pour « callout » : info | success | warning. */
+  tone?: "info" | "success" | "warning"
+  /** Pour « quote » : source de la citation. */
+  cite?: string
+}
+
+/** Encart d'appel à l'action en fin d'article (titre, texte, bouton). */
+export interface ArticleCta {
+  title: string
+  text: string
+  label: string
+  to: string
+}
 
 export type BlockType = Block["type"]
 

@@ -38,12 +38,16 @@ export const ORIGIN_GROUPS: OriginGroup[] = [
   { value: "rencontre-challenge", label: "Rencontre Challenge", programs: ["rencontre-challenge"] },
 ]
 
-export const STATUS_META: Record<CandidatureStatus, { label: string; cls: string }> = {
-  new: { label: "Nouvelle", cls: "bg-gold-tint text-navy" },
-  in_progress: { label: "En cours", cls: "bg-soon-bg text-soon-text" },
-  accepted: { label: "Retenue", cls: "bg-open-bg text-open-text" },
-  rejected: { label: "Non retenue", cls: "bg-destructive/10 text-destructive" },
-  archived: { label: "Archivée", cls: "bg-sand text-ink-muted" },
+/**
+ * Statut d'une candidature : libellé, pastille (`cls`) et couleur de série pour
+ * les graphiques (`color`, jeton du thème — jamais de valeur en dur).
+ */
+export const STATUS_META: Record<CandidatureStatus, { label: string; cls: string; color: string }> = {
+  new: { label: "Nouvelle", cls: "bg-surface-tint text-ink", color: "var(--color-status-new)" },
+  in_progress: { label: "En cours", cls: "bg-soon-bg text-soon-text", color: "var(--color-status-progress)" },
+  accepted: { label: "Retenue", cls: "bg-open-bg text-open-text", color: "var(--color-status-accepted)" },
+  rejected: { label: "Non retenue", cls: "bg-destructive/10 text-destructive", color: "var(--color-status-rejected)" },
+  archived: { label: "Archivée", cls: "bg-line text-ink-muted", color: "var(--color-status-archived)" },
 }
 
 /** Libellés des statuts, pour l'affichage de la valeur choisie dans les listes. */
@@ -121,6 +125,16 @@ export const fmtDateTime = (iso: string) =>
     hour: "2-digit",
     minute: "2-digit",
   })
+
+/** Ancienneté relative (« il y a 3 h ») ; au-delà de 30 jours, la date courte. */
+export function timeAgo(iso: string): string {
+  const s = (Date.now() - new Date(iso).getTime()) / 1000
+  if (s < 60) return "à l'instant"
+  if (s < 3600) return `il y a ${Math.floor(s / 60)} min`
+  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`
+  if (s < 86400 * 30) return `il y a ${Math.floor(s / 86400)} j`
+  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })
+}
 
 /** Recherche avec délai (évite un appel API par frappe). */
 export function useDebounced<T>(value: T, delay = 350): T {

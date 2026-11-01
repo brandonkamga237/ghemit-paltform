@@ -9,6 +9,7 @@ import {
   type ProgramStatusUpdate,
 } from "@/data/content"
 import { API_URL } from "@/lib/api"
+import { shortDate } from "@/lib/date"
 
 /**
  * Contenu administré, chargé depuis l'API après le premier rendu.
@@ -138,16 +139,7 @@ export function usePartners(): Partner[] {
   return useRemoteContent()?.partners ?? []
 }
 
-const MONTHS_SHORT = [
-  "janv.", "févr.", "mars", "avr.", "mai", "juin",
-  "juil.", "août", "sept.", "oct.", "nov.", "déc.",
-]
-
 /** Date d'affichage : ISO `publishedAt` formatée, sinon le champ libre historique. */
 export function articleDate(a: { publishedAt?: string; date?: string }): string {
-  if (a.publishedAt) {
-    const m = a.publishedAt.match(/^(\d{4})-(\d{2})-(\d{2})/)
-    if (m) return `${Number(m[3])} ${MONTHS_SHORT[Number(m[2]) - 1]} ${m[1]}`
-  }
-  return a.date ?? ""
+  return shortDate(a.publishedAt) || (a.date ?? "")
 }

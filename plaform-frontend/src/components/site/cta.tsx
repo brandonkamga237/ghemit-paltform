@@ -1,19 +1,15 @@
 import { Link } from "react-router"
-import type { ReactNode } from "react"
+import type { ButtonHTMLAttributes, ReactNode } from "react"
 import { ArrowRightIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
+import { useCtaClass, type CtaVariant as Variant } from "./cta-variants"
+import { useTone } from "./tone"
 
-type Variant = "primary" | "gold" | "outline" | "inverse" | "outline-inverse"
-
-const variants: Record<Variant, string> = {
-  primary: "bg-gehmit text-surface hover:bg-gehmit-hover active:bg-gehmit-active",
-  gold: "bg-gold text-navy hover:bg-gold-hover active:bg-gold-active",
-  outline: "border border-navy/25 text-navy hover:border-navy hover:bg-navy hover:text-surface",
-  inverse: "bg-surface text-navy hover:bg-cream",
-  "outline-inverse": "border border-surface/30 text-surface hover:border-surface hover:bg-surface/10",
+function Arrow() {
+  return <ArrowRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
 }
 
-/** Bouton d'action (lien interne ou externe). Une seule action principale par écran. */
+/** Lien d'action : route interne (`to`), ancre (`to="#…"`) ou site externe (`href`). */
 export function CtaLink({
   to,
   href,
@@ -29,17 +25,11 @@ export function CtaLink({
   className?: string
   children: ReactNode
 }) {
-  const cls = cn(
-    "group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-sm px-6 py-2.5 text-center text-small font-semibold text-balance transition-colors duration-150 [&>svg]:shrink-0",
-    variants[variant],
-    className
-  )
+  const cls = useCtaClass(variant, className)
   const content = (
     <>
       {children}
-      {arrow && (
-        <ArrowRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-      )}
+      {arrow && <Arrow />}
     </>
   )
   if (to?.startsWith("#")) {
@@ -63,26 +53,47 @@ export function CtaLink({
   )
 }
 
-/** Lien de texte fléché, pour les actions secondaires. */
+/** Bouton de formulaire, même apparence que `CtaLink`. */
+export function CtaButton({
+  variant = "primary",
+  className,
+  type = "button",
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
+  const cls = useCtaClass(variant, className)
+  return <button type={type} className={cls} {...props} />
+}
+
+/** Lien de texte fléché, pour les actions secondaires. Vert sur fond clair, blanc sur fond sombre. */
 export function ArrowLink({
   to,
+  href,
   className,
   children,
 }: {
-  to: string
+  to?: string
+  href?: string
   className?: string
   children: ReactNode
 }) {
+  const tone = useTone()
+  const cls = cn(
+    "group inline-flex items-center gap-2 text-small font-semibold underline-offset-4 hover:underline",
+    tone === "inverse" ? "text-surface" : "text-gehmit",
+    className
+  )
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+        {children}
+        <Arrow />
+      </a>
+    )
+  }
   return (
-    <Link
-      to={to}
-      className={cn(
-        "group inline-flex items-center gap-2 text-small font-semibold text-gehmit underline-offset-4 hover:underline",
-        className
-      )}
-    >
+    <Link to={to ?? "/"} className={cls}>
       {children}
-      <ArrowRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+      <Arrow />
     </Link>
   )
 }

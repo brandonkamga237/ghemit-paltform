@@ -1,5 +1,5 @@
-import { CrudPage, StatusBadge, type CrudConfig } from "@/components/admin/crud-page"
-import { Badge } from "@/components/ui/badge"
+import { CrudPage, StatusBadge, type CrudConfig } from "@/components/admin/crud"
+import { Badge } from "@gehmit/ui/components/badge"
 import type { ContentItem } from "@/lib/types"
 
 const statusField = {

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, type ClipboardEvent, type FocusEvent, type FormEvent, type KeyboardEvent } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 
 /**
  * Zone contentEditable non contrôlée : le HTML n'est injecté qu'au montage et

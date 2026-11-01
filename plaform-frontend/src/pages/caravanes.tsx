@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { usePageMeta } from "@/lib/seo"
 import { apiPost } from "@/lib/api"
-import { Container } from "@/components/site/bands"
-import { CtaLink } from "@/components/site/cta"
+import { Section } from "@/components/site/section"
+import { CtaLink, CtaButton } from "@/components/site/cta"
 import { InfoRows, PageHero, StageLine } from "@/components/site/page-header"
 import { NextStep } from "@/components/site/parcours"
-import { Input } from "@/components/ui/input"
+import { Input } from "@gehmit/ui/components/input"
 import {
   ChoiceGroup,
   Field,
@@ -15,7 +15,6 @@ import {
   FormSuccess,
   Recap,
   inputCls,
-  submitCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
 
@@ -84,11 +83,9 @@ export function CaravanesPage() {
         actions={<CtaLink to="#inscription" arrow>Participer à la prochaine</CtaLink>}
       />
 
-      <section className="bg-surface">
-        <Container className="py-section">
-          <InfoRows rows={rows} />
-        </Container>
-      </section>
+      <Section>
+        <InfoRows rows={rows} />
+      </Section>
 
       <FormSection
         id="inscription"
@@ -140,9 +137,9 @@ export function CaravanesPage() {
               <Input type="tel" value={form.tel} onChange={(e) => set("tel", e.target.value)} autoComplete="tel" placeholder="+237 6 …" className={inputCls} />
             </Field>
             <FormFooter note="Gratuit, sur place à Douala" error={state === "error"}>
-              <button type="submit" disabled={state === "sending"} className={submitCls}>
+              <CtaButton type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Envoi…" : "S'inscrire"}
-              </button>
+              </CtaButton>
             </FormFooter>
           </FormPanel>
         )}

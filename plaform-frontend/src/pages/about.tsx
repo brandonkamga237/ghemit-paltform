@@ -1,11 +1,10 @@
-import { Link } from "react-router"
-import { ArrowRightIcon } from "lucide-react"
 import { contact } from "@/data/content"
 import { Figure } from "@/components/site/photo"
-import { Container } from "@/components/site/bands"
-import { CtaLink } from "@/components/site/cta"
+import { Container, Section } from "@/components/site/section"
+import { ArrowLink, CtaLink } from "@/components/site/cta"
 import { PageHero } from "@/components/site/page-header"
 import { usePageMeta } from "@/lib/seo"
+import { Heading } from "@/components/site/heading"
 
 /** Les trois verbes de Gehmit, tels qu'ils figurent sur ses supports. */
 const missions = [
@@ -43,51 +42,47 @@ export function AboutPage() {
       />
 
       {/* Pourquoi */}
-      <section className="bg-surface">
-        <Container className="grid gap-block py-section lg:grid-cols-12">
-          <h2 className="font-heading text-h2 font-semibold text-navy lg:col-span-4">
-            Pourquoi Gehmit existe
-          </h2>
-          <div className="flex max-w-[680px] flex-col gap-group lg:col-span-8">
-            <p className="font-heading text-h2 text-navy">
-              Le numérique crée des emplois plus vite qu'il ne crée de repères.
-            </p>
-            <p className="text-body text-navy/75">
-              En Afrique centrale, un étudiant qui s'y intéresse découvre rarement l'étendue réelle
-              des métiers, et ceux qui ont un objectif précis avancent souvent seuls.
-            </p>
-            <p className="text-body text-navy/75">
-              Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de
-              formation et un réseau d'entreprises. Le reste dépend d'elles.
-            </p>
-          </div>
-        </Container>
-      </section>
+      <Section className="grid gap-block lg:grid-cols-12">
+        <Heading className="lg:col-span-4">
+          Pourquoi Gehmit existe
+        </Heading>
+        <div className="flex max-w-text flex-col gap-group lg:col-span-8">
+          <p className="font-heading text-h2 text-ink">
+            Le numérique crée des emplois plus vite qu'il ne crée de repères.
+          </p>
+          <p className="text-body text-ink/75">
+            En Afrique centrale, un étudiant qui s'y intéresse découvre rarement l'étendue réelle
+            des métiers, et ceux qui ont un objectif précis avancent souvent seuls.
+          </p>
+          <p className="text-body text-ink/75">
+            Nous mettons en face de ces personnes des professionnels expérimentés, un cadre de
+            formation et un réseau d'entreprises. Le reste dépend d'elles.
+          </p>
+        </div>
+      </Section>
 
       {/* Former. Inspirer. Connecter. */}
-      <section className="bg-navy text-surface">
-        <Container className="grid gap-block py-section md:grid-cols-3">
-          {missions.map((m, i) => (
-            <div key={m.verb} className="flex flex-col gap-4 border-t border-white/15 pt-6">
-              <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-              <span className="font-heading text-display leading-none font-normal italic">
-                {m.verb}.
-              </span>
-              <p className="max-w-[340px] text-body text-surface/70">{m.text}</p>
-            </div>
-          ))}
-        </Container>
-      </section>
+      <Section bg="inverse" className="grid gap-block md:grid-cols-3">
+        {missions.map((m, i) => (
+          <div key={m.verb} className="flex flex-col gap-4 border-t border-white/15 pt-6">
+            <span className="tnum text-small font-semibold text-gehmit-light">{String(i + 1).padStart(2, "0")}</span>
+            <span className="font-heading text-display leading-none font-normal italic">
+              {m.verb}.
+            </span>
+            <p className="max-w-xs text-body text-surface/70">{m.text}</p>
+          </div>
+        ))}
+      </Section>
 
       {/* Suite logique */}
-      <section className="bg-cream">
+      <section className="bg-surface-alt">
         <Container>
-          <div className="grid gap-px bg-sand-dark md:grid-cols-2">
-          <div className="flex flex-col gap-5 bg-cream py-section md:pr-10">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+          <div className="grid gap-px bg-line-strong md:grid-cols-2">
+          <div className="flex flex-col gap-5 bg-surface-alt py-section md:pr-10">
+            <Heading>
               Vous cherchez votre voie ?
-            </h2>
-            <p className="max-w-[440px] text-body text-ink-muted">
+            </Heading>
+            <p className="max-w-md text-body text-ink-muted">
               Le parcours Gehmit commence où vous en êtes : orientation, formation, accompagnement
               ou insertion.
             </p>
@@ -95,24 +90,18 @@ export function AboutPage() {
               Voir le parcours
             </CtaLink>
           </div>
-          <div className="flex flex-col gap-5 bg-cream py-section md:pl-10">
-            <h2 className="font-heading text-h2 font-semibold text-navy">
+          <div className="flex flex-col gap-5 bg-surface-alt py-section md:pl-10">
+            <Heading>
               Entreprises et institutions
-            </h2>
-            <p className="max-w-[440px] text-body text-ink-muted">
+            </Heading>
+            <p className="max-w-md text-body text-ink-muted">
               Stages, mécénat de compétences, matériel ou salles : quatre façons de contribuer,
               aucune n'exige un budget.
             </p>
-            <Link
-              to="/partenaire"
-              className="group inline-flex items-center gap-2 text-small font-semibold text-gehmit underline-offset-4 hover:underline"
-            >
-              Devenir partenaire
-              <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+            <ArrowLink to="/partenaire">Devenir partenaire</ArrowLink>
             <p className="pt-2 text-small text-ink-muted">
               Ou écrivez-nous :{" "}
-              <a href={`mailto:${contact.email}`} className="font-semibold text-navy hover:text-gehmit">
+              <a href={`mailto:${contact.email}`} className="font-semibold text-ink hover:text-gehmit">
                 {contact.email}
               </a>
             </p>

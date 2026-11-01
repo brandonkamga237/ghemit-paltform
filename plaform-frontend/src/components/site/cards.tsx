@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import type { ArticleSummary } from "@/data/content"
 import { articleDate } from "@/data/remote"
 import { MediaImage } from "./photo"
@@ -9,10 +9,10 @@ import { MediaImage } from "./photo"
  * rubrique, titre, chapô. `lead` = mise en avant sur deux colonnes.
  */
 export function ArticleCard({ article, lead = false }: { article: ArticleSummary; lead?: boolean }) {
-  const frame = cn("aspect-[4/3] overflow-hidden bg-sand", lead && "lg:col-span-7 lg:aspect-[16/10]")
-  // Sans image, ou image supprimée de la médiathèque : la rubrique sur fond navy.
+  const frame = cn("aspect-[4/3] overflow-hidden bg-line", lead && "lg:col-span-7 lg:aspect-[16/10]")
+  // Sans image, ou image supprimée de la médiathèque : la rubrique sur fond vert foncé.
   const panel = (
-    <div className="flex h-full items-end bg-navy p-6">
+    <div className="flex h-full items-end bg-inverse p-6">
       <span className="font-heading text-h3 text-surface/80 italic">{article.category || "Gehmit"}</span>
     </div>
   )
@@ -39,13 +39,13 @@ export function ArticleCard({ article, lead = false }: { article: ArticleSummary
         </span>
         <span
           className={cn(
-            "font-heading leading-[1.2] font-semibold text-navy decoration-1 underline-offset-4 [overflow-wrap:anywhere] group-hover:underline",
+            "font-heading leading-[1.2] font-semibold text-ink decoration-1 underline-offset-4 [overflow-wrap:anywhere] group-hover:underline",
             lead ? "text-h3" : "text-h3"
           )}
         >
           {article.title}
         </span>
-        <p className={cn("leading-relaxed text-navy/70", lead ? "text-body" : "line-clamp-3 text-body")}>
+        <p className={cn("leading-relaxed text-ink/70", lead ? "text-body" : "line-clamp-3 text-body")}>
           {article.excerpt}
         </p>
       </div>

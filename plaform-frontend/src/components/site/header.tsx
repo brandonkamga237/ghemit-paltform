@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, NavLink, useLocation } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
 import { ChevronDownIcon, MenuIcon, XIcon } from "lucide-react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { contact } from "@/data/content"
 import { usePrograms } from "@/data/remote"
 import { forCompanies, parcours, programStatus } from "@/data/parcours"
@@ -66,8 +66,8 @@ export function Header() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-40 bg-cream/95 backdrop-blur-sm transition-shadow duration-200",
-          (scrolled || menuOpen) && "shadow-[0_1px_0_var(--color-sand-dark)]"
+          "sticky top-0 z-40 bg-surface-alt/95 backdrop-blur-sm transition-shadow duration-200",
+          (scrolled || menuOpen) && "shadow-hairline"
         )}
         onMouseLeave={() => setMenuOpen(false)}
       >
@@ -91,7 +91,7 @@ export function Header() {
                     aria-expanded={menuOpen}
                     aria-label="Afficher les programmes"
                     onClick={() => setMenuOpen((v) => !v)}
-                    className="inline-flex h-10 items-center pr-3 text-navy hover:text-gehmit"
+                    className="inline-flex h-10 items-center pr-3 text-ink hover:text-gehmit"
                   >
                     <ChevronDownIcon className={cn("size-3.5 transition-transform duration-200", menuOpen && "rotate-180")} />
                   </button>
@@ -113,13 +113,13 @@ export function Header() {
           <div className="flex items-center gap-1">
             <Link
               to="/don"
-              className="inline-flex h-10 items-center rounded-sm bg-gold px-4 text-small font-semibold whitespace-nowrap text-navy transition-colors hover:bg-gold-hover active:bg-gold-active sm:px-5"
+              className="inline-flex h-10 items-center rounded-sm bg-gold px-4 text-small font-semibold whitespace-nowrap text-ink transition-colors hover:bg-gold-hover active:bg-gold-active sm:px-5"
             >
               Faire un don
             </Link>
             <button
               type="button"
-              className="inline-flex size-11 items-center justify-center text-navy lg:hidden"
+              className="inline-flex size-11 items-center justify-center text-ink lg:hidden"
               onClick={() => setMobileOpen(true)}
               aria-label="Ouvrir le menu"
             >
@@ -136,11 +136,11 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, transition: { duration: 0.1 } }}
               transition={{ duration: 0.16, ease: "easeOut" }}
-              className="absolute inset-x-0 top-full hidden border-t border-sand bg-surface shadow-[0_16px_32px_-16px_rgba(30,45,74,0.3)] lg:block"
+              className="absolute inset-x-0 top-full hidden border-t border-line bg-surface shadow-float lg:block"
             >
               <div className="mx-auto grid max-w-page grid-cols-[230px_1fr] gap-block px-gutter py-block">
-                <div className="flex flex-col gap-4 border-r border-sand pr-10">
-                  <p className="font-heading text-h3 text-navy">
+                <div className="flex flex-col gap-4 border-r border-line pr-10">
+                  <p className="font-heading text-h3 text-ink">
                     De l'orientation à l'emploi, <span className="accent-word">quatre étapes</span>.
                   </p>
                   <Link to="/programmes" className="text-small font-semibold text-gehmit hover:underline">
@@ -151,8 +151,8 @@ export function Header() {
                   <div className="grid grid-cols-4 gap-group">
                     {parcours.map((stage, i) => (
                       <div key={stage.id} className="flex flex-col gap-3.5">
-                        <span className="flex items-baseline gap-2 border-b border-sand pb-2.5 text-navy">
-                          <span className="tnum text-caption font-semibold text-gold">{i + 1}</span>
+                        <span className="flex items-baseline gap-2 border-b border-line pb-2.5 text-ink">
+                          <span className="tnum text-caption font-semibold text-gehmit">{i + 1}</span>
                           <span className="font-heading text-lead italic">{stage.verb}</span>
                         </span>
                         <ul className="flex flex-col gap-3">
@@ -161,7 +161,7 @@ export function Header() {
                             return (
                               <li key={o.name}>
                                 <Link to={o.to} className="group flex flex-col gap-0.5">
-                                  <span className="flex items-center gap-2 text-small font-semibold text-navy transition-colors group-hover:text-gehmit">
+                                  <span className="flex items-center gap-2 text-small font-semibold text-ink transition-colors group-hover:text-gehmit">
                                     {o.name}
                                     {st && st.status !== "archived" && <StatusDot status={st.status} />}
                                   </span>
@@ -174,8 +174,8 @@ export function Header() {
                       </div>
                     ))}
                   </div>
-                  <div className="flex items-center gap-group border-t border-sand pt-4 text-small">
-                    <span className="font-semibold text-navy">Vous êtes une entreprise ?</span>
+                  <div className="flex items-center gap-group border-t border-line pt-4 text-small">
+                    <span className="font-semibold text-ink">Vous êtes une entreprise ?</span>
                     {forCompanies.slice(0, 3).map((o) => (
                       <Link key={o.name} to={o.to} className="text-ink-muted transition-colors hover:text-gehmit">
                         {o.name}
@@ -197,7 +197,7 @@ export function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-navy text-surface lg:hidden"
+            className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-inverse text-surface lg:hidden"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
@@ -221,7 +221,7 @@ export function Header() {
                     to={item.to}
                     end={item.to === "/"}
                     className={({ isActive }) =>
-                      cn("block py-3.5 font-heading text-h3", isActive ? "text-gold" : "text-surface")
+                      cn("block py-3.5 font-heading text-h3", isActive ? "text-gehmit-light" : "text-surface")
                     }
                   >
                     {item.label}
@@ -230,7 +230,7 @@ export function Header() {
                     <div className="grid grid-cols-2 gap-x-4 gap-y-4 pb-5">
                       {parcours.map((stage) => (
                         <div key={stage.id} className="flex flex-col gap-1">
-                          <span className="text-caption text-gold italic">{stage.verb}</span>
+                          <span className="text-caption text-gehmit-light italic">{stage.verb}</span>
                           {stage.offers.map((o) => (
                             <Link key={o.name} to={o.to} className="py-1 text-small text-surface/85">
                               {o.name}
@@ -250,7 +250,7 @@ export function Header() {
               </a>
               <Link
                 to="/don"
-                className="flex h-12 items-center justify-center rounded-sm bg-gold text-body font-semibold text-navy"
+                className="flex h-12 items-center justify-center rounded-sm bg-gold text-body font-semibold text-ink"
               >
                 Faire un don
               </Link>
@@ -263,6 +263,6 @@ export function Header() {
 }
 
 const navCls =
-  "relative inline-flex h-10 items-center px-3 text-small font-medium whitespace-nowrap text-navy transition-colors hover:text-gehmit xl:px-3.5"
+  "relative inline-flex h-10 items-center px-3 text-small font-medium whitespace-nowrap text-ink transition-colors hover:text-gehmit xl:px-3.5"
 const activeCls =
   "text-gehmit after:absolute after:inset-x-3 after:-bottom-[15px] after:h-0.5 after:bg-gehmit"

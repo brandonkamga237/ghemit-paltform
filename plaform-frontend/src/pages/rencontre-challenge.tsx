@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { usePageMeta } from "@/lib/seo"
 import { apiPost } from "@/lib/api"
-import { Container } from "@/components/site/bands"
-import { CtaLink } from "@/components/site/cta"
+import { Section } from "@/components/site/section"
+import { CtaLink, CtaButton } from "@/components/site/cta"
 import { PageHero, StageLine } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
+import { Input } from "@gehmit/ui/components/input"
 import {
   ChoiceGroup,
   Field,
@@ -14,9 +14,9 @@ import {
   FormSuccess,
   Recap,
   inputCls,
-  submitCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
+import { Heading } from "@/components/site/heading"
 
 const profils = ["Étudiant·e", "Jeune diplômé·e", "Autodidacte", "Jeune pro", "Autre"]
 
@@ -78,22 +78,20 @@ export function RencontreChallengePage() {
       />
 
       {/* La journée, en trois temps */}
-      <section className="bg-navy text-surface">
-        <Container className="flex flex-col gap-block py-section">
-          <h2 className="font-heading text-h2 font-semibold">
-            Une journée, <span className="font-normal text-gold italic">trois temps</span>.
-          </h2>
-          <ol className="grid gap-block md:grid-cols-3">
-            {day.map((d, i) => (
-              <li key={d.title} className="flex flex-col gap-3 border-t border-white/15 pt-6">
-                <span className="tnum text-small font-semibold text-gold">{String(i + 1).padStart(2, "0")}</span>
-                <span className="font-heading text-h2 italic">{d.title}</span>
-                <p className="text-body text-surface/70">{d.text}</p>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </section>
+      <Section bg="inverse" className="flex flex-col gap-block">
+        <Heading>
+          Une journée, <span className="font-normal text-gehmit-light italic">trois temps</span>.
+        </Heading>
+        <ol className="grid gap-block md:grid-cols-3">
+          {day.map((d, i) => (
+            <li key={d.title} className="flex flex-col gap-3 border-t border-white/15 pt-6">
+              <span className="tnum text-small font-semibold text-gehmit-light">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-heading text-h2 italic">{d.title}</span>
+              <p className="text-body text-surface/70">{d.text}</p>
+            </li>
+          ))}
+        </ol>
+      </Section>
 
       <FormSection
         id="inscription"
@@ -133,9 +131,9 @@ export function RencontreChallengePage() {
               <ChoiceGroup options={profils} value={form.profil} onChange={(v) => set("profil", v)} />
             </Field>
             <FormFooter note="Gratuit, une journée à Douala" error={state === "error"}>
-              <button type="submit" disabled={state === "sending"} className={submitCls}>
+              <CtaButton type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Envoi…" : "S'inscrire"}
-              </button>
+              </CtaButton>
             </FormFooter>
           </FormPanel>
         )}

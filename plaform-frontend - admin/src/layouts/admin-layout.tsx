@@ -17,7 +17,7 @@ import {
   XIcon,
   type LucideIcon,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 import { api } from "@/lib/api"
 import { useAuth } from "@/lib/auth"
 import type { CandidaturesSummary, MessagesSummary } from "@/lib/types"
@@ -90,7 +90,7 @@ function Nav({ unread }: { unread: { candidatures: number; messages: number } })
       {groups.map((g, gi) => (
         <div key={gi} className="flex flex-col gap-0.5">
           {g.title && (
-            <span className="px-3 pb-2 font-heading text-caption text-gold italic">{g.title}</span>
+            <span className="px-3 pb-2 font-heading text-caption text-gehmit-light italic">{g.title}</span>
           )}
           {g.items.map((item) => {
             const count = item.count ? unread[item.count] : 0
@@ -103,7 +103,7 @@ function Nav({ unread }: { unread: { candidatures: number; messages: number } })
                   cn(
                     "group relative flex h-10 items-center gap-3 rounded-sm px-3 text-small transition-colors",
                     isActive
-                      ? "bg-white/[0.07] font-semibold text-surface before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:bg-gold"
+                      ? "bg-white/[0.07] font-semibold text-surface before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:bg-gehmit-light"
                       : "text-surface/65 hover:bg-white/[0.04] hover:text-surface"
                   )
                 }
@@ -111,7 +111,7 @@ function Nav({ unread }: { unread: { candidatures: number; messages: number } })
                 <item.icon className="size-[17px] shrink-0" strokeWidth={1.75} />
                 <span className="flex-1">{item.label}</span>
                 {count > 0 && (
-                  <span className="tnum min-w-6 rounded-sm bg-gold px-1.5 text-center text-caption leading-5 font-semibold text-navy-deep">
+                  <span className="tnum min-w-6 rounded-sm bg-gehmit-light px-1.5 text-center text-caption leading-5 font-semibold text-inverse-deep">
                     {count}
                   </span>
                 )}
@@ -174,9 +174,9 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-svh bg-cream">
+    <div className="flex min-h-svh bg-surface-alt">
       {/* Barre latérale — grand écran */}
-      <aside className="sticky top-0 hidden h-svh w-[248px] shrink-0 flex-col gap-group overflow-y-auto bg-navy-deep px-3 py-6 lg:flex">
+      <aside className="sticky top-0 hidden h-svh w-[248px] shrink-0 flex-col gap-group overflow-y-auto bg-inverse-deep px-3 py-6 lg:flex">
         <div className="flex flex-col gap-1 px-3">
           <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-9 w-auto self-start" />
           <span className="text-caption text-surface/50">Administration</span>
@@ -189,7 +189,7 @@ export function AdminLayout() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Barre du haut — mobile */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-navy-deep px-4 lg:hidden">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-inverse-deep px-4 lg:hidden">
           <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-7 w-auto" />
           <button
             type="button"
@@ -212,10 +212,10 @@ export function AdminLayout() {
           <button
             type="button"
             aria-label="Fermer le menu"
-            className="absolute inset-0 bg-navy-deep/60"
+            className="absolute inset-0 bg-inverse-deep/60"
             onClick={() => setOpen(false)}
           />
-          <aside className="relative flex h-full w-[280px] flex-col gap-group overflow-y-auto bg-navy-deep px-3 py-5">
+          <aside className="relative flex h-full w-[280px] flex-col gap-group overflow-y-auto bg-inverse-deep px-3 py-5">
             <div className="flex items-center justify-between px-3">
               <img src={logoUrl} alt="Gehmit" width={472} height={192} className="h-8 w-auto" />
               <button

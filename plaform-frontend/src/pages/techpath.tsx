@@ -1,9 +1,10 @@
 import { usePageMeta } from "@/lib/seo"
 import { techpathUrl } from "@/data/content"
-import { Container } from "@/components/site/bands"
+import { Container, Section } from "@/components/site/section"
 import { ArrowLink, CtaLink } from "@/components/site/cta"
 import { InfoRows, PageHero, StageLine } from "@/components/site/page-header"
 import { NextStep } from "@/components/site/parcours"
+import { Heading } from "@/components/site/heading"
 
 const steps = [
   {
@@ -36,14 +37,14 @@ export function TechPathPage() {
         }
         below={
           <Container>
-            <ol className="grid border-t border-sand-dark md:grid-cols-3">
+            <ol className="grid border-t border-line-strong md:grid-cols-3">
               {steps.map((s, i) => (
                 <li
                   key={s.title}
-                  className="flex flex-col gap-2 border-sand-dark py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
+                  className="flex flex-col gap-2 border-line-strong py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
                 >
-                  <span className="tnum text-small font-semibold text-gold">{i + 1}</span>
-                  <span className="font-heading text-h3 font-semibold text-navy">{s.title}</span>
+                  <span className="tnum text-small font-semibold text-gehmit">{i + 1}</span>
+                  <span className="font-heading text-h3 font-semibold text-ink">{s.title}</span>
                   <span className="text-body text-ink-muted">{s.text}</span>
                 </li>
               ))}
@@ -52,44 +53,42 @@ export function TechPathPage() {
         }
       />
 
-      <section className="bg-surface">
-        <Container className="flex flex-col gap-block py-section">
-          <h2 className="font-heading text-h2 font-semibold text-navy">
-            Ce que TechPath vous apporte
-          </h2>
-          <InfoRows
-            rows={[
-              {
-                title: "L'annuaire des écoles",
-                text: (
-                  <span className="flex flex-col items-start gap-3">
-                    Établissements de la sous-région, filières, durées et coûts, consultables sans
-                    inscription.
-                    <a
-                      href={techpathUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-semibold text-gehmit underline-offset-4 hover:underline"
-                    >
-                      Consulter l'annuaire →
-                    </a>
-                  </span>
-                ),
-              },
-              {
-                title: "Une suite concrète",
-                text: (
-                  <span className="flex flex-col items-start gap-3">
-                    TechPath ne s'arrête pas au conseil : il ouvre la page du programme recommandé et
-                    son formulaire de candidature.
-                    <ArrowLink to="/programmes">Voir les programmes</ArrowLink>
-                  </span>
-                ),
-              },
-            ]}
-          />
-        </Container>
-      </section>
+      <Section className="flex flex-col gap-block">
+        <Heading>
+          Ce que TechPath vous apporte
+        </Heading>
+        <InfoRows
+          rows={[
+            {
+              title: "L'annuaire des écoles",
+              text: (
+                <span className="flex flex-col items-start gap-3">
+                  Établissements de la sous-région, filières, durées et coûts, consultables sans
+                  inscription.
+                  <a
+                    href={techpathUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-gehmit underline-offset-4 hover:underline"
+                  >
+                    Consulter l'annuaire →
+                  </a>
+                </span>
+              ),
+            },
+            {
+              title: "Une suite concrète",
+              text: (
+                <span className="flex flex-col items-start gap-3">
+                  TechPath ne s'arrête pas au conseil : il ouvre la page du programme recommandé et
+                  son formulaire de candidature.
+                  <ArrowLink to="/programmes">Voir les programmes</ArrowLink>
+                </span>
+              ),
+            },
+          ]}
+        />
+      </Section>
 
       <NextStep offer="TechPath" />
     </div>

@@ -1,13 +1,14 @@
+import { CtaButton } from "@/components/site/cta"
 import { useState } from "react"
 import { useSearchParams } from "react-router"
 import { MessageCircleIcon } from "lucide-react"
 import { contact, faq, whatsappUrl } from "@/data/content"
 import { apiPost } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { Container } from "@/components/site/bands"
+import { Section } from "@/components/site/section"
 import { PageHero } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@gehmit/ui/components/input"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   ChoiceGroup,
   Field,
@@ -15,7 +16,6 @@ import {
   FormPanel,
   FormSuccess,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
@@ -24,7 +24,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@gehmit/ui/components/accordion"
+import { Heading } from "@/components/site/heading"
 
 const sujets = [
   "Une question sur un programme",
@@ -75,86 +76,84 @@ export function ContactPage() {
         lede="Une personne de l'équipe vous répond sous 48 heures ouvrées. Pour une réponse rapide, WhatsApp reste le plus direct."
       />
 
-      <section className="bg-surface">
-        <Container className="grid items-start gap-block py-section lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            {state === "sent" ? (
-              <FormSuccess title="Message envoyé">
-                Merci {form.name.split(" ")[0]}. Nous vous répondons à {form.email} sous 48 heures ouvrées.
-              </FormSuccess>
-            ) : (
-              <FormPanel onSubmit={submit}>
-                <Field label="Objet" as="div">
-                  <ChoiceGroup options={sujets} value={subject} onChange={setSubject} />
+      <Section className="grid items-start gap-block lg:grid-cols-12">
+        <div className="lg:col-span-7">
+          {state === "sent" ? (
+            <FormSuccess title="Message envoyé">
+              Merci {form.name.split(" ")[0]}. Nous vous répondons à {form.email} sous 48 heures ouvrées.
+            </FormSuccess>
+          ) : (
+            <FormPanel onSubmit={submit}>
+              <Field label="Objet" as="div">
+                <ChoiceGroup options={sujets} value={subject} onChange={setSubject} />
+              </Field>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <Field label="Nom complet" error={errors.name}>
+                  <Input value={form.name} onChange={(e) => set("name", e.target.value)} autoComplete="name" aria-invalid={!!errors.name} className={inputCls} />
                 </Field>
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field label="Nom complet" error={errors.name}>
-                    <Input value={form.name} onChange={(e) => set("name", e.target.value)} autoComplete="name" aria-invalid={!!errors.name} className={inputCls} />
-                  </Field>
-                  <Field label="Adresse e-mail" error={errors.email}>
-                    <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" placeholder="votre@email.com" aria-invalid={!!errors.email} className={inputCls} />
-                  </Field>
-                </div>
-                <Field label="Message" error={errors.message}>
-                  <Textarea value={form.message} onChange={(e) => set("message", e.target.value)} aria-invalid={!!errors.message} className={textareaCls} />
+                <Field label="Adresse e-mail" error={errors.email}>
+                  <Input type="email" value={form.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" placeholder="votre@email.com" aria-invalid={!!errors.email} className={inputCls} />
                 </Field>
-                <FormFooter note="Réponse sous 48 heures ouvrées" error={state === "error"}>
-                  <button type="submit" disabled={state === "sending"} className={submitCls}>
-                    {state === "sending" ? "Envoi…" : "Envoyer le message"}
-                  </button>
-                </FormFooter>
-              </FormPanel>
-            )}
+              </div>
+              <Field label="Message" error={errors.message}>
+                <Textarea value={form.message} onChange={(e) => set("message", e.target.value)} aria-invalid={!!errors.message} className={textareaCls} />
+              </Field>
+              <FormFooter note="Réponse sous 48 heures ouvrées" error={state === "error"}>
+                <CtaButton type="submit" disabled={state === "sending"}>
+                  {state === "sending" ? "Envoi…" : "Envoyer le message"}
+                </CtaButton>
+              </FormFooter>
+            </FormPanel>
+          )}
+        </div>
+
+        <aside className="flex flex-col gap-block lg:sticky lg:top-24 lg:col-span-5">
+          <div className="flex flex-col gap-4">
+            <Heading size="h3">Directement</Heading>
+            <dl className="flex flex-col border-t border-line-strong">
+              <Row label="E-mail">
+                <a href={`mailto:${contact.email}`} className="hover:text-gehmit">{contact.email}</a>
+              </Row>
+              <Row label="Téléphone">
+                <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-gehmit">{contact.phone}</a>
+              </Row>
+              <Row label="Adresse">{contact.city}</Row>
+            </dl>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-inverse text-small font-semibold text-surface transition-colors hover:bg-inverse-soft"
+            >
+              <MessageCircleIcon className="size-5 text-gehmit-light" strokeWidth={1.8} />
+              Écrire sur WhatsApp
+            </a>
           </div>
 
-          <aside className="flex flex-col gap-block lg:sticky lg:top-24 lg:col-span-5">
-            <div className="flex flex-col gap-4">
-              <h2 className="font-heading text-h3 font-semibold text-navy">Directement</h2>
-              <dl className="flex flex-col border-t border-sand-dark">
-                <Row label="E-mail">
-                  <a href={`mailto:${contact.email}`} className="hover:text-gehmit">{contact.email}</a>
-                </Row>
-                <Row label="Téléphone">
-                  <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className="hover:text-gehmit">{contact.phone}</a>
-                </Row>
-                <Row label="Adresse">{contact.city}</Row>
-              </dl>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-12 items-center justify-center gap-2.5 rounded-sm bg-navy text-small font-semibold text-surface transition-colors hover:bg-navy-light"
-              >
-                <MessageCircleIcon className="size-5 text-gold" strokeWidth={1.8} />
-                Écrire sur WhatsApp
-              </a>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <h2 className="font-heading text-h3 font-semibold text-navy">Questions fréquentes</h2>
-              <Accordion>
-                {faq.map((f, i) => (
-                  <AccordionItem key={i} value={`faq-${i}`} className="border-sand-dark">
-                    <AccordionTrigger className="py-4 text-left text-body font-semibold text-navy hover:no-underline">
-                      {f.q}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-body text-ink-muted">{f.a}</AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          </aside>
-        </Container>
-      </section>
+          <div className="flex flex-col gap-2">
+            <Heading size="h3">Questions fréquentes</Heading>
+            <Accordion>
+              {faq.map((f, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-line-strong">
+                  <AccordionTrigger className="py-4 text-left text-body font-semibold text-ink hover:no-underline">
+                    {f.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-body text-ink-muted">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </aside>
+      </Section>
     </div>
   )
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-sand py-3.5">
+    <div className="flex items-baseline justify-between gap-4 border-b border-line py-3.5">
       <dt className="text-small text-ink-muted">{label}</dt>
-      <dd className="text-right text-body font-semibold text-navy">{children}</dd>
+      <dd className="text-right text-body font-semibold text-ink">{children}</dd>
     </div>
   )
 }

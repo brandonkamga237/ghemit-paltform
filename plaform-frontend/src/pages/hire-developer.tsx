@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { usePageMeta } from "@/lib/seo"
 import { apiPost } from "@/lib/api"
-import { Container } from "@/components/site/bands"
-import { ArrowLink, CtaLink } from "@/components/site/cta"
+import { Container } from "@/components/site/section"
+import { ArrowLink, CtaLink, CtaButton } from "@/components/site/cta"
 import { PageHero } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@gehmit/ui/components/input"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   ChoiceGroup,
   Field,
@@ -15,7 +15,6 @@ import {
   FormSuccess,
   Recap,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
@@ -112,14 +111,14 @@ export function HireDeveloperPage() {
         }
         below={
           <Container>
-            <ol className="grid border-t border-sand-dark md:grid-cols-3">
+            <ol className="grid border-t border-line-strong md:grid-cols-3">
               {steps.map((s, i) => (
                 <li
                   key={s.title}
-                  className="flex flex-col gap-2 border-sand-dark py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
+                  className="flex flex-col gap-2 border-line-strong py-7 max-md:border-b max-md:last:border-b-0 md:pr-8 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-8"
                 >
-                  <span className="tnum text-small font-semibold text-gold">{i + 1}</span>
-                  <span className="font-heading text-h3 font-semibold text-navy">{s.title}</span>
+                  <span className="tnum text-small font-semibold text-gehmit">{i + 1}</span>
+                  <span className="font-heading text-h3 font-semibold text-ink">{s.title}</span>
                   <span className="text-body text-ink-muted">{s.text}</span>
                 </li>
               ))}
@@ -181,9 +180,9 @@ export function HireDeveloperPage() {
               <Input value={form.budget} onChange={(e) => set("budget", e.target.value)} placeholder="Ex. 150 000 – 300 000 FCFA / mois" className={inputCls} />
             </Field>
             <FormFooter note="Sans commission" error={state === "error"}>
-              <button type="submit" disabled={state === "sending"} className={submitCls}>
+              <CtaButton type="submit" disabled={state === "sending"}>
                 {state === "sending" ? "Envoi…" : "Envoyer le besoin"}
-              </button>
+              </CtaButton>
             </FormFooter>
           </FormPanel>
         )}

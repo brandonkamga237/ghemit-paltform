@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { BoldIcon, ItalicIcon, LinkIcon, QuoteIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@gehmit/ui/cn"
 import { promptLink } from "@/lib/rich-text"
 import type { BlockType } from "./model"
 
@@ -68,7 +68,7 @@ export function SelectionToolbar({
       role="toolbar"
       aria-label="Mise en forme"
       style={{ top: Math.max(8, anchor.top), left: anchor.left }}
-      className="fixed z-50 flex -translate-x-1/2 items-center gap-0.5 rounded-sm bg-navy-deep p-1 text-surface shadow-[0_8px_24px_-8px_rgba(20,30,51,0.5)]"
+      className="fixed z-50 flex -translate-x-1/2 items-center gap-0.5 rounded-sm bg-inverse-deep p-1 text-surface shadow-float"
       onMouseDown={(e) => e.preventDefault()}
     >
       <ToolButton label="Gras (Ctrl+B)" onClick={() => document.execCommand("bold")}>
@@ -118,7 +118,7 @@ function ToolButton({
       onClick={onClick}
       className={cn(
         "inline-flex size-8 items-center justify-center rounded-sm transition-colors hover:bg-white/10",
-        active && "text-gold"
+        active && "text-gehmit-light"
       )}
     >
       {children}

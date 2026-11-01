@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { LogInIcon, TriangleAlertIcon } from "lucide-react"
 import { useAuth } from "@/lib/auth"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@gehmit/ui/components/button"
+import { Input } from "@gehmit/ui/components/input"
+import { Label } from "@gehmit/ui/components/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@gehmit/ui/components/card"
 
 export function LoginPage() {
   const { login } = useAuth()

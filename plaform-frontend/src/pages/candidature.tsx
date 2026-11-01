@@ -1,14 +1,15 @@
+import { CtaButton } from "@/components/site/cta"
 import { useState } from "react"
 import { Link, Navigate, useParams } from "react-router"
 import { AnimatePresence, motion } from "motion/react"
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import { usePrograms } from "@/data/remote"
 import { apiPost, uploadCv } from "@/lib/api"
 import { usePageMeta } from "@/lib/seo"
-import { Container } from "@/components/site/bands"
+import { Container } from "@/components/site/section"
 import { Breadcrumb } from "@/components/site/page-header"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@gehmit/ui/components/input"
+import { Textarea } from "@gehmit/ui/components/textarea"
 import {
   ChoiceGroup,
   CvInput,
@@ -17,7 +18,6 @@ import {
   FormSuccess,
   Recap,
   inputCls,
-  submitCls,
   textareaCls,
 } from "@/components/site/form"
 import { emailOk } from "@/lib/validation"
@@ -101,7 +101,7 @@ export function CandidaturePage() {
   const facts = program.detail?.facts.slice(0, 3).map((f) => [f.label, f.value] as [string, string]) ?? []
 
   return (
-    <div className="bg-cream">
+    <div className="bg-surface-alt">
       <Container className="grid items-start gap-block py-section lg:grid-cols-12">
         <div className="flex flex-col gap-group lg:col-span-7">
           <div className="flex flex-col gap-4">
@@ -112,10 +112,10 @@ export function CandidaturePage() {
                 { label: "Candidature" },
               ]}
             />
-            <h1 className="font-heading text-display font-semibold text-navy">
+            <h1 className="font-heading text-display font-semibold text-ink">
               Candidature <span className="accent-word">{program.name}</span>
             </h1>
-            <p className="text-body text-navy/75">
+            <p className="text-body text-ink/75">
               Dix minutes, trois étapes. Réponse par e-mail sous dix jours ouvrés.
             </p>
           </div>
@@ -124,8 +124,8 @@ export function CandidaturePage() {
             <ol className="grid grid-cols-3 gap-2" aria-label="Étapes de la candidature">
               {steps.map((s, i) => (
                 <li key={s} aria-current={i === step ? "step" : undefined} className="flex flex-col gap-2">
-                  <span className={cn("h-1 transition-colors duration-300", i <= step ? "bg-gehmit" : "bg-sand-dark")} />
-                  <span className={cn("text-small", i === step ? "font-semibold text-navy" : "text-ink-muted")}>
+                  <span className={cn("h-1 transition-colors duration-300", i <= step ? "bg-gehmit" : "bg-line-strong")} />
+                  <span className={cn("text-small", i === step ? "font-semibold text-ink" : "text-ink-muted")}>
                     {i + 1}. {s}
                   </span>
                 </li>
@@ -151,7 +151,7 @@ export function CandidaturePage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.25, ease }}
-                className="flex flex-col gap-group bg-surface p-6 shadow-[0_1px_0_var(--color-sand-dark)] sm:p-9"
+                className="flex flex-col gap-group bg-surface p-6 shadow-hairline sm:p-9"
               >
                 {step === 0 && (
                   <div className="grid gap-5 sm:grid-cols-2">
@@ -204,14 +204,14 @@ export function CandidaturePage() {
                       <button
                         type="button"
                         onClick={() => setStep(step - 1)}
-                        className="inline-flex h-12 items-center rounded-sm border border-navy/25 px-6 text-small font-semibold text-navy transition-colors hover:border-navy"
+                        className="inline-flex h-12 items-center rounded-sm border border-ink/25 px-6 text-small font-semibold text-ink transition-colors hover:border-ink"
                       >
                         Retour
                       </button>
                     )}
-                    <button type="submit" disabled={state === "sending"} className={submitCls}>
+                    <CtaButton type="submit" disabled={state === "sending"}>
                       {step === 2 ? (state === "sending" ? "Envoi…" : "Envoyer ma candidature") : "Continuer"}
-                    </button>
+                    </CtaButton>
                   </div>
                 </FormFooter>
               </motion.form>

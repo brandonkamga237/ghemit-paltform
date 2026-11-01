@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn"
+import { cn } from "@gehmit/ui/cn"
 import type { ProgramStatus } from "@/data/content"
 
 const styles: Record<ProgramStatus, string> = {
